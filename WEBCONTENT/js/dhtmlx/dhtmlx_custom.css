@@ -569,6 +569,7 @@ div.gridbox_dhx_skyblue table.obj tr.rowselected td{
 div.gridbox_dhx_skyblue table.obj.row20px tr.rowselected td{
 	background-image:url("./imgs/grid/sky_blue_sel.png");
 	color: #000000;
+	background-repeat: repeat-y;
 }
 
 div.gridbox_dhx_skyblue table.obj tr.rowselected td.cellselected {
@@ -944,10 +945,12 @@ div.gridbox_dhx_skyblue table.obj tr td{
 
 div.gridbox_dhx_skyblue table.hdr td {
 	font-family: tahoma;
-	font-size: 11px;
+	font-size: 15px;
 	color: #000000;
 	font-weight: normal;
 	font-style: normal;
+	text-align:center;
+	vertical-align:middle;
 }
 
 .dhx_combo_select, .gridbox_dhx_skyblue .dhx_combo_edit, .gridbox_dhx_skyblue .dhx_textarea{

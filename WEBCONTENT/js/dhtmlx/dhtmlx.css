@@ -479,11 +479,11 @@ div.gridbox table.hdr td div.hdrcell{overflow:hidden}
 div.gridbox table.obj td {border: 1px solid; border-color : white Gray Gray white; font-family:Arial; font-size:12px; -moz-user-select:none; -moz-user-select:-moz-none; 
  overflow:hidden; padding-top:0px; padding-bottom:0px; empty-cells:show}
 div.gridbox table.obj th, div.gridbox table.hdr th{padding:0px 0px 0px 0px ; margin:0px 0px 0px 0px}
-div.gridbox table.row20px tr td{height:20px; white-space: nowrap; padding:0px}
+div.gridbox table.row20px tr td{height:40px; white-space: nowrap; padding:0px}
 div.gridbox .objbox {background-color:white; position:relative; -webkit-overflow-scrolling: touch}
 div.gridbox table.obj td span.space, div.gridbox table.obj td img.space{width:18px}
-div.gridbox table.obj tr.rowselected td.cellselected, div.gridbox table.obj td.cellselected {background-color:#d8d8d8; color:black}
-div.gridbox table.obj tr.rowselected td{background-color:#e1e0d7; color:black}
+div.gridbox table.obj tr.rowselected td.cellselected, div.gridbox table.obj td.cellselected {background-color:#d8d8d8; color:black;}
+div.gridbox table.obj tr.rowselected td{background-color:#e1e0d7; color:black;}
 div.gridbox table.obj td.editable{-moz-user-select:text}
 div.gridbox table.obj td.group_row{vertical-align:middle; font-family:Tahoma; font-size:10pt; font-weight:bold; height:30px; border:0px; border-bottom: 2px solid navy; 
 } 
@@ -566,7 +566,7 @@ div.gridbox_clear div.topMumba{position:absolute; left:0px; width:100%; height:3
 div.gridbox_clear div.bottomMumba{position:absolute; left:0px; width:100%; height:3px; background-image:url(imgs/skinD_header.png); overflow:hidden}
 div.gridbox_clear div.bottomMumba img,div.gridbox_clear div.topMumba img{border:0px; position:absolute; top:0px}
 div.gridbox_clear{padding-left: 10px; padding-right: 10px}
-div.gridbox_clear table.hdr td {border:0px; background-color:transparent; font-family:Tahoma; font-size:11px; font-weight:bold; color:#055A78; vertical-align:top; text-align:left}
+div.gridbox_clear table.hdr td {border:0px; background-color:transparent; font-family:Tahoma; font-size:11px; font-weight:bold; color:#055A78; vertical-align:top; text-align:left;}
 div.gridbox_clear table.hdr td div.hdrcell{width:auto; padding-left:10px; padding-bottom:2px}
 div.gridbox_clear table.hdr .filter{padding-left:0px !important; text-align:center}
 div.gridbox_clear table.obj td {border-width: 0px 1px 0px 0px ; border-color:#D6D6D6; font-family:Tahoma; font-size:11px; padding-right:4px; padding-left:4px}

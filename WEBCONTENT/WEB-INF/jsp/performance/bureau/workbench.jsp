@@ -39,7 +39,7 @@ a:active {color: #0000FF}
 </head>
 <body>
 
-<div style="background: url(images/performance/banner.jpg);height:90px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
+<div style="background: url(../images/performance/bureau/banner.jpg);height:90px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
 <div id="parentId" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;"></div>
 <div id="controlPanel" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;padding:0px;margin:0px;border:0px;">
 <ul id="controllist" style="width: 100%; height: 100%;padding:20px 0px 20px 0px;margin:0px;border:0px;text-align:left;list-style-type:none;text-indent:4em;">
