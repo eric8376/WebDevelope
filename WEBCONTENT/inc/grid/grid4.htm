@@ -1,0 +1,202 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset="gb2312">
+<title>Grid Page</title>
+<script language="javascript" src="grid4.js"></script>
+
+<link rel="stylesheet" type="text/css" href="grid2.css"/>
+<script>
+if(!document.all){
+window.constructor.prototype.__defineGetter__("event",function(){
+  var func = arguments.callee.caller;
+  while(func != null){
+   var arg0 = func.arguments[0];
+   if(arg0 && (arg0.constructor==Event || arg0.constructor ==MouseEvent)){
+    return arg0;
+   }
+   func = func.caller;
+  }
+     return null;
+ });
+}
+</script> 
+</head>
+
+<body onLoad="init()">
+<table>
+<tr><td>
+<div id="dContainer"></div>
+</td><td>
+<div style="width:100px; height:200px; border:1px solid red; vertical-align:middle; ">dwdsfvvvvvvvvvvvvvvvvvvvvvvvvvvvvvd</div>
+</td></tr>
+<tr><td>
+<div id="dContainer2"></div>
+</td><td>
+<div style="width:100px; height:200px; border:1px solid red; vertical-align:middle; ">dwdsfvvvvvvvvvvvvvvvvvvvvvvvvvvvvvd</div>
+</td></tr></table>
+<input type="button" name="" value="Get checked" onClick="getChecked()">&nbsp;&nbsp;
+<input type="button" name="" value="Add Row" onClick="addRow()">&nbsp;&nbsp;
+<input type="button" name="" value="Remorw Row" onClick="removeRow()">
+</body>
+</html>
+<script>
+var grid1;
+var grid2;
+
+function addRow(){
+	var dataToAdd = new Object();
+		dataToAdd.name1 = "111";
+		dataToAdd.name2 = "222";
+		dataToAdd.name3 = "333";
+		dataToAdd.name4 = "444";
+		dataToAdd.name5 = "555";  
+		dataToAdd.name6 = "666"; 
+		dataToAdd.name7 = "777";  
+	grid1.addRow(dataToAdd);
+}
+
+function removeRow(){
+	grid1.removeRow(grid1.selected);
+}
+
+
+
+function init(){
+	var start = new Date();
+    var titleData = [{name:"name1", text:"title_1",  visible:true, hidden:false, sortable:true, dataType:"string"},
+	                 {name:"name2", text:"title_2",  visible:true, sortable:true, sortable:false, dataType:"string"},
+					 {name:"name3", text:"title_3",  visible:true, sortable:true, sortable:false, dataType:"string"},
+					 {name:"name4", text:"title_4",  visible:true, sortable:true, dataType:"string"},
+					 {name:"name5", text:"title_5",  visible:true, sortable:true, dataType:"string"},
+					 {name:"name6", text:"title_6",  visible:false, sortable:true, dataType:"string"},
+					 {name:"name7", text:"title_7",  visible:false, sortable:true, dataType:"string"}
+	                 ]
+					 
+    grid1 = new Grid({id: "dContainer",
+	                      width: "600px",
+						  height: 200,
+						  showCheckbox: false,
+						  showSequence: true,
+						  adaptOutline: true,
+						  showPage: true,
+						  whiteSpace: "nowrap",
+						  isRender: false,
+						  titleData: titleData,
+						  page: {pageIndex:1,pageSize:20,pageCount:0,recordCount:0},
+						  imgPath: "img/",
+						  attachSvc: "makeData",
+						  showTitle:false,
+						  select:0
+						  });
+	
+	
+	grid2 = new Grid({id: "dContainer2",
+	                      width: "600px",
+						  height: 200,
+						  showCheckbox: false,
+						  showSequence: true,
+						  adaptOutline: true,
+						  showPage: false,
+						  whiteSpace: "nowrap",
+						  isRender: false,
+						  titleData: titleData,
+						  page: {pageIndex:1,pageSize:20,pageCount:0,recordCount:0},
+						  imgPath: "img/",
+						  attachSvc: "makeData",
+						  showTitle:false,
+						  select:1
+						  });		
+						  		  
+
+	var strXML = "<items>";
+	 for(var i=0; i<30; i++) {
+	   strXML += "<item name1='row-"+i+"' name2='姘歌繙鐨勪竴鐝璼wg-"+i+"' name3='鐢? name4='22' name5='B030301' name6='16' name7='姘歌繙鐨勪竴鐝?'/>"
+	 }
+	 strXML += "</items>";
+
+	grid1.loadByPage(makeData(0,20), {pageIndex:2,pageSize:10,recordCount:100});	
+	grid2.load(makeData(0,5));
+	//for(o in grid2.all.items)alert(o+":"+grid2.all.items[o].id);
+
+	//grid1.select(2);
+	//grid1.disSelect();
+	grid1.onSelect = function(item){
+		return;
+		for(o in item){
+			alert(o+":"+item[o]);
+		}
+	}
+		
+	//grid.load("data.xml");	
+	//grid.load(strXML);	
+	
+	grid1.reLoad = function(oPage){
+	    grid1.load(makeData(oPage.pageIndex, oPage.pageSize));
+	}
+	
+	grid2.reLoad = function(oPage){
+	    grid2.load(makeData(oPage.pageIndex, oPage.pageSize));
+	}		
+		
+	grid1.onClick = function(obj){
+	     //alert(obj["name1"]);
+		 //var obj1 = grid.getPicked();
+		 //for(p in obj1)alert(p + ":" + obj1[p]);
+	}
+	
+	grid1.onDblClick = function(obj){
+	    for(p in obj)alert(p + ":" + obj[p]);
+	}
+	
+	grid1.onContextmenu = function(obj, evt){
+	     for(o in obj)alert(o+":"+obj[o]);
+		 return;
+    }
+	
+	/*
+	grid2.onContextmenu = function(obj, evt){
+	     for(o in obj)alert(o+":"+obj[o]);
+		 return;
+    }
+	*/
+	
+	//grid.sortRule = function(a, b){
+	    
+	//}	
+	
+	var end = new Date();  
+	var time = (end.getTime()-start.getTime())/1000;
+	alert("控件载入耗时："+time+'秒');
+}
+
+function getChecked(){
+    var col = grid1.getChecked();
+	alert(col.length);
+	return;
+	for(var i=0; i<col.length; i++){
+		for(o in col[i])alert(o+":"+col[i][o]);
+	}
+
+}
+
+function makeData(index, size){
+    size = size || "10";
+    var testData = new Array(); 
+	  for(var i=0; i<size; i++)
+	  {
+		var recordData = new Object();
+		recordData.name1 = "roqqqqqqqqqw-"+i;
+		recordData.name2 = "swg-"+index;
+		recordData.name3 = "name3"+i;
+		recordData.name4 = "85";
+		recordData.name5 = "name5"+i;  
+		recordData.name6 = "name6"+i; 
+		recordData.name7 = "";  
+		if(i==2)recordData.name5="";
+		testData.push(recordData);
+	  }
+	  return testData;
+}
+
+</script>
+                                                                                              

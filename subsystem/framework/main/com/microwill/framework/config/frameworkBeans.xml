@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+<bean id="compositeCommandTemplate" abstract="true" lazy-init="true"
+		class="com.microwill.framework.command.impl.DefaultCompositeCommandImpl" />
+<bean id="queryForListCmd" parent="allInOneDaoSupportTemplate"
+		class="com.microwill.framework.Persistence.ibatis.query.QueryForListCmd" />
+<bean id="queryForStepCmd" parent="allInOneDaoSupportTemplate"
+		class="com.microwill.framework.Persistence.ibatis.query.QueryForStepCmd" />
+<bean id="queryForDtoCmd" parent="allInOneDaoSupportTemplate"
+		class="com.microwill.framework.Persistence.ibatis.query.QueryForDtoCmd" />
+<bean id="queryDataCmd" parent="allInOneDaoSupportTemplate"
+		class="com.microwill.framework.Persistence.ibatis.query.QueryDataCmd" />
+
+<bean id="queryForListSvc" parent="txCmdProxyTemplate">
+		<property name="target">
+			<bean parent="compositeCommandTemplate">
+				<constructor-arg>
+					<list>
+						<ref bean="queryForListCmd" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</property>
+</bean>
+<bean id="queryForStepSvc" parent="txCmdProxyTemplate">
+		<property name="target">
+			<bean parent="compositeCommandTemplate">
+				<constructor-arg>
+					<list>
+						<ref bean="queryForStepCmd" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</property>
+</bean>
+<bean id="queryForDtoSvc" parent="txCmdProxyTemplate">
+		<property name="target">
+			<bean parent="compositeCommandTemplate">
+				<constructor-arg>
+					<list>
+						<ref bean="queryForDtoCmd" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</property>
+</bean>
+<bean id="queryDataSvc" parent="txCmdProxyTemplate">
+		<property name="target">
+			<bean parent="compositeCommandTemplate">
+				<constructor-arg>
+					<list>
+						<ref bean="queryDataCmd" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</property>
+</bean>	
+</beans>

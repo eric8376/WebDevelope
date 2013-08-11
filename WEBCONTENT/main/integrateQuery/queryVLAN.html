@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>VLAN查询</title>
+</head>
+<link rel="stylesheet" href="css/integerate.css" type="text/css">
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/tab-view.js"></script>
+<link rel="STYLESHEET" type="text/css" href="../../inc/dhtmlxGrid/css/dhtmlXGrid.css"> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXCommon.js"></script>
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGrid.js"></script> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGridCell.js"></script>
+<script language="javascript" type="text/javascript" src="../../inc/js/formUtils.js"></script>
+<script src="../../inc/json/json.js"></script>
+
+<script language="javascript" type="text/javascript" src="js/integrateQuery.js"></script>
+<script language="javascript" type="text/javascript" src="js/popWin.js"></script>
+<style>
+.span{
+FONT-SIZE: 12px; CURSOR: hand; COLOR:#0b2c67;
+}
+body table{
+FONT-SIZE: 12px;
+}
+body{
+FONT-SIZE: 12px;
+}
+</style>
+<body onload="init()"  >
+<div position:absolute; left:6px; top:2px;height:90px;width:99%;">
+<form id="qryCondition" style="background-color: #F8F3F7;">
+<table>
+<tr>
+<td width="20%">VLAN名称</td><td width="30%"><input type="text" id="vlanName"></td>
+<td width="20%">VLAN编号</td><td width="30%"><input type="text" id="vlanNo"></td>
+</tr>
+<tr>
+<td>业务状态</td><td><select id="oprStateId" style="width:155px"><option></option></select></td>
+<td>设备名称</td><td><input type="text" id="eqpName"></td>
+</tr>
+<tr>
+<td>节点编号</td><td><input type="text" id="nodeNo"></td>
+<td colspan="2"><input class="button_blue" type="button" value="查询" onclick="query()"></td>
+</tr>
+</table>
+</form>
+</div>
+<div id="VlanGridbox" style="background-color:white;overflow:hidden;border:0px solid blue;position:absolute; left:6px; top:100px;height:360px;width:99%;"></div>
+
+<div id="staticDiv" style="position:absolute; left:2px; top:460px;height:19px;width:95%;text-align:right;background-color: #F8F3F7;">
+<span class="span_mouseout" id="pageInfoSpan"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+<span onclick="dataList.firstPage();query();" class="span">首页</span> 
+<span onclick="dataList.prePage();query();" class="span">上一页</span>
+<span onclick="dataList.nextPage();query();" class="span">下一页</span>
+<span onclick="dataList.lastPage();query();" class="span">末页</span>
+</div>
+<div id="confirmDiv" style="position:absolute; left:2px; top:478px;height:19px;width:95%;text-align:center;background-color: #F8F3F7;">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='确定' onclick="okBtnClick(VlanGrid)">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='取消' onclick="window.close();">
+<!-- 
+<div algin="right" style="position:absolute; left:6px; top:478px;height:18px;width:99%;text-align:right"><span id="pageInfoSpan"></span>&nbsp;&nbsp;<span class="span" onclick="firtPage()">首页</span>&nbsp;&nbsp;<span class="span" onclick="pref()">上一页</span>&nbsp;&nbsp;<span class="span" onclick="next()">后一页</span>&nbsp;&nbsp;</div>
+<div algin="center" style="position:absolute; left:6px; top:475px;height:18px;width:99%;text-align:center"><input type="button" value="确定" onclick="rtData(VlanGrid)" ><input type="button" value="取消" onclick="window.close()"></div>
+ -->
+</body>
+</html>
+<script>
+var pageIndex=0;
+var pageSize="20";
+var dataList=new DataList(null,0,20,1);
+function init(){
+	 VlanGrid = new dhtmlXGridObject('VlanGridbox');
+	 VlanGrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+	 VlanGrid.setHeader("VLAN编号,VLAN名称,所属专业,起始VLAN号,终止VLAN号,所属VLAN编号,所属VLAN名称,设备编号,设备名称,节点编号,节点名称"); 
+	 VlanGrid.setInitWidths("120,150,120,120,120,120,120,120,120,120,120")
+	 VlanGrid.setColAlign("left,left,left,left,left,left,left,left,left,left,left")
+	 VlanGrid.setColShow("block,block,block,block,block,block,block,block,block,block,block");
+	 VlanGrid.setColId("vlanNo,vlanName,speciality,beginVlanNumber,endVlanNumber,parentVlanNo,parentVlanName,eqpNo,eqpName,nodeNo,nodeName")
+	 //VlanGrid.setMultiselect(true) 
+	 VlanGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro"); 
+	 VlanGrid.setColSorting("str,str,str,str,str,str,str,str,str,str,str")
+	 VlanGrid.init();
+	 VlanGrid.setDblClick(_dataItemDbClick);
+	 setSelecttion("oprStateId",queryOptState(),"serialNo","descChina");
+	 setDefaultSel("oprStateId","空闲");
+	 document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:18px;width:24px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";	 	 
+}
+
+function queryOptState(){
+	var serviceCall = new ServiceCall();
+	 var obj=new Object();
+	 obj.viewName='PUB_RESTRICTION';
+	 obj.advQueryC=" keyword = 'OPERATE_STATE' order by DESC_CHINA  asc";
+	 serviceCall.init("queryForListSvc");
+	 var list=serviceCall.execute(obj);
+	 if(list&&list.length)return list;
+	 return null;
+}
+
+function query(page){
+	 dataList.count=parseInt(document.all.pageCount.value);
+	 var serviceCall = new ServiceCall(); 
+	 
+	 var obj=new Object();
+	 obj.pageIndex=dataList.pageNo.toString();//第几页
+	 obj.pageSize=dataList.count.toString();//每页大小
+
+	var fm=new FormUtil(eval("qryCondition"));
+	var formInfo=fm.getData();
+	for(key in formInfo){
+		if(formInfo[key]!="")obj[key]=formInfo[key];
+	}
+	obj.needFieldConvert="1";
+	obj.tableSqlMap="CircuitQuery.selectVlanStep";
+	obj.tableCountSqlMap="CircuitQuery.selectVlanCount";
+	
+	serviceCall.init("queryForStepSvc");
+	 
+	 var map=serviceCall.execute(obj);
+	 if(map&&map.pageCount){
+	 	dataList.maxPageNo=map.pageCount;
+	 	dataList.total=map.recordCount;	
+	 }else{
+	 	dataList.maxPageNo=0;
+	 	dataList.total=0;	 
+	 }
+	 if(!map||!map.list||!map.list.length)VlanGrid.clearAll();
+	 else VlanGrid.loadData(map.list);
+	 document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:18px;width:24px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+	return 0;
+}
+
+/*
+function rtData(grid){
+	var id=grid.getSelectedId();
+	if(!id||id==""){
+		alert("还没选择VLAN,请选择一条VLAN数据，然后点击\"确定\"。");
+		return;
+	}
+	var itemRow=grid.getRowById(parseInt(id));
+	var itemRowValue=itemRow.grid.gridDataArray[itemRow.idd-1];
+	window.returnValue= {"vlanNo":itemRowValue.vlanName};
+	window.close();
+}
+
+function doubleClickData(rowObj){
+	window.returnValue= {"vlanNo":rowObj.vlanName};
+	window.close();
+}
+
+function firtPage(){
+if(parseInt(pageIndex)==1)return;
+else query(1);
+}
+function next(){
+if(pageCount==null)return;
+if(pageIndex.toString()==pageCount.toString())return;
+if(parseInt(pageIndex)+1<=parseInt(pageCount)){
+query(parseInt(pageIndex)+1);
+}
+}
+function pref(){
+if(pageCount==null)return;
+if(parseInt(pageIndex)==1)return;
+if(parseInt(pageIndex)-1>0){
+query(parseInt(pageIndex)-1);
+}
+}
+String.prototype.trim = function() {
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+*/
+</script>

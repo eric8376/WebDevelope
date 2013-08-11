@@ -1,0 +1,367 @@
+body {
+scrollbar-face-color:#ebf4fd;
+scrollbar-shadow-color:#c5ccdc;
+scrollbar-highlight-color:#FFFFFF;
+scrollbar-3dlight-color:#FFFFFF;
+scrollbar-track-color:#EEEEEE;
+scrollbar-arrow-color:#000000;
+}
+.webfxGrid {	
+	overflow: hidden;	
+}
+.check {
+	width:100%;
+	font-size:9pt;
+	height:14;
+	border:0;
+	cursor:default;
+}
+.btn_mouseout{ 
+BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: #FFFFFF 1px solid; PADDING-LEFT: 1px; FONT-SIZE: 12px; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cfdce8); BORDER-LEFT: #ffffff 1px solid; CURSOR: hand; COLOR:#0b2c67; PADDING-TOP: 1px; BORDER-BOTTOM: #ffffff 1px solid;
+} 
+.btn_mousedown { 
+BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; BORDER-TOP:green 1px solid; PADDING-LEFT: 1px; FONT-SIZE: 12px; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#89a7c4); BORDER-LEFT: #ffffff 1px solid; CURSOR: hand; COLOR:#0b2c67; PADDING-TOP: 1px; BORDER-BOTTOM: #ffffff 1px solid;
+} 
+.btn_mouseover { 
+BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: red 1px solid; PADDING-LEFT: 1px; FONT-SIZE: 12px; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#89a7c4); BORDER-LEFT: #ffffff 1px solid; CURSOR: hand; COLOR:#0b2c67; PADDING-TOP: 1px; BORDER-BOTTOM: #ffffff 1px solid;
+}
+button{
+BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: #FFFFFF 1px solid; PADDING-LEFT: 1px; FONT-SIZE: 12px; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cfdce8); BORDER-LEFT: #ffffff 1px solid; CURSOR: hand; COLOR:#0b2c67; PADDING-TOP: 1px; BORDER-BOTTOM: #ffffff 1px solid;
+event:expression(
+onmouseover = function()
+{
+this.className="btn_mouseover";
+},
+onmouseout = function()
+{
+this.className="btn_mouseout";
+},
+onmousedown = function()
+{
+this.className="btn_mouseout";
+}
+)
+}
+.button_blue{
+BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: #FFFFFF 1px solid; PADDING-LEFT: 1px; FONT-SIZE: 12px; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cfdce8); BORDER-LEFT: #ffffff 1px solid; CURSOR: hand; COLOR:#0b2c67; PADDING-TOP: 1px; BORDER-BOTTOM: #ffffff 1px solid;
+event:expression(
+onmouseover = function()
+{
+this.className="btn_mouseover";
+},
+onmouseout = function()
+{
+this.className="btn_mouseout";
+},
+onmousedown = function()
+{
+this.className="btn_mouseout";
+}
+)
+}
+.noHead {
+	position:     absolute;
+	width:        35px;
+	height:       20px;
+	overflow:     hidden;
+	font:         menu;
+	border-style: solid;
+	border-color: #C0C0C0;    
+	border-width: 0px 1px 1px 0px;		
+	color:white;
+	background: #F6F6F6;
+}
+.noHead table{
+	table-layout: fixed;
+	height:20px;
+	empty-cells: show;
+}
+.noHead table td{
+	height:20px;
+}
+.head {
+	position:     absolute;
+	height:       20px;
+	overflow:     hidden;	
+	border-style: solid;
+	border-color: #C0C0C0;    
+	border-width: 0px 1px 1px 0px;		
+	background: #F6F6F6;
+}
+.head table{
+	table-layout: fixed;
+	height:20px;
+	empty-cells: show;
+}
+.head table td{
+	height:20px;
+	border-style: solid;
+	border-color: #C0C0C0;    
+	border-width: 0px 1px 0px 0px;			
+}
+.head table td span {	
+	font-size: 12px;
+}
+.no {
+	width: 35px;	
+	overflow: hidden;
+	background: #F6F6F6;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.no table{
+	table-layout: fixed;
+	width: 100%;
+	empty-cells: show;
+} 
+.no table td {
+	height: 17px;
+	text-align: right;
+	border-width: 0px 1px 1px 0px;
+	border-style: solid;
+	border-color: #C0C0C0;
+	font: menu;	
+	empty-cells: show;
+	white-space: nowrap;
+	overflow: hidden;	
+	color   : #0033CC;	
+}
+.no table td span{
+	font-size: 12px;
+	cursor:default;	
+}
+.main {
+	background: #FFFFFF;
+	overflow: scroll;
+	scrollbar-shadow-color:#FFFFFF; 
+	scrollbar-highlight-color:#FFFFFF; 
+	scrollbar-3dlight-color:#C0C0C0; 
+	scrollbar-darkshadow-color:#C0C0C0; 
+	scrollbar-track-color:#EEEEEE; 
+	scrollbar-arrow-color:#C0C0C0;
+	padding: 18px 0px 0px 34px;
+	border-width: 0px,1px,1px,1px;
+	border-color: #C0C0C0;
+	border-style: solid;		
+}
+.main table,.head table{
+	border-width: 0px;
+	table-layout: fixed;
+	empty-cells: show;
+}
+
+.main table{
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	background: window;
+}
+.main table td, .head table td {
+	font: menu;
+	empty-cells: show;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.main table td {
+	border-style: solid;
+	border-color: #EFEFEF;
+	border-width: 1px 1px 0px 0px;
+	padding: 1px;
+}
+.main table td span {
+	margin-left: 5px;
+	font-size: 12px;
+	cursor:default;
+}
+.step {
+	overflow: hidden;
+	position: absolute;
+	left: 0px;
+	border-width: 1px;
+}
+.step table{
+	width:100%;	
+	font-size:13px;	
+}
+.step table td{
+	height: 100%;
+	cursor: default;
+	color:black;	
+}
+.step span {
+	margin-left: 0px;
+}
+.span_link{
+	color:#0033CC;
+	cursor: hand;
+}
+.text_t{
+	WIDTH: 30px;
+	border-width:1px;
+	border-top-style: solid; 
+	border-top-color: #FFFFFF;
+	
+	border-left-style: solid; 
+	border-left-color: #FFFFFF;
+	
+	border-right-style: solid; 
+	border-right-color: #FFFFFF;
+	
+	border-bottom-style: solid; 
+	border-bottom-color: #0033CC;
+}
+.arrow {
+	font-family: webdings; 
+	padding: 0; 
+	color: black; 
+	overflow: hidden;
+}
+.selectDiv{
+	overflow: hidden;
+	position: absolute; 
+	background-color: #99CCFF; 
+	display: none;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=40);
+}
+.selectDiv table td {
+	height: 17px;
+	width:100%;	
+	white-space: nowrap;
+	padding: 1px;
+	color:#000000;
+}
+.selectDiv table td span {
+	margin-left: 5px;
+	font-size: 12px;
+	cursor:default;
+}
+.tree{
+	border-style: solid;
+	border-color: #C0C0C0; 
+	border-width: 1px;
+	overflow: hidden;
+	top:0px;
+	left:0px;		
+}
+.treeHead {
+	position:     absolute;
+	height:       20px;
+	overflow:     hidden;	
+	border-style: solid;
+	border-color: #C0C0C0;    
+	border-width: 1px;		
+	background: #F6F6F6;
+}
+.treeHead table{
+	table-layout: fixed;
+	height:20px;
+	empty-cells: show;
+}
+.treeHead table td{
+	height:20px;
+	border-style: solid;
+	border-color: #C0C0C0;    
+	border-width: 0px 1px 0px 0px;			
+}
+.treeHead table td span {	
+	font-size: 12px;
+}
+.treeMain{
+	background: #FFFFFF;
+	overflow: auto;
+	scrollbar-shadow-color:#FFFFFF; 
+	scrollbar-highlight-color:#FFFFFF; 
+	scrollbar-3dlight-color:#C0C0C0; 
+	scrollbar-darkshadow-color:#C0C0C0; 
+	scrollbar-track-color:#EEEEEE; 
+	scrollbar-arrow-color:#C0C0C0;
+	border-width: 0px,1px,1px,1px;
+	border-color: #C0C0C0;
+	border-style: solid;
+	padding: 22px,0px,0px,0px;
+}
+
+.treeMain table{
+	border-collapse: collapse;
+	background: window;
+}
+.treeMain table td{
+	font: menu;
+	height: 20px;
+	white-space: nowrap;
+}
+.treeMain table td span {
+	margin-left: 5px;
+	font-size: 12px;
+	height: 16px;	
+	cursor:default;
+	vertical-align : middle;
+	padding: 2px,2px,0px,2px;
+}
+.treeMain table td img {
+	vertical-align : middle;
+	width:16px;
+	height:16px;
+}
+
+
+
+.webfx-tree-main{
+	background: #FFFFFF;
+	overflow: auto;
+	scrollbar-shadow-color:#FFFFFF; 
+	scrollbar-highlight-color:#FFFFFF; 
+	scrollbar-3dlight-color:#C0C0C0; 
+	scrollbar-darkshadow-color:#C0C0C0; 
+	scrollbar-track-color:#EEEEEE; 
+	scrollbar-arrow-color:#C0C0C0;
+	border-width: 0px,1px,1px,1px;
+	border-color: #C0C0C0;
+	border-style: solid;
+	padding: 22px,0px,0px,0px;
+}
+.webfx-tree-container {
+	margin: 0px;
+	padding: 0px;
+	font: icon;
+	white-space: nowrap;
+	padding: 0px,0px,2px,2px;
+}
+
+.webfx-tree-item {
+	padding: 0px;
+	margin: 0px;
+	font: menu;
+	color: WindowText;
+	white-space: nowrap;
+	padding: 0px,0px,2px,2px;
+}
+.webfx-tree-item span {
+	margin-left: 0px;
+	font-size: 12px;
+	cursor:default;
+	height: 16px;	
+	vertical-align : middle;
+	padding: 2px,2px,0px,2px;
+}
+
+
+.webfx-tree-item img {
+	vertical-align: middle;
+	border: 0px;
+	width: 16px;
+	height: 16px;	
+}
+ 
+.webfx-tree-check{
+	vertical-align: middle;
+	border: 0px;
+	width:16;
+	height:16;
+}
+.grid-head-td-back{background:url("images/grid-hrow.gif")}
+.grid-head-td-over{background:url("images/grid-hrow-over.gif")}
+.grid-content-tr-bgColor{background-color:#ffffff;}
+.grid-content-tr-over{background:url("images/grid-hrow-over.gif")}
+.grid-content-tr-active{background-color:yellow}

@@ -1,0 +1,53 @@
+/* ---- CSDN 目录树样式 ---- */
+.CSDN {
+	margin: 0px 0px 0px 1px;/* 边距 */
+	padding: 1px;
+	width: 150px;/* 宽度 */;
+	white-space: nowrap;
+}
+.CSDN * {
+	margin: 0px;
+	padding: 0px;
+}
+.CSDN ul {
+	list-style-type: none;	
+}
+.CSDN div {
+	padding-left: 2px;
+	background-image: url('/OSS/inc/menu/images/CSDN/_UL_LINE.gif');
+	background-repeat: repeat-y;
+}
+.CSDN div.LAST {
+	background-image: none;
+}
+.CSDN img {
+	vertical-align: middle;
+}
+.CSDN a {
+	margin-left: 2px;
+	padding: 1px 2px 0px 2px;
+	cursor: pointer;
+	color: #000000;
+	font-size: 14px;/* 字号 */
+	line-height: 12px;/* 行距 */
+	text-decoration: none;
+	border: 1px #f1f1f1 solid;
+}
+.CSDN a:hover {
+	border: 1px #999999 solid;
+	background-color: #cccccc;
+}
+.CSDN a.ACTIVE {
+	color: #ffffff;	
+	border: 1px #999999 solid;
+	background-color: #cccccc;
+}
+.CSDN a.NONE {
+	color: #888888;
+}
+/* ---- MT_L0 ---- */
+.CSDN .MT_L0_BODY {
+	padding-left: 0px;
+	background-image: none;
+}
+/* ---- CSDN 目录树样式 ---- */

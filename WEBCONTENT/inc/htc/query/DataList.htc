@@ -1,0 +1,927 @@
+<!-- list @edit moejoe(zong.xiongxiong@zte.com.cn) -->
+<!-- zxx modify (2006-8-15) 高度自适应-->
+<!-- zxx modify (2006-8-21) 宽度自适应-->
+<!-- zxx modify (2006-12-24) 增加item.refresh();item.setSelected-->
+<!-- zxx modify (2006-12-24) 增加add和addItem方法返回值-->
+<!-- zxx modify (2006-12-24) 增加allItems属性-->
+<!-- zxx modify (2006-12-24) 增加loadByXML默认选择第一行-->
+<!-- zxx modify (2006-12-24) 增加onDivContextClick触发-->
+<!-- yuan.baoyu modify (2007-3-7) 增加headDivHTM和mainDivHTM属性,获得treelist的标题行table和数据表格的htm代码-->
+<public:component tagname="treelist" literalcontent="true">
+<public:property name="pagiClient" put="setPagiClient" />
+<public:property name="pagination" put="setPagination" />
+<public:property name="selectedItem" get="getSelectedItem" />
+<public:property name="checkedItems" get="getCheckedItems" />
+<public:property name="allItems" get="getAllItems" />
+<public:property name="headDivHTM" get="getHeadDivHTM" />
+<public:property name="mainDivHTM" get="getMainDivHTM" />
+
+<public:method name="loadByXML" />
+<public:method name="loadByData" />
+<public:method name="add" />
+<public:method name="menuClear" />
+<public:method name="menuAdd" />
+<public:method name="menuHr" />
+<public:method name="menuLoad" />
+<public:method name="setChecked"/>
+
+
+<public:attach event="oncontentready" onevent="onCReady()" />
+<public:attach event="ondocumentready" onevent="onDReady()" />
+
+<PUBLIC:event name="onItemClick" id="_onItemClick" />
+<PUBLIC:event name="onItemDbClick" id="_onItemDbClick" />
+<PUBLIC:event name="onItemContextClick" id="_onItemContextClick" />
+<PUBLIC:event name="onDivContextClick" id="_onDivContextClick" />
+<public:defaults viewLinkContent=true tabStop=false viewInheritStyle=false viewMasterTab=false />
+</public:component>
+<html> 
+<head>
+<link type="text/css" rel="stylesheet" href="grid.css"></link>
+<link type="text/css" rel="stylesheet" href="menu.css"></link>
+<script>
+function setPagiClient(pValue){
+}
+function setPagination(pValue){
+}
+var gt;
+var gl;
+var gc;
+var xmldoc;
+var bl;
+var bodyW;
+var bodyH;
+var showTitle=element.getAttribute("showTitle")==null?false:(element.getAttribute("showTitle")=="true"?true:false);
+var showCheck=element.getAttribute("showCheck")==null?false:(element.getAttribute("showCheck")=="true"?true:false);
+var checkAll=element.getAttribute("checkAll")==null?false:(element.getAttribute("checkAll")=="true"?true:false);
+var sort=element.getAttribute("sort")==null?false:(element.getAttribute("sort")=="true"?true:false);
+
+function onCReady(){
+gt=element.innerHTML;
+gt=gt.substring(gt.indexOf("<")+1,gt.indexOf(":")+1);
+var doc=um();
+doc.loadXML((element.innerHTML).replace(new RegExp(gt,"g"),""));
+var temp=doc.getElementsByTagName("column");
+gl=temp.length;
+if (gl>0){
+gc=[];
+var node;
+var gc_t=[];
+for(var i=0;i<gl;i++){
+node = temp.item(i);
+var tObj={
+p:node.getAttribute("propertyName"),
+d:node.getAttribute("displayText"),
+w:node.getAttribute("width"),
+h:node.getAttribute("display")==null?"none":(node.getAttribute("display")=="true"?"":"none"),
+t:node.getAttribute("sortType")==null?"String":node.getAttribute("sortType"),
+c:node.getAttribute("color"),
+b:node.getAttribute("bgcolor")
+};
+if (tObj.h=="") gc[gc.length]=tObj;
+else gc_t[gc_t.length]=tObj;
+}
+for(var i=0;i<gc_t.length;i++){
+gc[gc.length]=gc_t[i];
+}
+}
+}
+
+var mu;
+function onDReady(){
+initHeadT();
+initNoHeadT();
+initBodyT();
+calcSize();
+mu=new Menu(bodyO);
+}
+
+function menuAdd(name,click_str){
+mu.add(name,click_str);
+}
+function menuHr(){
+mu.hr();
+}
+function menuClear(){
+mu.clear();
+}
+function menuLoad(l){
+if (l!=null&&l.length>0){
+mu.clear();
+for(var i=0;i<l.length;i++){
+if (l[i].type==null||l[i].type!='hr'){
+menuAdd(l[i].name,l[i].click);
+}
+else{
+menuHr();
+}
+}
+}
+}
+
+var cl=false;
+function onHeadMouseMove(obj){
+var e = window.event.srcElement;
+var l=event.offsetX-e.clientWidth;
+if (Math.abs(l)<5){
+obj.style.cursor="col-resize";
+cl=true;
+}
+else{
+obj.style.cursor="default";
+cl=false;
+}
+}
+
+function setHeadTDsWidth(){
+for(var i=0;i<gc.length;i++){
+tdO=head_tr_0.cells(i);
+tdO.style.width=gc[i].w;
+}
+}
+
+function initNoHeadT(){
+if(showCheck){
+var trO=noHeadT.insertRow();
+trO.insertCell();
+var tdO=trO.insertCell();
+tdO.width=20;
+tdO.align="right";
+var chkO=document.createElement('<input type=checkbox class=check onclick="no_head_click(this);" />');
+tdO.appendChild(chkO);
+if (checkAll) chkO.checked=true;
+}
+}
+
+var body_t;
+function initHeadT(){
+var trO
+if (gc!=null&&gc.length>0){
+trO=headT.insertRow();
+var body_t_html=[];
+trO.id="head_tr_0";
+var tdO;
+for(var i=0;i<gc.length;i++){
+tdO=document.createElement("<td onclick='head_click(\""+gc[i].t+"\");' onmousemove=\"onHeadMouseMove(this)\">");
+trO.appendChild(tdO);
+tdO.innerHTML="<span>"+gc[i].d+"</span>";
+tdO.style.display=gc[i].h;
+tdO.setAttribute("width",gc[i].w);
+tdO.setAttribute("align","center");
+body_t_html.push("<td width="+gc[i].w+" style='display:"+gc[i].h+"'></td>");
+}
+body_t='<table cellspacing="0"><tHead style="display:none"><tr id="bodyFirstTr">'+body_t_html.join("")+'</tr></tHead><tbody id="bodyT">';
+}	
+}
+
+function initBodyT(){
+mainDiv.insertAdjacentHTML("afterBegin",body_t+'</tbody></table>');	
+}
+
+function um(){
+var o,suffixs=[".4.0",".3.0",".2.0",""];
+for(var i=0;i<suffixs.length;i++){
+try{
+o=new ActiveXObject("msxml2.DOMDocument"+suffixs[i]);
+break;
+}catch(ex){};
+}
+o.async=false;
+o.validateOnParse=false;
+o.resolveExternals=false;
+return o;
+}
+
+function _scroll(){
+var main=document.getElementById("mainDiv");
+var head=document.getElementById("headDiv");
+var idcol=document.getElementById("noDiv");
+head.scrollLeft = main.scrollLeft;
+idcol.scrollTop = main.scrollTop;
+noChkDiv.scrollTop = main.scrollTop;
+}
+
+
+var mainH=0;
+var mainW=0;
+var t_len=0;
+var t_width=0;
+function calcSize() { 	
+var root   = document.getElementById("bodyDiv");
+var main   = document.getElementById("mainDiv");
+var corner = document.getElementById("noHeadDiv");
+var head   = document.getElementById("headDiv");
+var idcol  = document.getElementById("noDiv");
+var noChk  = document.getElementById("noChkDiv");
+var step   = document.getElementById("stepDiv");
+if(!showCheck){
+corner.style.width=30;
+idcol.style.width=30;
+noChk.style.display="none";
+main.style.padding = "18px 0px 0px 28px";
+}
+else{
+corner.style.width=50;
+idcol.style.width=30;
+noChk.style.width=20;
+noChk.style.display="";
+main.style.padding = "18px 0px 0px 48px";
+}
+
+bodyW=element.width==null?"100%":element.width;
+bodyH=element.height==null?"100%":element.height;
+if (bodyH.indexOf("%")>0){
+	bodyH=element.parentElement.clientHeight*Number(bodyH.substring(0,bodyH.indexOf("%")))/100;
+}
+
+root.style.width=bodyW;
+root.style.height=bodyH;
+var x = root.clientLeft;
+var y = root.clientTop;
+mainW=root.clientWidth;
+mainH=bodyH;
+main.style.width   = mainW;
+main.style.height  = mainH;
+mainH-=17;
+corner.style.top   = y;
+corner.style.left  = x;
+head.style.left    = x + corner.offsetWidth;
+head.style.top     = y;
+idcol.style.left   = x;
+idcol.style.top    = y + corner.offsetHeight;
+t_len=mainH-head.clientHeight-1;
+if (t_len<0) return;
+idcol.style.height = t_len;
+noChk.style.left   = x+30;
+noChk.style.top    = y + corner.offsetHeight;
+noChk.style.height = t_len;
+mainW-=17;
+t_width=mainW-idcol.clientWidth-noChk.clientWidth;
+if (t_width<0) return;
+head.style.width   = t_width; 
+}
+
+var hisRow;
+var hisBgCor;
+function changeTrBgC(row){
+var cels;
+if (hisRow!=null) {
+cels = hisRow.cells;
+for(var i=0;i<cels.length;i++){
+cels[i].style.backgroundColor=hisBgCor[i];
+}
+}
+cels = row.cells;
+hisBgCor=[];
+for(var i=0;i<cels.length;i++){
+hisBgCor[i]=cels[i].style.backgroundColor;
+cels[i].style.backgroundColor="#BFDFFF";
+}
+hisRow=row;
+}
+
+function onMClick(o){
+changeTrBgC(o);
+_onItemClick.fire();
+}
+
+function onNoClick(o){
+onMClick(bodyT.rows[o.rowIndex]);
+}
+
+function onMDbClick(){
+_onItemDbClick.fire();
+}
+
+function onItemRightClick(row){
+changeTrBgC(row);
+_onItemContextClick.fire();
+mu.show();
+event.returnValue=false;
+event.cancelBubble=true;
+}
+
+function onDivRightClick(){
+_onDivContextClick.fire();
+mu.show();
+event.returnValue=false;
+event.cancelBubble=true;
+}
+
+var isDown=false;
+var gf=0;
+var hisIndex;
+var hisX;
+function headDbClick(){
+var ele = window.event.srcElement;	
+if (ele.tagName=="TD"&&cl){
+hisIndex=ele.cellIndex;
+var items = bodyT.rows;
+var maxLen=0;
+var tl;
+for(var i=0;i<items.length;i++){
+tl=getChLen(items[i].cells(hisIndex).firstChild.outerText);
+if (tl>maxLen){
+maxLen=tl;
+}
+}
+var t_s=head_tr_0.cells(hisIndex).firstChild.outerText;
+if (head_tr_0.cells(hisIndex).childNodes.length>1){
+t_s+=head_tr_0.cells(hisIndex).lastChild.outerText;
+}
+tl=getChLen(t_s+16);
+if (tl>maxLen){
+maxLen=tl;
+}
+maxLen=maxLen*6+13;
+head_tr_0.cells(hisIndex).style.width=maxLen;
+bodyFirstTr.cells(hisIndex).style.width=maxLen;
+}
+}
+
+function headMouseD(){
+if (cl){
+isDown=true;
+headDiv.style.cursor="col-resize";
+headDiv.setCapture();
+hisIndex=window.event.srcElement.cellIndex;
+hisX=event.clientX;
+line.style.height=mainDiv.clientHeight;
+}
+}
+function headMouseM(){
+if (isDown){
+gf=event.x-bodyDiv.scrollLeft+document.body.scrollLeft;
+line.style.left=gf;
+line.style.display="inline";
+}
+}
+function headMouseU(){
+if (isDown){
+isDown=false;
+line.style.display="none";
+headDiv.style.cursor="default";
+headDiv.releaseCapture();
+var nowW=head_tr_0.cells(hisIndex).clientWidth+event.clientX-hisX;
+if (nowW>0){
+head_tr_0.cells(hisIndex).style.width=nowW;
+bodyFirstTr.cells(hisIndex).style.width=nowW;
+}
+}
+adjustLeftTrHeiht();
+}
+function adjustLeftTrHeiht(){
+	var tableLeft=document.all.noT;
+	var tableMain=document.all.bodyT;
+    var tableCheck=document.all.noChkT;
+	for(i=0;i<tableLeft.rows.length;i++){
+		tableLeft.rows[i].style.height=tableMain.rows[i].clientHeight;
+		if(tableCheck&&tableCheck.rows[i])
+		 tableCheck.rows[i].style.height=tableMain.rows[i].clientHeight;
+	}
+	}
+var b=true;
+var head_click_his;
+var i;
+var arrowDown=null;
+function head_click(t){
+if (!cl){
+var e=window.event.srcElement;
+if (sort){
+if (e.tagName=="SPAN") e=e.parentElement;
+if (arrowDown!=null){
+headT.firstChild.cells[i].removeChild(arrowDown);
+}
+if (e.cellIndex!=i) b=true;
+i=e.cellIndex;
+arrowDown = document.createElement("SPAN");
+if (b)
+arrowDown.innerText="5";
+else
+arrowDown.innerText="6";
+arrowDown.id="arrowDown";
+arrowDown.className = "arrow";
+headT.firstChild.cells[i].appendChild(arrowDown);
+sortTable(i, b, t);
+b=!b;
+}
+}
+}
+
+function no_head_click(chO){
+var checkO;
+var noChkRows=noChkT.rows;
+for(var i=0;i<noChkRows.length;i++){
+checkO=noChkRows[i].firstChild.firstChild;
+checkO.checked=chO.checked;
+}
+new_m=true;
+}
+
+function getSelectedItem(){
+if (hisRow != null){
+	for(i=0;i<bl.length;i++){
+		if(bl[i].bodyT_tr_id==hisRow.id.substring(hisRow.id.indexOf("bodyT_tr_")+9)){
+		  return bl[i];
+		  break;
+		}
+	}
+}
+else return null;
+}
+var rt;
+var new_m=false;
+function getCheckedItems(){
+if (!new_m&&rt!=null) return rt;
+rt=[];
+var checkO;
+var items = noChkT.rows;
+var bodyT_tr_id;
+for(var i=0;i<items.length;i++){
+checkO=items[i].firstChild.firstChild;
+if (checkO!=null){
+if (checkO.checked){
+bodyT_tr_id=bodyT.rows[i].id;
+for(j=0;j<bl.length;j++){
+  if(bl[j].bodyT_tr_id==bodyT_tr_id.substring(bodyT_tr_id.indexOf("bodyT_tr_")+9)){
+  	rt.push(bl[j]);
+  	break;
+  }
+}
+
+}	
+}
+}
+new_m=false;
+return rt;
+}
+
+function getAllItems(){
+if(bl==null||bl.length==0){
+return null;
+}
+return bl;
+}
+function getHeadDivHTM(){
+  return headDiv.innerHTML;
+}
+
+function getMainDivHTM(){
+  return mainDiv.innerHTML;
+}
+
+function sel(id){
+this.bodyT_tr_id=id;
+this.isRemoved=false;
+}
+sel.prototype.remove=function(){
+if (!this.isRemoved){
+var body_row=document.getElementById("bodyT_tr_"+this.bodyT_tr_id);
+var bl_t = new Array();
+var ti=0;
+for(i=0;i<bl.length;i++){
+	if(bl[i].bodyT_tr_id!=this.bodyT_tr_id){
+	bl_t[ti++]=bl[i];	
+	}
+ }
+bl=bl_t;
+noT.lastChild.removeNode(true);
+if (showCheck) noChkT.rows[body_row.rowIndex-1].removeNode(true);
+
+ body_row.removeNode(true);
+this.isRemoved=true;
+}
+adjustLeftTrHeiht();
+
+}
+sel.prototype.refresh=function(){
+for(var j=0;j<gc.length;j++){
+var tdO=document.getElementById("bodyT_tr_"+this.bodyT_tr_id+"_"+j);
+tdO.firstChild.innerText=this[gc[j].p];
+}
+adjustLeftTrHeiht();
+}
+sel.prototype.select=function(){
+var body_row=document.getElementById("bodyT_tr_"+this.bodyT_tr_id);
+changeTrBgC(body_row);
+}
+
+
+function getTdTitle(str){
+return str;
+}
+//---------------------
+function clear_without_arr(){
+mainDiv.removeChild(mainDiv.firstChild);
+noDiv.removeChild(noDiv.firstChild);
+noChkDiv.removeChild(noChkDiv.firstChild);
+bl=[];
+}
+
+var rowIndex=0;
+function loadByData(l){
+var start_i=1;
+var t_html = bodyFirstTr.outerHTML;
+clear_without_arr();
+var bodyHTML=[];
+var noHTML=[];
+var noChkHTML=[];
+var tdHTML;
+rowIndex=l.length;
+for(var i=0;i<l.length;i++){
+bl[i]=new sel(i);
+bodyHTML.push("<tr id='bodyT_tr_"+i+"' onclick='onMClick(this)' ondblclick='onMDbClick()' oncontextmenu='onItemRightClick(this)' style='color: "+l[i]["FONT_COLOR"]+"'>");
+tdHTML=[];
+for(var j=0;j<gc.length;j++){
+if(typeof(l[i][gc[j].p])=="undefined")l[i][gc[j].p]="";
+tdHTML.push("<td id='bodyT_tr_"+i+"_"+j+"' style='display:"+gc[j].h+";background-color:"+gc[j].b+";color:"+gc[j].c+"'>");	
+if (showTitle){
+t_t=getTdTitle(l[i][gc[j].p])||"";
+tdHTML.push('<span title="'+t_t+'">'+l[i][gc[j].p]+'</span>');
+}else{
+tdHTML.push('<span>'+l[i][gc[j].p]+'</span>');
+}
+tdHTML.push("</td>");	
+bl[i][gc[j].p]=l[i][gc[j].p];
+}
+bodyHTML.push(tdHTML.join(""));
+bodyHTML.push("</tr>");
+
+noHTML.push("<tr id='noT_tr_"+i+"' onclick='onNoClick(this)'>");
+noHTML.push("<td><span>"+(i+start_i)+"</span></td>");
+noHTML.push("</tr>");
+if (showCheck){
+noChkHTML.push("<tr>");
+noChkHTML.push("<td>");
+if (checkAll) noChkHTML.push('<input id="bodyT_chb_'+i+'" type=checkbox class=check onclick="{new_m=true;}" checked=true/>');
+else noChkHTML.push('<input id="bodyT_chb_'+i+'" type=checkbox class=check onclick="{new_m=true;}"/>');
+noChkHTML.push("</td>");
+noChkHTML.push("</tr>");
+}
+}
+mainDiv.insertAdjacentHTML("afterBegin","<table cellspacing=\"0\"><tHead style=\"display:none\">"+t_html+"</tHead><tbody id='bodyT'>"+bodyHTML.join("")+'</tbody></table>');
+noDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noT">'+noHTML.join("")+'</tbody></table>');
+noChkDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noChkT">'+noChkHTML.join("")+'</tbody></table>');
+//清空check返回值
+rt=[];
+if (checkAll) new_m=true;
+
+//初始化选择
+	if(showCheck){	
+	  initCheckedItems();
+	  }	
+adjustLeftTrHeiht();	  
+}
+
+function add(item){
+if (bl==null){
+clear_without_arr();
+mainDiv.insertAdjacentHTML("afterBegin",body_t+"</tbody></table>");
+noDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noT"></tbody></table>');
+noChkDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noChkT"></tbody></table>');
+rowIndex=0;
+}
+return addItem(rowIndex++,item);
+}
+
+function addItem(i,item){
+var tO=new sel(i);
+trO=document.createElement("<tr id='bodyT_tr_"+i+"' onclick='onMClick(this)' ondblclick='onMDbClick()' oncontextmenu='onItemRightClick(this)' style='color: "+item["FONT_COLOR"]+"'>");	
+bodyT.appendChild(trO);
+trO.id="bodyT_tr_"+i;
+for(var j=0;j<gc.length;j++){
+tdO=document.createElement("<td id='bodyT_tr_"+i+"_"+j+"' style='display:"+gc[j].h+";background-color:"+gc[j].b+";color:"+gc[j].c+"'>");
+trO.appendChild(tdO);
+tdO.setAttribute("width",gc[j].w);
+tdO.style.display=gc[j].h;
+tdO.id="bodyT_tr_"+i+"_"+j;
+if (showTitle){
+t_t=getTdTitle(item[gc[j].p]);
+tdO.innerHTML='<span title="'+t_t+'">'+item[gc[j].p]+'</span>';
+}else
+tdO.innerHTML='<span>'+item[gc[j].p]+'</span>';
+tO[gc[j].p]=item[gc[j].p];
+}
+
+trO=document.createElement("<tr id='noT_tr_"+i+"' onclick='onNoClick(this)'>");
+noT.appendChild(trO);
+trO.id="noT_tr_"+i;
+tdO=trO.insertCell();
+tdO.innerHTML='<span>'+(i+1)+'</span>';
+if (showCheck){
+trO=document.createElement("<tr>");
+noChkT.appendChild(trO);
+tdO=trO.insertCell();
+var chkO=document.createElement('<input type=checkbox class=check onclick="{new_m=true;}"/>');
+tdO.appendChild(chkO);
+chkO.id="bodyT_chb_"+i;
+if (checkAll) {
+chkO.checked=true;
+new_m=true;
+}
+}
+adjustLeftTrHeiht();
+bl[i]=tO;
+//清空check返回值
+rt=[];
+//2006。12。26增加返回
+return tO;
+}
+
+var trO;
+var tdO;
+var t_t;
+function loadByXML(xmlstr){
+	var start_i=1;
+	var t_html = bodyFirstTr.outerHTML;
+	clear_without_arr();
+	xmldoc = um();
+	xmldoc.loadXML(xmlstr);
+	var items=xmldoc.getElementsByTagName("item");
+	var bodyHTML=[];
+	var noHTML=[];
+	var noChkHTML=[];
+	var tdHTML;
+	rowIndex=items.length;
+	for(var i=0;i<items.length;i++){
+		bl[i]=new sel(i);
+		bodyHTML.push("<tr id='bodyT_tr_"+i+"' onclick='onMClick(this)' ondblclick='onMDbClick()' oncontextmenu='onItemRightClick(this)' style='color: "+items[i].getAttribute("FONT_COLOR")+"'>");	
+		tdHTML=[];
+		for(var j=0;j<gc.length;j++){	
+		tdHTML.push("<td id='bodyT_tr_"+i+"_"+j+"' style='display:"+gc[j].h+";background-color:"+gc[j].b+";color:"+gc[j].c+"'>");	
+		if (showTitle){
+		t_t=getTdTitle(items[i].getAttribute(gc[j].p));
+		tdHTML.push('<span title="'+t_t+'">'+items[i].getAttribute(gc[j].p)+'</span>');
+		}else{
+		tdHTML.push('<span>'+items[i].getAttribute(gc[j].p)+'</span>');
+		}
+		bl[i][gc[j].p]=items[i].getAttribute(gc[j].p);
+		tdHTML.push("</td>");	
+		}
+		bodyHTML.push(tdHTML.join(""));
+		bodyHTML.push("</tr>");
+		
+		noHTML.push("<tr id='noT_tr_"+i+"' onclick='onNoClick(this)'>");
+		noHTML.push("<td><span>"+(i+start_i)+"</span></td>");
+		noHTML.push("</tr>");
+		if (showCheck){
+			noChkHTML.push("<tr>");
+			noChkHTML.push("<td>");
+			if (checkAll) noChkHTML.push('<input id="bodyT_chb_'+i+'" type=checkbox class=check onclick="{new_m=true;}" checked=true/>');
+			else noChkHTML.push('<input id="bodyT_chb_'+i+'" type=checkbox class=check onclick="{new_m=true;}"/>');
+			noChkHTML.push("</td>");
+			noChkHTML.push("</tr>");
+		}
+	}
+	mainDiv.insertAdjacentHTML("afterBegin","<table cellspacing=\"0\"><tHead style=\"display:none\">"+t_html+"</tHead><tbody id='bodyT'>"+bodyHTML.join("")+'</tbody></table>');
+	noDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noT">'+noHTML.join("")+'</tbody></table>');
+	noChkDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody id="noChkT">'+noChkHTML.join("")+'</tbody></table>');
+	//清空check返回值
+	rt=[];
+	if (checkAll) new_m=true;
+	//默认选择第一行
+	if (bl!=null&&bl.length>0)
+		bl[0].select();
+		
+		//初始化选择
+	if(showCheck){	
+	  initCheckedItems();
+	  }	
+adjustLeftTrHeiht();	  
+}
+
+
+</script>
+
+<script>
+//-------------------
+function Menu(obj){
+this.id="menu_"+obj.id;
+this.menuDiv;
+this.tbody_t;
+this.init(obj);
+}
+Menu.prototype.init=function(obj){
+var o = obj.document.createElement('<div class="menu" onselectstart="return false;">');
+o.id=this.id;
+o.innerHTML='<table cellspacing="0"><tbody></tbody></table>';
+o.style.display="none";
+obj.appendChild(o);
+this.menuDiv=o;
+this.tbody_t=this.menuDiv.firstChild;
+}
+Menu.prototype.add=function(name,click_str){
+this.addRow("text",name,click_str);
+}
+Menu.prototype.hr=function(){
+this.addRow("hr","","");
+}
+Menu.prototype.show=function(){
+var e=window.event;
+this.menuDiv.style.display="";
+if ((this.menuDiv.clientHeight+e.clientY)>element.clientHeight) 
+   this.menuDiv.style.top=e.clientY-this.menuDiv.clientHeight;
+else 
+   this.menuDiv.style.top=e.clientY;
+if ((this.menuDiv.clientWidth+e.clientX)>element.clientWidth) 
+   this.menuDiv.style.left=e.clientX-this.menuDiv.clientWidth;
+else 
+   this.menuDiv.style.left=e.clientX;
+
+}
+Menu.prototype.hide=function(){
+this.menuDiv.style.display="none";
+}
+Menu.prototype.clear=function(){
+this.menuDiv.removeChild(this.menuDiv.firstChild);
+this.menuDiv.insertAdjacentHTML("afterBegin",'<table cellspacing="0"><tbody></tbody></table>');
+this.tbody_t=this.menuDiv.firstChild;
+t_td_w=80;
+}
+
+
+var t_trO;
+var t_tdO;
+var t_td_w=80;
+var t_l;
+Menu.prototype.addRow=function(type,name,click_str){
+var menuT = this.tbody_t;
+t_trO=menuT.insertRow();
+if (type==null||type=='hr'){
+t_tdO=document.createElement("<td>");
+t_tdO.innerHTML="<hr />";
+}
+else {
+t_tdO=document.createElement("<td onmouseover='onMOver(this);' onmouseout='onMOut(this);' onclick=\""+click_str+"\" onmouseup='mu.hide();'>");
+t_tdO.innerHTML="<span>"+name+"</span>";
+}
+t_trO.appendChild(t_tdO);
+t_l=getChLen(name)*8+10;
+if (t_l>t_td_w) t_td_w=t_l;
+this.menuDiv.style.width=t_td_w;
+}
+
+var bgC;
+function onMOver(tdO){
+bgC=tdO.style.backgroundColor;
+tdO.style.backgroundColor="#55AAFF";
+}
+
+function onMOut(tdO){
+tdO.style.backgroundColor=bgC;
+}
+
+function getChLen(str){
+return str.length2();
+}
+
+String.prototype.length2 = function() {
+    var cArr = this.match(/[^\x00-\xff]/ig);
+    return this.length + (cArr == null ? 0 : cArr.length);
+}
+
+function c_click(){
+return false;
+}
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var ie5 = (document.getElementsByTagName && document.all) ? true : false;
+
+function sortTable(nCol, bDesc, sType) {
+var trs = bodyT.rows;
+var trl= trs.length;
+var a = [];
+var chk;
+var chk_row=[];
+if (trl>0&&noChkT.rows.length>1){
+for (var i = 0; i < trl; i++) {
+a[i] = trs[i];
+chk=noChkT.rows[i].firstChild.firstChild;
+if (chk.checked){
+chk.checked=false;
+chk_row.push(trs[i].id);
+}
+}
+}else{
+for (var i = 0; i < trl; i++) {
+a[i] = trs[i];
+}
+}
+a.sort(compareByColumn(nCol,bDesc,sType));
+var index;
+var chkO;
+for (var i = 0; i < trl; i++) {
+bodyT.appendChild(a[i]);
+}
+for (var i=0;i<chk_row.length;i++){
+var indx=document.getElementById(chk_row[i]).rowIndex;
+noChkT.rows[indx-1].firstChild.firstChild.checked=true;
+}
+adjustLeftTrHeiht();
+}
+
+function CaseInsensitiveString(s) {
+return String(s).toUpperCase();
+}
+
+function parseDate(s) {
+return Date.parse(s.replace(/\-/g, '/'));
+}
+
+function compareByColumn(nCol, bDescending, sType) {
+var c = nCol;
+var d = bDescending;
+
+var fTypeCast = String;
+
+if (sType == "Number")
+fTypeCast = Number;
+else if (sType == "Date")
+fTypeCast = parseDate;
+else if (sType == "CaseInsensitiveString")
+fTypeCast = CaseInsensitiveString;
+
+return function (n1, n2) {
+if (fTypeCast(getInnerText(n1.cells[c])) < 
+fTypeCast(getInnerText(n2.cells[c])))
+return d ? -1 : +1;
+if (fTypeCast(getInnerText(n1.cells[c])) > 
+fTypeCast(getInnerText(n2.cells[c])))
+return d ? +1 : -1;
+return 0;
+};
+}
+
+function getInnerText(el) {
+if (ie5) return el.innerText; //Not needed but it is faster
+
+var str = "";
+
+var cs = el.childNodes;
+var l = cs.length;
+for (var i = 0; i < l; i++) {
+switch (cs[i].nodeType) {
+case 1: //ELEMENT_NODE
+str += getInnerText(cs[i]);
+break;
+case 3: //TEXT_NODE
+str += cs[i].nodeValue;
+break;
+}
+
+}
+
+return str;
+}
+
+
+var initCheckedObj=new Object();
+function setChecked(obj){
+	initCheckedObj=obj;
+}
+
+function initCheckedItems(){
+	if(initCheckedObj==null) return;
+	
+	 for(i=0;i<gc.length;i++){
+	   if(gc[i].p==initCheckedObj.name)break;
+	  }
+	if(i>=gc.length) return;
+	
+	for(i=0;i<bl.length;i++){
+		  for(j=0;j<initCheckedObj.value.length;j++){
+		  	  if(bl[i][initCheckedObj.name]==initCheckedObj.value[j]){
+		  	  	 noChkT.rows[i].firstChild.firstChild.checked=true;
+		  	  	 new_m=true;
+		  	  	 break;
+		  	  }
+		  }
+	} 
+	
+initCheckedObj=null;
+	
+}
+
+//-->
+</SCRIPT>
+</head>
+<body scroll="no" id=bodyO>
+<div id="bodyDiv" class="webfxGrid"  onresize="calcSize();" oncontextmenu="return false;" onclick="mu.hide();">
+        <div id="noHeadDiv" class="noHead" onselectstart="return false;">
+        	<table cellspacing="0" cellpadding="0" ><tbody id="noHeadT"></tbody></table>        	       	   	
+        </div>    
+	<div id="headDiv" class="head" onselectstart="return false;" onmousedown='headMouseD()' onmousemove='headMouseM()' onmouseup='headMouseU()' ondblclick='headDbClick()'>
+		<table cellspacing="0" cellpadding="0" ><tbody id="headT"></tbody></table>
+	</div>
+	<div id="mainDiv" class="main" onscroll = "_scroll();"  oncontextmenu="onDivRightClick();"></div>	
+	<div id="noDiv" class="no" onselectstart="return false;">
+		<table cellspacing="0" cellpadding="0" ><tbody id="noT"></tbody></table>
+	</div>
+	<div id="noChkDiv" class="no" onselectstart="return false;">
+		<table cellspacing="0" cellpadding="0" ><tbody id="noChkT"></tbody></table>
+	</div>						
+</div>
+<div id="line" style="position: absolute; top: 0; left: 0; width: 1; height: 23; background-color: black; display: none"></div>
+</body>
+</html>

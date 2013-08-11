@@ -1,0 +1,211 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="language" content="en" />
+		<title>通道选择</title>
+		<style type="text/css">
+body {
+	font-family: Arial, sans-serif;
+	font-size: 0.85em;
+	margin:0 0 0 0;
+}
+
+.layout-lr-div{      
+ 
+    height:100%; 
+    height:100%; 
+    width:6px;
+    background:#DDD;
+    margin:0px 0px 0px 0px; 
+
+}
+</style>
+<script language="javascript" src="../../inc/json/json.js"></script>
+<script type="text/javascript">
+String.prototype.trim = function() {
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function GetUrlParameter(param){
+  var url = window.location.search;
+  var pos1 = 0, pos2 = 0;
+  pos1 = url.indexOf("&"+ param +"=");
+  if(pos1<0) pos1 = url.indexOf("?"+ param +"=");
+  if(pos1>-1){
+    pos2 = url.indexOf("&",pos1+1);
+    if(pos2==-1) pos2 = url.length;
+    return unescape(url.substring(pos1+param.length+2, pos2));
+  }else return null;
+}
+function GetTextParam(ob,param){
+
+var str0=ob.toString();
+var str=str0.substr(1,str0.length-2).replace(/ /g,"");
+  var pos1 = 0, pos2 = 0;
+  pos1 = str.indexOf(","+ param +"=");
+  if(pos1<0) pos1 = str.indexOf(param +"=");
+  if(pos1>-1){
+    pos2 = str.indexOf(",",pos1+1);
+    if(pos2==-1) pos2 = str.length;
+    return unescape(str.substring(pos1+param.length+2, pos2));
+  }else return null;
+ }
+function init(){
+	var mapLayerId = GetUrlParameter("mapLayerId");
+	if(mapLayerId +"" != "null"){
+		self.frames['topo'].document.applets[0].loadGraph("1024",mapLayerId);
+	}else{
+		alert("没有传入图层id: "+ mapLayerId);
+	}
+}
+function onNodeDbClick(obj){
+	var resId=GetTextParam(obj,"resId");
+	document.getElementById("attributeTD").style.display="block";
+	  
+	 
+	if(resId==null ||resId+""=="null"||resId.length<=0)
+	 frames["attributeIFRAME"].location.href="/RES/main/userQuery/noAttribute.html";
+	else
+	  frames["attributeIFRAME"].location.href="/DispatchDesign/applications/interface/showRes.jsp?col=1&resid="+resId;
+	
+}
+function onNodeClick(obj){
+	
+	var resId=GetTextParam(obj,"resId");
+	//var resId="000102050000000000004620";
+	document.getElementById("attributeTD").style.display="block";
+	if(resId==null ||resId+""=="null"||resId.length<=0)
+	 frames["attributeIFRAME"].location.href="/RES/main/userQuery/noAttribute.html";
+	else
+	frames["attributeIFRAME"].location.href="/DispatchDesign/applications/interface/showRes.jsp?col=1&resid="+resId;
+}
+function onLinkDbClick(list){
+	
+	var resId=GetTextParam(list,"resId");
+	document.getElementById("attributeTD").style.display="block";
+	if(resId==null ||resId+""=="null"||resId.length<=0)
+	 frames["attributeIFRAME"].location.href="/RES/main/userQuery/noAttribute.html";
+	else
+    frames["attributeIFRAME"].location.href="/DispatchDesign/applications/interface/showRes.jsp?col=1&resid="+resId;
+	
+}
+
+function onLinkClick(obj){
+   var resId=GetTextParam(obj,"resId");
+   document.getElementById("attributeTD").style.display="block";
+	if(resId==null ||resId+""=="null"||resId.length<=0)
+	 frames["attributeIFRAME"].location.href="/RES/main/userQuery/noAttribute.html";
+	else
+   	frames["attributeIFRAME"].location.href="/DispatchDesign/applications/interface/showRes.jsp?col=1&resid="+resId;
+
+   //查询路由
+   if(document.all.chk1.checked)
+   {
+   		document.all.routeTxtArea.innerHTML="&nbsp;";
+   		if(resId==null ||resId+""=="null"||resId.length<=0)
+   			return;
+   		var serviceCall = new ServiceCall();
+   		var o = new Object();
+ 		o.resId=resId;
+ 		o.resType="circuit";
+		serviceCall.init("txtRouteQrySvc");
+ 		var rtnValue=serviceCall.execute(o); 
+   		if(rtnValue)
+   			document.all.routeTxtArea.innerText=rtnValue.replace(/(\\n)|(\n)/g,"\r\n");
+    } 
+   
+   
+	//var resId=GetTextParam(obj,"resId");
+}
+
+function onMapClick(){
+
+ var serviceCall = new ServiceCall();
+ var o = new Object();
+ o.TopoDefId=GetUrlParameter("sTopDefId");
+ o.RootId=GetUrlParameter("RootId");
+ o.MapLayerId=GetUrlParameter("mapLayerId");
+ o.Hierarchy="1";
+ o.TabName="上海";
+ o.ipAddress="127.0.0.1:"+document.location.port;
+ o.isEJB="true";
+ o.NodeParams=GetUrlParameter("NodeParams");
+ o.LinkParams="";
+ serviceCall.init("topoUpdateSvc");
+ serviceCall.execute(o); 
+  
+}
+
+function javaToJs(obj){
+	var iterator = obj.keySet().iterator();
+	var jsObj = {};
+	while(iterator.hasNext()){
+		var key = iterator.next();
+		jsObj[key] = obj.get(key);
+	}
+	return jsObj;
+}
+
+function listToArray(list){
+	var arr = [];
+	for(var i=0;i<list.size();i++){
+		arr.push(javaToJs(list.get(i)));
+	}
+	return arr;
+}
+
+
+function chooseChannel(arr){
+alert("chooseChannel");
+}
+
+
+function function_dispatch(fun_id,xml,list){
+alert("function_dispatch");
+	switch(fun_id){
+		case "000117160010005001053001":
+			chooseChannel(listToArray(list));
+			break;
+		default :
+			alert("无此定义: " + fun_id);
+			return;
+	}
+}	
+function closeDiv(){
+	if(document.getElementById("attributeTD").style.display=="none"){
+		document.getElementById("attributeTD").style.display="block";
+	}else{
+		document.getElementById("attributeTD").style.display="none";
+	}
+}
+
+function ChkClick()
+{
+	if(!document.all.chk1.checked)
+    		document.all.routeTxtArea.innerHTML="&nbsp;";
+}
+</script>
+
+	</head>
+	<body onload="init()">
+		<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr width="100%" height="500px">
+          <td width="100%" valign="top" id="topoTD" nowrap>
+          	<IFRAME id="topo" src="/RES/topo2.jsp?dispatchdesign=true&TopoDefId=3700016&SpecId=50" frameBorder="0" width="100%" height="100%" scrolling="no"></IFRAME>
+          	</td>
+          <td class="layout-lr-div"" valign="middle">
+          	 <div  style="cursor:hand;height:40px;width:6px;background:#AAA;" onclick="closeDiv()"></div>
+          	</td>
+          <td id="attributeTD" style="display:none;width:300px">
+          	<IFRAME id="attributeIFRAME" src="" frameBorder="0" width="250" height="100%" scrolling="auto"></IFRAME>
+          	</td>
+        </tr>
+      </table>
+       <div><input type="checkbox" id="chk1" onclick="ChkClick()">显示路由
+    	<TEXTAREA id="routeTxtArea" READONLY rows=5 style="width:85%">
+      </TEXTAREA>
+      </div>
+      <div>&nbsp;</div>
+	</body>
+</html>
+
+

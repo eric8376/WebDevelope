@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>大客户LOGO视图</title>
+<style>
+table img{display:block;margin:0 auto;text-align:top;margin-top:0;}
+p{color:white;
+}
+a{TEXT-DECORATION:none ;
+
+}
+.overStyle{
+cursor:hand;
+border-style:outset
+}
+.outStyle{
+
+}
+</style>
+<meta http-equiv= "Content-Type" content= "text/html;charset=gb2312">
+<script language="javascript" src="../../inc/json/json.js"></script>
+<script language= "javascript">
+var _custMap;
+ function GetUrlParameter(param){
+                var url = window.location.search;
+                var pos1 = 0, pos2 = 0;
+                pos1 = url.indexOf("&"+ param +"=");
+                if(pos1<0) pos1 = url.indexOf("?"+ param +"=");
+                if(pos1>-1){
+                    pos2 = url.indexOf("&",pos1+1);
+                    if(pos2==-1) pos2 = url.length;
+                    return unescape(url.substring(pos1+param.length+2, pos2));
+                }else return null;
+            }
+function getCustMap(custMap){//被树形菜单调用 
+            _custMap=custMap;
+            init();
+      }  
+function initCustShow(){//与翻页保持一致logo
+	var tableInit = document.getElementById('CustShow');
+	rowInitNum=tableInit.rows.length;
+	for( var j=rowInitNum-1;j>0;j--){
+		tableInit.deleteRow(j);
+	}
+	//alert("tableInit.rows.length="+tableInit.rows.length);
+}       
+function init(){
+	initCustShow();
+	
+	//return;
+	//var custMap = GetUrlParameter("custMap");
+	var custMap =_custMap
+	if(custMap==null)return;
+	//alert(JSON.stringify(custMap.list[1]));
+	//alert("custMap="+custMap);
+	for(i=0;i<custMap.list.length;i++){
+    var item = custMap.list[i];
+   // if(item.custName.trim().length<=0)continue;    
+ 	var custId = item.custId;
+	var custName = item.custName;
+	var cirNum = item.cirCount;
+	addCust(i,custId,custName,cirNum);
+	//i=8;
+   }
+	
+}
+function showOver(obj){
+	obj.style.borderStyle="inset"; 
+	obj.style.cursor="hand";
+}
+function showOut(obj){
+	obj.style.borderStyle="outset"; 
+}
+function addCust(i,custId,custName,cirNum,custType){
+    var tableCust = document.getElementById('CustShow');
+      //表格行数
+    var rowsNow = tableCust.rows.length ;
+   // alert("rowsNow="+rowsNow);
+      //表格列数
+	var cellsNow = 0;
+	if (rowsNow > 0){
+		cellsNow = tableCust.rows.item(rowsNow - 1).cells.length ;
+	}else{
+		cellsNow = 6;
+	}
+	////alert("cellsNow="+cellsNow);
+    if (cellsNow == 6){
+		var newTr = tableCust.insertRow(rowsNow);
+		newTr.setAttribute('height', '100');
+		cellsNow = 0;
+		rowsNow = rowsNow + 1;
+	}
+	var rowNow = tableCust.rows.item(rowsNow - 1);
+	//alert("rowNow.innerHTML0="+rowNow.innerHTML);
+	var newTd = rowNow.insertCell(cellsNow);
+	newTd.setAttribute('align', 'center');
+	newTd.setAttribute('valign', 'bottom');
+	newTd.setAttribute('style', 'font-size: 6');
+	//alert("newTd.innerHTML0="+newTd.innerHTML);
+	var titleValue=custName;
+	if (custName.length > 5){
+	    custName = custName.substring(0,5) + '..';
+	}
+	
+	nodeSeq=i+3;//节点顺序号 从3开始 
+	custName = '[' + cirNum + ']' + custName;
+	//if(i==2)alert("custID="+custId);
+	newTd.innerHTML = newTd.innerHTML +'<font size="2" ><p style="line-height: 180%;color:white" ><img src= "../../images/LOGO/' + custId +'.png" title='+titleValue+' width= 90 style="border-style: outset" onmouseover="showOver(this)" onmouseout="showOut(this)" height=60 onclick="openTree('+nodeSeq+')" "><p style="line-height: 200%" valign= "bottom" align= "center">' + custName + '</p></p></font>';
+	//newTd.innerHTML = newTd.innerHTML +'<font size="2" ><p style="line-height: 160%;color:red" ><a style="color:white;" title='+titleValue+' href="#"><img src= "../../images/LOGO/' + custId +'.png" width= 90 border="0" height=60 onclick="openTree('+nodeSeq+')" "></a><p style="line-height: 200%" valign= "bottom" align= "center">' + custName + '</p></p></font>';good
+	//newTd.innerHTML = newTd.innerHTML +"<font size=\"2\" ><p style=\"line-height: 160%;color:red\" ><a style=\"color:white;\" title="+titleValue+" href=\"#\"><img src= \"../../images/LOGO/" + custId +".png\" width= 90 border=0 height=60 onclick=\"openTree("+nodeSeq+")\" \"></a>"+"<style>p{line-height1: 250%}</style>"+"<p  valign= \"bottom\" align= \"center\">" + custName + "</p></p></font>";
+	//newTd.innerHTML = newTd.innerHTML + '<font size="2" ><a  title='+titleValue+' href="#"><img src= "../../images/LOGO/' + custId +'.png" width= 90 height=60 onclick="openTree('+nodeSeq+')" "></a><P valign= "top" align= "center">' + custName + '</P></font><br>';
+	//newTd.innerHTML = newTd.innerHTML + '<font size="2" ><a  title='+titleValue+' href="javascript:openTree('+nodeSeq+')"><img src= "../../images/LOGO/' + custId +'.png" width= 90 height=60  "></a><P valign= "top" align= "center">' + custName + '</P></font><br>';
+	//newTd.innerHTML = newTd.innerHTML + '<img src= "../../images/LOGO/img_cust_' + custId +'.jpg" width= 90 height=60 onclick="openTree('+nodeSeq+')" "><P valign= "top" align= "center">' + custName + '</P><br>';
+	//if(i==2)alert("newTd.innerHTML1="+newTd.innerHTML);
+}
+function mouseChange(){
+	alert("onmousechange");
+}
+function openTree(nodeSeq){
+	//alert("opentreeid="+nodeSeq);
+	window.parent.parent.document.frames['lfefFrame'].showFromLog(nodeSeq);
+}
+function prePageQuery(){
+	window.parent.parent.document.frames['lfefFrame'].prePageQuery();
+}
+function nextPageQuery(){
+	window.parent.parent.document.frames['lfefFrame'].nextPageQuery();
+}
+</script>
+</head>
+<body bgcolor= "#33333333" onload="">
+<table id = "CustShow" width= 96% align= "center" valign= "top" border= "0" cellspacing= "0" cellpadding= "0">
+<tr height = 0>
+<td align= "center" valign= "top" width=16%>
+</td>
+<td align= "center" valign= "top" width=16%>
+</td>
+<td align= "center" valign= "top" width=16%>
+</td>
+<td align= "center" valign= "top" width=16%>
+</td>
+<td align= "center" valign= "top" width=16%>
+<p style="line-height: 150%"></p>
+</td>
+<td  align= "center" valign= "bottom" width=16%>
+<div style="width:100%;text-align:center;color:white;font:12"><a href="javascript:prePageQuery()" style="color:white">前一页</a><span id="nowPageIndex"></span>/<span id="totalPageNum"></span><a href="javascript:nextPageQuery()" style="color:white">后一页</a><span></span></div><br/>
+</td>
+</tr>
+</table>
+</body>
+</html> 

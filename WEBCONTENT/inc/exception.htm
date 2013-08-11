@@ -1,0 +1,44 @@
+<HTML>
+<HEAD>
+<title>告警提示</title>
+</HEAD>
+<body onload="init();">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#7dbeff">
+    <td height="25">
+      <font size="3" face="宋体" color="#FF0000">
+        <b>          错误提示
+          &gt;&gt;
+        </b>
+      </font>
+    </td>
+  </tr>
+</table>
+<table cellpadding="0" cellspacing="1" border="0" width="100%" bgcolor="#7dbeff">
+  <tr bgcolor="white">
+    <td>
+      <TABLE cellSpacing="0" cellPadding="1" width="100%" border="0">
+        <TR>
+          <TD>
+          	<font size="2"><span id="exceptionSpan"></span></font>
+          </TD>
+        </TR>
+      </TABLE>
+    </td>
+  </tr>
+</table>
+<table cellSpacing="10" cellPadding="0" width="100%" border="0">
+  <TR>
+    <TD align="center">
+      <img alt="关闭" src="../images/button/button_close.gif" onclick="window.close();"/>
+    </TD>
+  </TR>
+</table>
+</body>
+<script>
+    function init(){
+      var exceptionStr = window.dialogArguments;
+      exceptionSpan.innerText=exceptionStr;
+    }
+ </script>
+</HTML>

@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+	<link rel="stylesheet" href="css/tab.css" type="text/css" media="screen">
+	<script type="text/javascript" src="js/tab.js"></script>
+
+<body onload="init()">
+<div id="tabDiv"></div>
+<div id="div1" style="height:90%">1</div>
+<div id="div2" >2</div>
+<div id="div3" >3</div>
+<div id="div4" >4</div>
+</body>
+</html>
+<script>
+function init(){
+
+ var tabs = new initTabs("tabDiv",Array('Menu scripts','Calendar','Menus','About us'),0,Array('div1','div2','div3','div4'),"");
+ tabs.addButton("button",testF);
+ }
+ function testF(){
+ alert(123);
+ }
+</script>

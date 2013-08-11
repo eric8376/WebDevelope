@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ztesfot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../../style/base.css" />
+<link rel="stylesheet" href="../../inc/tab/css/tab-view.css" type="text/css" media="screen">
+<script type="text/javascript" src="../../inc/tab/js/tab-view.js"></script>
+<link rel="STYLESHEET" type="text/css" href="../../inc/dhtmlxGrid/css/dhtmlXGrid.css">
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXCommon.js"></script>
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXGrid.js"></script>		
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXGridCell.js"></script>	
+<script language="javascript" src="../../inc/json/json.js"></script>
+<style>
+html,body{ overflow-x: hidden; overflow-y: hidden; }
+</style>
+<body onload="init()">
+<div id="dhtml_tabView1" id="tab0" style="width:100%;height:100%;">
+	<div class="dhtmlgoodies_aTab" id="tab1">
+	<div id="coverdiv"  style="display:none;z-index:1000;filter:alpha(opacity=30);Opacity:0.3; background-color:#F8F4E2; position:absolute; left:5px; top:5px;width:100%;height:100%"></div>
+    <div id="coverdiv-loading" style="display:none;z-index:1001; position:absolute; left:100px; top:200px;"><img src="../../images/loading.gif"/>数据加载...</div>
+	<div id="cust_cir_grid" width="100%" height="100%" style="background-color:white;overflow:hidden;border:1px solid #919b9c;margin:0 0 0 0;"></div>
+	<div id="cust_cir_grid_info" style="text-align:right;background-color:#D4D0C8;"></div>
+	</div>
+	<div class="dhtmlgoodies_aTab" id="tab2">
+	<div id="cust_eqp_grid" width="100%" height="100%" style="background-color:white;overflow:hidden;border:1px solid #919b9c;margin:0 0 0 0;"></div>
+	<div id="cust_eqp_grid_info" style="text-align:right;background-color:#D4D0C8;"></div>
+	</div>
+	<div class="dhtmlgoodies_aTab" id="tab3">
+	 <iframe name="tuopFrame1" id="tuopFrame1" src="" frameborder=0 width="100%" height="100%" scrolling="auto"></iframe>
+	</div>
+	<div class="dhtmlgoodies_aTab" id="tab4">
+	 <iframe name="tuopFrame2" id="tuopFrame2" src="" frameborder=0 width="100%" height="100%" scrolling="auto"></iframe>
+	</div>
+</div>
+<form style="margin:0 0 0 0" method="post" name="form1" id="form1" action="/RES/PrintServlet?printId=custCirQueryPrint">
+<div><input type="button" value="导出数据" onclick="printData()"></div>
+</form>
+</body>
+</html>
+<script type="text/javascript">
+var mygrid,mygrid2;
+
+var _last_custInfo=null;
+var _tabDataExit=Array(false,false,false,false);
+function initTab(custInfo){
+
+for(i=0;i<4;i++){
+_tabDataExit[i]=false;
+}
+_last_custInfo=custInfo;
+initActiveTab();
+}
+function initActiveTab(){
+  
+  var aTab=getActiveTab();
+  if(aTab==null)return;
+   var tabNames = aTab.id.split("_");
+  var tabIndex=tabNames[tabNames.length-1].replace(/[^0-9]/gi,'');
+  if(_tabDataExit[parseInt(tabIndex)]==true)return;
+  switch(parseInt(tabIndex)){
+  case 0:initGrid1();break;
+  case 1:initGrid2();break;
+  case 2:initGrid3();break;
+  case 3:initGrid4();break;   
+  case 4:alert(1);    
+  }
+  _tabDataExit[parseInt(tabIndex)]=true;
+}
+
+function _dataItemDbClick(idstr){
+			 
+}
+function initGrid1(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[0]==true)return;
+_tabDataExit[0]=true;
+
+var custId=custInfo.custId;
+var dataType=custInfo.dataType;
+   
+   coverdivIsShow(true);
+   var serviceCall = new ServiceCall(true,initData1);
+   var obj=new Object();
+   if(typeof(custId)=="undefined"||custId==null||custId==""){
+   obj.sql="select * from vw_dat_sh_cust_cir_query ";
+   }else{
+   obj.sql="select * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"'";
+   if(dataType=="1"){
+     obj.sql = "select * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"' and buz_type='"+custInfo.custName+"' ";
+   }else if(dataType=="2"){
+     obj.sql="select * from vw_dat_sh_cust_cir_query where circuit_id='"+custInfo.circuitId+"' and cust_id='"+custId+"'";
+     
+   }  
+   }
+   //obj.pageIndex="1";
+   //obj.pageSize="2000";
+   //obj.pageCount="-1";
+   serviceCall.init("queryDataSvc");
+   serviceCall.execute(obj);
+   
+   
+}
+
+function initData1(map){
+
+ //document.getElementById("cust_cir_grid_info").innerHTML=map.recordCount+"&nbsp;&nbsp;&nbsp;";
+ mygrid.loadData(map.list);
+
+ coverdivIsShow(false);
+}
+
+function initGrid2(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[1]==true)return;
+_tabDataExit[1]=true;
+
+   var custId = custInfo.custId;
+   coverdivIsShow(true);
+   var serviceCall = new ServiceCall(true,initData2);
+   var obj=new Object();
+   if(typeof(custId)=="undefined"||custId==null||custId==""){
+   obj.sql="select * from vw_dat_sh_cust_cir_eqp ";
+   }else{
+   obj.sql="select * from vw_dat_sh_cust_cir_eqp where cust_id='"+custId+"' ";
+  
+    if(custInfo.buzType!=null && custInfo.buzType!="_ALL_TYPE_CIR")
+      obj.sql+=" and buz_type='"+custInfo.buzType+"' "; 
+    if(custInfo.circuitId!=null && custInfo.circuitId.length>0)
+       obj.sql+=" and circuit_Id='"+custInfo.circuitId+"' ";  
+   }
+   //obj.pageIndex="1";
+   //obj.pageSize="20";
+   //obj.pageCount="-1";
+   
+   serviceCall.init("queryDataSvc");
+   serviceCall.execute(obj);
+   
+   
+}
+function initData2(map){
+
+ //document.getElementById("cust_eqp_grid_info").innerHTML=map.recordCount+"&nbsp;&nbsp;&nbsp;";
+ mygrid2.loadData(map.list);
+ coverdivIsShow(false);
+}
+
+
+function initGrid3(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[2]==true)return;
+_tabDataExit[2]=true;
+  
+   //if(!custInfo.dataType ||custInfo.dataType!="2") return;
+   
+   var serviceCall = new ServiceCall();
+   var code=custInfo.custId;
+   if(custInfo.buzType!="_ALL_TYPE_CIR"){
+   var obj=new Object();
+   obj.sql="select code from pub_restriction where desc_china='"+custInfo.buzType+"'";
+   serviceCall.init("queryDataSvc");
+   var o= serviceCall.execute(obj); 
+  
+   if(o.list && o.list.length && o.list[0].code!=null){
+     code=custInfo.custId+o.list[0].code;
+     }
+    }
+    var oo=new Object();
+    oo.sTopDefId="700012";
+    oo.sSysLayerType="vip_room";
+    oo.sResId=code;
+    oo.tableSqlMap="resShCir.maplayerIdSql";
+    serviceCall.init("queryForDtoSvc");
+    var oo2= serviceCall.execute(oo); 
+    if(oo2 && oo2.maplayerId){
+     frames["tuopFrame1"].location.href ="tuopo.html?mapLayerId="+oo2.maplayerId;
+    }else{
+       frames["tuopFrame1"].location.href ="noTuopo.html";
+    
+    }
+ 
+}
+
+function initGrid4(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[3]==true)return;
+_tabDataExit[3]=true;
+  
+   //if(!custInfo.dataType ||custInfo.dataType!="2") return;
+   
+   var serviceCall = new ServiceCall();
+   var code=custInfo.custId;
+   if(custInfo.buzType!="_ALL_TYPE_CIR"){
+   var obj=new Object();
+   obj.sql="select code from pub_restriction where desc_china='"+custInfo.buzType+"'";
+   serviceCall.init("queryDataSvc");
+   var o= serviceCall.execute(obj); 
+  
+   if(o.list && o.list.length && o.list[0].code!=null){
+     code=custInfo.custId+o.list[0].code;
+     }
+    }
+    var oo=new Object();
+    oo.sTopDefId="700013";
+    oo.sSysLayerType="vip_ne";
+    oo.sResId=code;
+    oo.tableSqlMap="resShCir.maplayerIdSql";
+    serviceCall.init("queryForDtoSvc");
+    var oo2= serviceCall.execute(oo); 
+    if(oo2 && oo2.maplayerId){
+     frames["tuopFrame2"].location.href ="tuopo.html?mapLayerId="+oo2.maplayerId;
+    }else{
+       frames["tuopFrame2"].location.href ="noTuopo.html";
+    
+    }    
+    
+
+ }
+
+function init(){	
+    setPrefDir("../../inc/tab/");
+    var height0 = document.body.parentElement.clientHeight-70;
+    initTabs('dhtml_tabView1',Array('电路列表','两端设备列表','机房拓扑图','传输网元拓扑图','导出数据'),0,"98%",height0,null,null,Array(initGrid1,initGrid2,initGrid3,initGrid4));
+    var aTab = document.createElement('DIV');
+    aTab.className='tabInactive';
+    aTab.innerHTML="1111111";
+    dhtmlgoodies_tabObj[mainContainerID].getElementsByTagName('DIV')[0].append(aTab);
+	mygrid = new dhtmlXGridObject('cust_cir_grid');
+	mygrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+	mygrid.setHeader("业务类型,状态,编号,速率,国际国内编码,路由");
+	mygrid.setInitWidths("60,50,150,50,200,100");
+	mygrid.setColAlign("left,left,left,left,left,left");
+	mygrid.setColShow("block,block,block,block,block,block");
+	mygrid.setColId("buzType,oprState,circuitNo,rate,circuitId,route");
+	mygrid.setColTypes("ro,ro,ro,ro,ro,ed");
+	mygrid.setColSorting("str,str,str,str,str,str");
+	mygrid.setDblClick(_dataItemDbClick);
+ 	mygrid.init();
+
+	mygrid2 = new dhtmlXGridObject('cust_eqp_grid');
+	mygrid2.setImagePath("../../inc/dhtmlxGrid/imgs/");
+	mygrid2.setHeader("专业,机房名称,设备名称,设备编号");
+	mygrid2.setInitWidths("150,200,150,100");
+	mygrid2.setColAlign("left,left,left,left");
+	mygrid2.setColShow("block,block,block,block");
+	mygrid2.setColId("speciality,roomName,eqpName,eqpId");
+	mygrid2.setColTypes("ro,ro,ro,ed");
+	mygrid2.setColSorting("str,str,str,str");
+	mygrid2.setDblClick(_dataItemDbClick);
+ 	mygrid2.init();
+	
+	var treeItem=window.parent.document.frames['lfefFrame'].getSelectedItemData();
+	if(treeItem!=null){
+	_last_custInfo=treeItem.data;
+	initActiveTab();
+	
+	}
+	}
+	
+function coverdivIsShow(isShow){
+ if(typeof(isShow)=="undefined"||isShow==null||isShow==false){
+  document.getElementById("coverdiv").style.display="none";
+  document.getElementById("coverdiv-loading").style.display="none";
+ }else{
+  document.getElementById("coverdiv").style.display="block";
+  document.getElementById("coverdiv-loading").style.display="block";
+ }
+}	
+
+function printData(){
+var custInfo=_last_custInfo;
+if (custInfo==null){
+alert("请选择一个客户");
+return;
+}
+
+var custId=custInfo.custId;
+var dataType=custInfo.dataType;
+var advQueryC=" where cust_id='"+custId+"' ";
+   if(dataType=="1"){
+     advQueryC = " where cust_id='"+custId+"' and buz_type='"+custInfo.custName+"' ";
+   }else if(dataType=="2"){
+     advQueryC=" where circuit_id='"+custInfo.circuitId+"' and cust_id='"+custId+"'";
+     
+   } 
+var advQueryC2=" where cust_id='"+custId+"' ";
+  
+    if(custInfo.buzType!=null && custInfo.buzType!="_ALL_TYPE_CIR")
+      advQueryC2+=" and buz_type='"+custInfo.buzType+"' "; 
+    if(custInfo.circuitId!=null && custInfo.circuitId.length>0)
+       advQueryC2+=" and circuit_Id='"+custInfo.circuitId+"' ";  
+       
+
+
+document.getElementById('form1').action=document.getElementById('form1').action+"&advQueryC="+advQueryC+"&advQueryC2="+advQueryC2;
+document.getElementById('form1').submit();
+}
+</script>

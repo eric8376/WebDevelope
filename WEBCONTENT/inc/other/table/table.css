@@ -1,0 +1,141 @@
+.tableDiv{
+ border:1px solid #AAA;
+ overflow:auto; 
+ zoom:1;
+ scrollbar-arrow-color: #AAA;
+ scrollbar-face-color: #F6F6F6;
+ scrollbar-3dlight-color: #AAA;
+ } 
+.tableDiv table{ 
+font-size:14; 
+float:left;
+cellspacing=0
+border:0;
+empty-cells:show;
+overflow:auto; 
+} 
+.tableDiv table .fixedHeaderTr     
+  {    
+  position:relative;
+  cursor:pointer;
+  height:30px;
+  };
+       
+
+  .tableDiv table .fixedHeaderTr .lastTd{
+  height:30px;
+  border-bottom: 1px solid #AAA;
+  }    
+.tableDiv table .fixedHeaderTr .tailTd{
+  position:relative;     
+  font-size:14; 
+  background-color:#F6F6F6;
+  /*width:100%;*/
+  padding:0px;
+  border-right:1px solid #DEDEDE;
+  border-bottom:1px solid #DEDEDE;
+  -moz-user-select:none;/*Firefox*/
+  cursor:pointer;
+  } 
+
+
+.tableDiv table .fixedHeaderTr .fixedHeadTd   
+  {     
+  position:relative;     
+  font-size:14; 
+  background-color:#F6F6F6;
+  margin:0 6 0 6;
+  padding:0px;
+  border-right:1px solid #DEDEDE;
+  border-bottom:1px solid #DEDEDE;
+  -moz-user-select:none;/*Firefox*/
+  cursor:pointer;
+  } 
+ 
+.tableDiv table .fixedHeaderTr .fixedLeftTd   
+  {     
+  position:relative;     
+  font-size:14; 
+  background-color:#F6F6F6;
+  width:30px;
+  padding:0px;
+  border-right:1px solid #DEDEDE;
+  border-bottom:1px solid #DEDEDE;
+  -moz-user-select:none;/*Firefox*/
+  cursor:pointer;
+  }
+.tableDiv table .textTr{
+height:20px;
+}
+.tableDiv table .textTr .activeTd{
+background-color:#F6F6F6;
+}
+.tableDiv table .textTr .selectedTd{
+background-color:#F6F6F6;
+}
+.tableDiv table .textTr .blurTd{
+table-layout:fixed;
+border-top:0px solid #FFFFFF;
+border-left:1px solid #FFFFFF;
+border-right:1px solid #EBEBEB;
+border-bottom:1px solid #EBEBEB;
+}
+.tableDiv table .textTr td{
+table-layout:fixed;
+
+border-top:0px solid #FFFFFF;
+border-left:1px solid #FFFFFF;
+border-right:1px solid #EBEBEB;
+border-bottom:1px solid #EBEBEB;
+/*word-wrap:break-word;
+word-break:break-all;
+*/
+}
+.tableDiv table .textTr .tailTd{
+table-layout:fixed;
+
+border-top:0px solid #FFFFFF;
+border-left:1px solid #FFFFFF;
+border-right:1px solid #EBEBEB;
+border-bottom:1px solid #EBEBEB;
+/*word-wrap:break-word;
+word-break:break-all;
+*/
+}
+.tableDiv table .textTr td span{
+word-wrap:break-word;
+word-break:break-all;
+text-overflow :ellipsis;
+width:100%;
+height:100%;
+
+table-layout:fixed;
+vertical-align:middle;
+}
+.tableDiv table  .textTr .fixedLeftTd   
+  {     
+   position:relative;     
+   font-size:14; 
+   background-color:#F6F6F6;
+   width:30px;
+   padding:0px;
+   border-right:1px solid #DEDEDE;
+   border-bottom:1px solid #DEDEDE;
+   -moz-user-select:none;/*Firefox*/
+  };  
+  .tableDiv .lineDiv{
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 1; 
+  height: 23; 
+  background-color: black; 
+  display: none;
+  }  
+ .pageInfo{
+  float:right;
+  padding-top:3px;
+  font-size:12px;
+  padding-right:10px;
+
+ }   

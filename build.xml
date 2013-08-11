@@ -1,0 +1,11 @@
+<project name="peformance" default="java" basedir=".">
+	<property name="WEB-INF" value="WEBCONTENT/WEB-INF" />
+	<target name="clean">
+	<ant dir="WEBCONTENT/WEB-INF/classes" target="clean" />
+	</target>
+	<target name="java" depends="">
+			<copy toDir="${target.webapp}">
+					<fileset dir="jsproot"/>
+			</copy>
+	</target>
+</project>

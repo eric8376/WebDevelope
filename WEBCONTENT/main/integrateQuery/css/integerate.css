@@ -1,0 +1,32 @@
+.span_mouseout{ 
+ FONT-SIZE: 12px; CURSOR: hand; COLOR:#0b2c67;
+} 
+.span_mousedown { 
+FONT-SIZE: 12px; CURSOR: hand; COLOR:#0b2c67;
+} 
+.span_mouseover { 
+FONT-SIZE: 14px; CURSOR: hand; COLOR:#0b2c67;
+}
+.span{
+FONT-SIZE: 12px; CURSOR: hand; COLOR:#0b2c67;
+event:expression(
+	onmouseover = function()
+	{
+	this.className="span_mouseover";
+	},
+	onmouseout = function()
+	{
+	this.className="span_mouseout";
+	},
+	onmousedown = function()
+	{
+	this.className="span_mouseout";
+	}
+)
+}
+
+.labeltxt{
+	font-size:12px;
+}
+
+	.button_blue{margin:1 2 1 2; border-right:1 solid #5AA9FF; border-top:1 solid #FFFFFF; border-left:1 solid #FFFFFF; border-bottom:1 solid #5AA9FF; font-size:12px; color:#003399; padding-top:2; background:#BDE5FF;}

@@ -1,0 +1,40 @@
+<?xml version='1.0'?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="defaultQuery">
+	<select id="find" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap" remapResults="true">
+		<![CDATA[select * from ]]>$viewName$
+		<dynamic  prepend="where">
+		  <isNotEmpty property="advQueryC" prepend="and">
+		     <![CDATA[$advQueryC$]]>
+		  </isNotEmpty>
+		</dynamic>
+		 <isNotEmpty property="orderBy" prepend=" order by ">
+		     <![CDATA[$orderBy$]]>
+		  </isNotEmpty>
+	</select>
+	<select id="findByStep" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap" remapResults="true">
+		<![CDATA[select * from (select rownum RESULT_INDEX,a.* from ( ]]> 
+		<![CDATA[select * from ]]>$viewName$
+		<dynamic  prepend="where">
+		  <isNotEmpty property="advQueryC" prepend="and">
+		     <![CDATA[$advQueryC$]]>
+		  </isNotEmpty>
+		</dynamic>
+		 <isNotEmpty property="orderBy" prepend=" order by ">
+		     <![CDATA[$orderBy$]]>
+		  </isNotEmpty>
+		<![CDATA[)a) where RESULT_INDEX between #startIndex# and #endIndex#]]>  
+	</select>
+	<select id="findCount" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer" remapResults="true">
+		<![CDATA[select count(*) from ]]>$viewName$
+		<dynamic  prepend="where">
+		  <isNotEmpty property="advQueryC" prepend="and">
+		     <![CDATA[$advQueryC$]]>
+		  </isNotEmpty>
+		</dynamic>
+	</select>		
+</sqlMap>

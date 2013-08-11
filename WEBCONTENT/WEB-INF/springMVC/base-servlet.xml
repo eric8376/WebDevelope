@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+      <!-- bundle a message resource -->
+        <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+            <property name="basename" value="messages"/>
+        </bean>
+
+        <bean id="viewResolver"
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix">
+                <value>/WEB-INF/jsp/</value>
+            </property>
+            <property name="suffix">
+                <value>.jsp</value>
+            </property>
+        </bean>
+
+      <bean id="paramMethodResolver"
+            class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver">
+          <property name="paramName">
+              <value>action</value>
+          </property>
+          <property name="defaultMethodName">
+              <value>handleDefault</value>
+          </property>
+      </bean>
+        <bean id="baseMultiActionController" class="com.microwill.framework.web.BaseMultiActionController">
+          <property name="methodNameResolver">
+              <ref bean="paramMethodResolver" />
+          </property>
+          <property name="messageSource" ref="messageSource"/>
+      </bean> 
+   
+</beans>

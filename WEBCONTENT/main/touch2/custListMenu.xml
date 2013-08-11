@@ -1,0 +1,10 @@
+<data>
+	<item id="Circuits" type="view" viewName="circuit_view" url="/cust.spr?action=queryCircuits">电路光路列表</item>
+	<item id="BothDevice" type="view" viewName="bothDevice_view" url="/cust.spr?action=queryBothDevice">两端设备列表</item>
+	<item id="housePic" type="url" url="/main/touch/testTwaver.jsp?custId=">机房拓扑图</item>
+	<item id="NetPic" type="url" url="/main/touch/testTwaverNetTopo.jsp?custId=">传输网元拓扑图</item>
+	<!--item id="OPTPic" type="url" url="">光纤拓扑图</item-->
+	<item id="cloudPic" type="url" url="/main/touch/testTwaverCloudyTopo.jsp?custId=">拓扑云图</item>
+	<item id="netDesc"  type="view" viewName="netdesc_view" url="/cust.spr?action=queryNetDesc">网络描述</item>
+	<item id="custprop" type="view" viewName="custinfo_view" url="/cust.spr?action=queryCustProp">客户信息</item>
+</data>

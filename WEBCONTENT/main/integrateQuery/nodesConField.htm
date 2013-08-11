@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!-- 此文件用于查询数据条件的接入节点及数据节点 -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>节点查询</title>
+<link rel="stylesheet" href="css/integerate.css" type="text/css">
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/tab-view.js"></script>
+<link rel="STYLESHEET" type="text/css" href="../../inc/dhtmlxGrid/css/dhtmlXGrid.css"> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXCommon.js"></script>
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGrid.js"></script> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGridCell.js"></script>
+<script language="javascript" type="text/javascript" src="../../inc/js/formUtils.js"></script>
+<script src="../../inc/json/json.js"></script>
+
+<script language="javascript" type="text/javascript" src="js/integrateQuery.js"></script>
+<script language="javascript" type="text/javascript" src="js/popWin.js"></script>
+<style type="text/css">
+body{
+	font-size:12px;
+}
+
+</style>
+</head>
+<body onload='init();'>
+	<div style="position:absolute; left:2px; top:2px;height:20px width:600px;background-color: #F8F3F7;">
+			<form id="qryCondition"  style="background-color: #F8F3F7;">
+			节点编码:&nbsp;&nbsp;<input type="text" id="nodeNo" onkeydown="isEnter(event.keyCode||event.which)">&nbsp;&nbsp;&nbsp;&nbsp;
+			节点名称:&nbsp;&nbsp;<input type="text" id="nodeName" onkeydown="isEnter(event.keyCode||event.which)"><br>
+			专业类型:&nbsp;&nbsp;<select id="speciality" style="width:155px"><option></option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+			<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='查询(P)' onclick="dataList.pageNo=1;execQuery();">
+			</form>
+	</div>
+
+	<div id="nodeGridbox" style="background-color:white;overflow:hidden;border:0px solid blue;position:absolute; left:6px; top:56px;height:360px;width:99%;"></div>
+
+
+
+<div id="staticDiv" style="position:absolute; left:2px; top:460px;height:19px;width:95%;text-align:right;background-color: #F8F3F7;">
+<span class="span_mouseout" id="pageInfoSpan"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+<span onclick="dataList.firstPage();execQuery();" class="span">首页</span> 
+<span onclick="dataList.prePage();execQuery();" class="span">上一页</span>
+<span onclick="dataList.nextPage();execQuery();" class="span">下一页</span>
+<span onclick="dataList.lastPage();execQuery();" class="span">末页</span>
+</div>
+<div id="confirmDiv" style="position:absolute; left:2px; top:478px;height:19px;width:95%;text-align:center;background-color: #F8F3F7;">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='确定' onclick="okBtnClick(nodeGrid)">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='取消' onclick="window.close();">
+</div>
+
+</body>
+<script>
+var dataList=new DataList(null,0,15,1);
+var diaLogParam=window.dialogArguments;
+		
+function init(){
+ document.title=diaLogParam.winTitle+"查询";
+ nodeGrid = new dhtmlXGridObject('nodeGridbox');
+ nodeGrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+ if(diaLogParam.resTypeId==2300){
+	 nodeGrid.setHeader("节点编码,节点名称,专业类型,节点类型,机型,机房名称");
+	 nodeGrid.setInitWidths("120,250,120,120,120,120")
+	 nodeGrid.setColAlign("center,left,left,left,left,left")
+	 nodeGrid.setColShow("block,block,block,block,block,block");
+	 nodeGrid.setColId("nodeNo,nodeName,speciality,nodeTypeName,machineTypeName,roomName")
+	 //nodeGrid.setMultiselect(true) 
+	 nodeGrid.setColTypes("ro,ro,ro,ro,ro,ro"); 
+	 nodeGrid.setColSorting("str,str,str,str,str,str");
+ 	 setSelecttion("speciality",querySpecial(),"speciality","speciality");
+ 	 setDefaultSel("speciality","数据网");	 
+ }else{
+	 nodeGrid.setHeader("节点编码,节点名称,节点类型,机房名称,系统名称"); 
+	 nodeGrid.setInitWidths("120,250,120,120,120,120")
+	 nodeGrid.setColAlign("center,left,left,left,left,left")
+	 nodeGrid.setColShow("block,block,block,block,block,block");
+	 nodeGrid.setColId("nodeNo,nodeName,nodeTypeName,roomName,sysName,speciality")
+	 //nodeGrid.setMultiselect(true) 
+	 nodeGrid.setColTypes("ro,ro,ro,ro,ro,ro"); 
+	 nodeGrid.setColSorting("str,str,str,str,str,str");
+	 var fm=document.getElementById("qryCondition");
+	 /*
+	 fm.innerHTML="节点编码:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='nodeNo' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;节点名称:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='nodeName' onkeydown='isEnter(event.keyCode||event.which)'><br>专业类型:&nbsp;&nbsp;&nbsp;&nbsp;<select id='speciality' style='width:155px'><option></option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	 			 +"上级节点:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='X3' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;<br>"
+	 			 +"安置地点ID:<input type='text' id='X2' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	 			 +"资源类型:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='X1' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;<br>"
+	 			 +"系统名称:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='sysName' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	 			 +"<input style='width:65px;align:right' class='button_blue' type='button' id='queryBtn' value='查询(P)' onclick='dataList.pageNo=1;execQuery();'>";
+	 */
+	 fm.innerHTML="节点编码:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='nodeNo' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;节点名称:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='nodeName' onkeydown='isEnter(event.keyCode||event.which)'><br>专业类型:&nbsp;&nbsp;&nbsp;&nbsp;<select id='speciality' style='width:155px'><option></option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	 			 +"系统名称:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' id='sysName' onkeydown='isEnter(event.keyCode||event.which)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	 			 +"<input style='width:65px;align:right' class='button_blue' type='button' id='queryBtn' value='查询(P)' onclick='dataList.pageNo=1;execQuery();'>";
+	/* 
+	 document.getElementById("nodeGridbox").style.top="106px";
+	 document.getElementById("staticDiv").style.top="445px";
+	 document.getElementById("confirmDiv").style.top="479px";
+	 */
+	 setSelecttion("speciality",querySpecial(),"speciality","speciality");
+	 setDefaultSel("speciality","接入网");
+ }
+ nodeGrid.init();
+ nodeGrid.setDblClick(_dataItemDbClick);
+ 
+ document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+}
+
+function querySpecial(){
+	var serviceCall = new ServiceCall();
+	 var obj=new Object();
+	 obj.viewName='PUB_SPECIALITY';
+	 if(diaLogParam.resTypeId==2300)
+	 	obj.advQueryC=" SPECIALITY_ID in (70,71,90,91,100,101,102,103,105,106) order by SPECIALITY  asc";//数据节点
+	 else obj.advQueryC=" speciality_id in( 90,70) order by SPECIALITY  asc"
+	 serviceCall.init("queryForListSvc");
+	 var list=serviceCall.execute(obj);
+	 if(list&&list.length)return list;
+	 return null;
+}
+
+function execQuery(){
+	 dataList.count=parseInt(document.all.pageCount.value);
+	 var serviceCall = new ServiceCall(); 
+	 
+	 var obj=new Object();
+	 obj.pageIndex=dataList.pageNo.toString();//第几页
+	 obj.pageSize=dataList.count.toString();//每页大小
+	 //obj.orderBy="node_id";
+	 obj.needFieldConvert="1";
+	 
+	 //obj.viewName='pub_log_node';
+
+	/*
+	 var resNameObj=document.getElementById("resName");
+	 var resNoObj=document.getElementById("resNo");
+	 var queryC="";
+	 if(resNoObj&&resNoObj.value&&resNoObj.value!="")
+	 	queryC+=" node_no like '%"+resNoObj.value+"%'" ;//这个是用户输入的内容,如果用户没有输入，不要传这个属性	 
+	 if(resNameObj&&resNameObj.value&&resNameObj.value!="")
+	 	queryC+=" and node_name like '%"+resNameObj.value+"%'" ;//这个是用户输入的内容,如果用户没有输入，不要传这个属性
+	 if(queryC.indexOf("and")==1)queryC=queryC.substring(4);
+	 if(queryC!="")
+	 	obj.advQueryC =queryC+" and res_type_id="+diaLogParam.resTypeId+" and delete_state='0'";
+	 else obj.advQueryC="res_type_id="+diaLogParam.resTypeId+" and delete_state='0'";
+	
+	if(resNoObj&&resNoObj.value&&resNoObj.value!="")obj.nodeNo=resNoObj.value;
+	if(resNameObj&&resNameObj.value&&resNameObj.value!="")obj.nodeName=resNameObj.value;
+	*/
+	var fm=new FormUtil(eval("qryCondition"));
+	var formInfo=fm.getData();
+	for(key in formInfo){
+		if(formInfo[key]!="")obj[key]=formInfo[key];
+	}
+	if(diaLogParam.resTypeId==2300){
+		obj.tableSqlMap="CircuitQuery.selectDataNodeStep";
+		obj.tableCountSqlMap="CircuitQuery.selectDataNodeCount";
+	}else{
+		obj.tableSqlMap="CircuitQuery.selectAccessNodeStep";
+		obj.tableCountSqlMap="CircuitQuery.selectAccessNodeCount";
+	}
+	 serviceCall.init("queryForStepSvc");
+	 
+	 var map=serviceCall.execute(obj);
+	 if(map&&map.pageCount){
+	 	dataList.maxPageNo=map.pageCount;
+	 	dataList.total=map.recordCount;	
+	 }else{
+	 	dataList.maxPageNo=0;
+	 	dataList.total=0;	 
+	 }
+	 if(!map||!map.list||!map.list.length)nodeGrid.clearAll();
+	 else nodeGrid.loadData(map.list);
+	 document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+	return 0;	 
+	 
+}
+</script>
+</html>

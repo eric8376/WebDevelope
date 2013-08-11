@@ -1,0 +1,6 @@
+八月 11, 2013 10:48:06 上午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+八月 11, 2013 11:13:37 上午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring FrameworkServlet 'spring'
+八月 11, 2013 3:54:59 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext

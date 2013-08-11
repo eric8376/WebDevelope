@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>资源管理</title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../style/base.css" />
+<link rel="stylesheet" type="text/css" href="../../style/dragDiv.css" />
+<link rel="stylesheet" type="text/css"  href="../../inc/xtree/xtree.css">
+<link rel="stylesheet" href="../../inc/tab/css/tab-view.css" type="text/css" media="screen">
+<link rel="stylesheet" type="text/css" href="../../inc/dhtmlxGrid/css/dhtmlXGrid.css">
+<script src="../../inc/xtree/xtree.js"></script>
+<script src="../../inc/json/json.js"></script>
+<script src="../../inc/js/string.js"></script>
+
+<script  src="../../inc/tab/js/tab-view.js"></script>
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXCommon.js"></script>
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXGrid.js"></script>		
+<script  src="../../inc/dhtmlxGrid/js/dhtmlXGridCell.js"></script>	
+
+<style>
+html, body {
+  height:100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size:14px;
+  overflow:hidden;
+}
+</style>
+
+<body onload="init();init2();">
+<div id="title-div"></div>
+<div class="divTop">
+
+ 	<div id="left-div"  class="left-div" style="width:300px;scroll:no;margin:0 0 0 0;overflow:auto">
+      <span>   
+        <div id="coverdiv"  style="display:none;z-index:1000;filter:alpha(opacity=30);Opacity:0.3; background-color:#F8F4E2; position:absolute; left:0px; top:0px;width:100%;height:100%"></div>
+		<div id="coverdiv-loading" style="display:none;z-index:1001; position:absolute; left:20px; top:200px;"><img src="../../images/loading.gif"/>数据加载...</div>
+		<div style="width:100%;margin:0 0 0 0;overflow: hidden;">
+		 <a href="javascript:prePageQuery()">前一页</a><span id="nowPageIndex"></span>/<span id="totalPageNum"></span><a href="javascript:nextPageQuery()">后一页</a>
+		<br>
+		名称<input id="cust_name">&nbsp;&nbsp;<a href="javascript:init()">查询</a>
+		</div>
+		<div id="treeDiv" style="width:100%; height:80%; padding: 5px;font-size:14px; overflow: auto;">
+        </div>
+       </span> 	
+ 	</div> 
+ 	<div class="middld-div" onmousedown="moveStartLR(this,document.getElementById('left-div'),document.getElementById('right-div'));" onmousemove="movingLR(this,document.getElementById('left-div'),document.getElementById('right-div'));"onmouseup="moveEnd(this);" >
+ 	</div> 
+ 	<div style="float:left;"><img id="divBar" onclick="changeDivWidth();" src="../../images/btn/left.png" style="cursor:pointer"/></div>
+ 	<div id="right-div" class="right-div">
+     <span id="tab-view-span">
+      <div id="dhtml_tabView1">
+	<div class="dhtmlgoodies_aTab">
+	<div id="coverdiv2"  style="display:none;z-index:1000;filter:alpha(opacity=30);Opacity:0.3; background-color:#F8F4E2;  left:5px; top:5px;width:100%;height:100%"></div>
+    <div id="coverdiv-loading2" style="display:none;z-index:1001;  left:100px; top:200px;"><img src="../../images/loading.gif"/>数据加载...</div>
+	<div id="cust_cir_grid" width="100%" height="100%" style="background-color:white;overflow:hidden;border:1px solid #919b9c;margin:0 0 0 0;"></div>
+	<div id="cust_cir_grid_info" style="text-align:right;background-color:#D4D0C8;"></div>
+	</div>
+	<div class="dhtmlgoodies_aTab">
+	<div id="cust_eqp_grid" width="100%" height="100%" style="background-color:white;overflow:hidden;border:1px solid #919b9c;margin:0 0 0 0;"></div>
+	<div id="cust_eqp_grid_info" style="text-align:right;background-color:#D4D0C8;"></div>
+	</div>
+	<div class="dhtmlgoodies_aTab">
+	 <iframe name="tuopFrame1" id="tuopFrame1" src="" frameborder=0 width="100%" height="100%" scrolling="auto"></iframe>
+	</div>
+	<div class="dhtmlgoodies_aTab">
+	 <iframe name="tuopFrame2" id="tuopFrame2" src="" frameborder=0 width="100%" height="100%" scrolling="auto"></iframe>
+	</div>
+</div>
+     </span>
+ 	</div> 
+</div> 
+</body>
+</html>
+<script>
+function changeDivWidth(){
+  if((document.getElementById("divBar").src).indexOf("right.png")!=-1){
+    document.getElementById("divBar").src="../../images/btn/left.png";
+    document.getElementById("left-div").style.width=_lastWidth;
+  }else {
+   document.getElementById("divBar").src="../../images/btn/right.png";
+   _lastWidth=document.getElementById("left-div").clientWidth;
+   document.getElementById("left-div").style.width=0;
+  }
+}
+
+var _down = 0;  
+var _lastWidth=0;    
+function moveEnd(obj){      
+    _down = 0;      
+    obj.releaseCapture();      
+}  
+function moveStartLR(obj,lDiv,rDiv){      
+    obj.setCapture();      
+    obj.style.zIndex = 10;      
+    _down = 1;
+    _styleWidth =  lDiv.clientWidth;   
+     
+    _sideLeft = event.clientX - _styleWidth;      
+              
+    event.cancelBubble = true;      
+    event.returnValue = false;      
+}      
+     
+function movingLR(obj,lDiv,rDiv){      
+    if(_down==1){
+                  
+              _styleWidth = Math.max(xx = event.clientX - _sideLeft,0); 
+              if(rDiv.clientWidth>10 || _styleWidth<lDiv.clientWidth){ 
+              lDiv.style.width = _styleWidth; 
+              document.getElementById("divBar").src="../../images/btn/left.png";
+              }    
+    }      
+}
+</script>
+
+<script>
+setWebFXTreeRootPath("../../inc/xtree/");
+var custTree =  new WebFXTree("大客户列表");
+document.getElementById("treeDiv").innerHTML = custTree.toHTML().toString();
+var _pageCount=0;
+var _pageIndex=1;
+var _pageSize="20";
+
+document.getElementById("treeDiv").style.height=(document.body.scrollHeight-55)+"px";
+function init(){
+coverdivIsShow(true);
+ var serviceCall = new ServiceCall(true,initTree);
+ var obj=new Object();
+ obj.advQueryC=" parent_id is null  and consume_level='1'";
+ if(getCondition().length>0)
+  obj.advQueryC=" parent_id is null  and consume_level='1' and "+getCondition()+" ";
+ obj.treeLevel="1";
+ obj.pageIndex="1";
+ obj.pageSize=_pageSize;
+ obj.pageCount="-1";
+ serviceCall.init("queryCustCirSvc");
+ serviceCall.execute(obj);
+  
+ 
+}
+function initTree(custMap){
+custTree.remove();
+_pageCount=custMap.pageCount;
+ document.getElementById("nowPageIndex").innerHTML=_pageIndex;
+ document.getElementById("totalPageNum").innerHTML=_pageCount+"["+custMap.recordCount+"]";
+ if(custMap.list &&　custMap.list.length>0){
+   for(i=0;i<custMap.list.length;i++){
+    var item = custMap.list[i];
+   var a = new WebFXTreeItem(item.custName+"["+item.cirCount+"]","javascript:showChild();showContent();",null,item);
+   custTree.add(a);
+ 
+   }
+ }
+ coverdivIsShow(false);
+}
+function queryCust(pageIndex){
+coverdivIsShow(true);
+var serviceCall2 = new ServiceCall(true,initTree2);
+ var obj=new Object();
+ obj.advQueryC=" parent_id is null  and consume_level='1'"; 
+  if(getCondition().length>0)
+  obj.advQueryC=" parent_id is null  and consume_level='1' and "+getCondition()+" ";
+ obj.pageIndex=pageIndex.toString();
+ obj.pageSize=_pageSize;
+ obj.treeLevel="1";
+ serviceCall2.init("queryCustCirSvc");
+ serviceCall2.execute(obj);
+
+
+ 
+
+}
+function initTree2(custMap){
+ custTree.remove();
+ if(custMap.list &&　custMap.list.length>0){
+   for(i=0;i<custMap.list.length;i++){
+    var item = custMap.list[i];
+   var a = new WebFXTreeItem(item.custName,"javascript:showChild();showContent();",null,item);
+   custTree.add(a);
+   }
+ }
+ coverdivIsShow(false);
+}
+
+function showChild(){
+ var selectItem = custTree.getSelected();
+ if(selectItem==null) return;
+ if(!selectItem.childNodes ||  selectItem.childNodes.length<=0){
+ coverdivIsShow(true);  
+ var serviceCall3 = new ServiceCall(true,initTree3);
+ serviceCall3.init("queryCustCirSvc");
+ if(selectItem.data.dataType=="1"){
+  selectItem.data.buzType=selectItem.data.custName;
+ }
+ serviceCall3.execute(selectItem.data);
+ }
+
+}
+function initTree3(childItems){
+var selectItem = custTree.getSelected();
+ if(childItems.list &&　childItems.list.length>0){
+   for(i=0;i<childItems.list.length;i++){
+    var item = childItems.list[i];
+    var treeItemName = item.custName+"["+item.cirCount+"]";
+   if(item.dataType=="2") treeItemName = item.custName;
+   var a = new WebFXTreeItem(treeItemName,"javascript:showChild();showContent();",null,item);
+   selectItem.add(a);
+ 
+   }
+ }
+ coverdivIsShow(false);
+ 
+}
+ function showContent(custInfo){
+ var selectItem = custTree.getSelected();
+ if(selectItem==null) return;
+ initTab(selectItem.data);
+
+ }
+function prePageQuery(){
+ _pageIndex=_pageIndex-1;
+ if(_pageIndex<1) {
+  _pageIndex=1;
+  return;
+ }
+ document.getElementById("nowPageIndex").innerHTML=_pageIndex;
+ queryCust(_pageIndex);
+}
+function nextPageQuery(){
+_pageIndex=_pageIndex+1;
+ if(_pageIndex>_pageCount) 
+  {
+  _pageIndex=_pageCount;
+  return;
+  }
+ document.getElementById("nowPageIndex").innerHTML=_pageIndex;
+ queryCust(_pageIndex);
+}
+function getCondition(){
+  var condition="";
+  if(document.getElementById("cust_name").value.trim().length>0)
+    condition=" lower(cust_name) like '%"+document.getElementById("cust_name").value.trim().toLowerCase()+"%'";
+  return condition;  
+}
+function coverdivIsShow(isShow){
+ if(typeof(isShow)=="undefined"||isShow==null||isShow==false){
+  document.getElementById("coverdiv").style.display="none";
+  document.getElementById("coverdiv-loading").style.display="none";
+ }else{
+  document.getElementById("coverdiv").style.display="block";
+  document.getElementById("coverdiv-loading").style.display="block";
+ }
+}
+
+function getSelectedItemData(){
+if(custTree==null) return null;
+var selectItem = custTree.getSelected();
+ if(selectItem==null) return null;
+ return selectItem;
+}
+</script>
+
+<script type="text/javascript">
+var mygrid,mygrid2;
+
+var _last_custInfo=null;
+var _tabDataExit=Array(false,false,false,false);
+function initTab(custInfo){
+
+for(i=0;i<4;i++){
+_tabDataExit[i]=false;
+}
+_last_custInfo=custInfo;
+initActiveTab();
+}
+function initActiveTab(){
+  
+  var aTab=getActiveTab();
+  if(aTab==null)return;
+   var tabNames = aTab.id.split("_");
+  var tabIndex=tabNames[tabNames.length-1].replace(/[^0-9]/gi,'');
+  if(_tabDataExit[parseInt(tabIndex)]==true)return;
+  switch(parseInt(tabIndex)){
+  case 0:initGrid1();break;
+  case 1:initGrid2();break;
+  case 2:initGrid3();break;
+  case 3:initGrid4();break;       
+  }
+  _tabDataExit[parseInt(tabIndex)]=true;
+}
+
+function _dataItemDbClick(idstr){
+			 
+}
+function initGrid1(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[0]==true)return;
+_tabDataExit[0]=true;
+
+var custId=custInfo.custId;
+var dataType=custInfo.dataType;
+   
+   coverdivIsShow2(true);
+   var serviceCall = new ServiceCall(true,initData1);
+   var obj=new Object();
+   if(typeof(custId)=="undefined"||custId==null||custId==""){
+   obj.sql="select * from vw_dat_sh_cust_cir_query ";
+   }else{
+   obj.sql="select * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"'";
+   if(dataType=="1"){
+     obj.sql = "select * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"' and buz_type='"+custInfo.custName+"' ";
+   }else if(dataType=="2"){
+     obj.sql="select * from vw_dat_sh_cust_cir_query where circuit_id='"+custInfo.circuitId+"' and cust_id='"+custId+"'";
+     
+   }  
+   }
+   obj.pageIndex="1";
+   obj.pageSize="20";
+   obj.pageCount="-1";
+   serviceCall.init("queryDataSvc");
+   serviceCall.execute(obj);
+   
+   
+}
+
+function initData1(map){
+
+ document.getElementById("cust_cir_grid_info").innerHTML=map.recordCount+"&nbsp;&nbsp;&nbsp;";
+ mygrid.loadData(map.list);
+
+ coverdivIsShow2(false);
+}
+
+function initGrid2(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[1]==true)return;
+_tabDataExit[1]=true;
+
+   var custId = custInfo.custId;
+   coverdivIsShow2(true);
+   var serviceCall = new ServiceCall(true,initData2);
+   var obj=new Object();
+   if(typeof(custId)=="undefined"||custId==null||custId==""){
+   obj.sql="select * from vw_dat_sh_cust_cir_eqp ";
+   }else{
+   obj.sql="select * from vw_dat_sh_cust_cir_eqp where cust_id='"+custId+"'";
+   }
+   obj.pageIndex="1";
+   obj.pageSize="20";
+   obj.pageCount="-1";
+   serviceCall.init("queryDataSvc");
+   serviceCall.execute(obj);
+   
+   
+}
+function initData2(map){
+
+ document.getElementById("cust_eqp_grid_info").innerHTML=map.recordCount+"&nbsp;&nbsp;&nbsp;";
+ mygrid2.loadData(map.list);
+ coverdivIsShow2(false);
+}
+
+
+function initGrid3(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[2]==true)return;
+_tabDataExit[2]=true;
+  
+   //if(!custInfo.dataType ||custInfo.dataType!="2") return;
+   
+   var serviceCall = new ServiceCall();
+   var obj=new Object();
+   obj.sql="select code from pub_restriction where desc_china='"+custInfo.buzType+"'";
+   serviceCall.init("queryDataSvc");
+  var o= serviceCall.execute(obj); 
+  if(o.list && o.list.length){
+    var code=custInfo.custId+o.list[0].code
+    var oo=new Object();
+    oo.sTopDefId="700012";
+    oo.sSysLayerType="vip_room";
+    oo.sResId=code;
+    oo.tableSqlMap="resShCir.maplayerIdSql";
+    serviceCall.init("queryForDtoSvc");
+    var oo2= serviceCall.execute(oo); 
+    if(oo2 && oo2.maplayerId){
+     frames["tuopFrame1"].location.href ="../../tuopo.jsp?mapLayerId="+oo2.maplayerId;
+    }else{
+       frames["tuopFrame1"].location.href ="noTuopo.html";
+    
+    }
+ }
+}
+
+function initGrid4(){
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+
+//为了只初始化一次
+if(_tabDataExit[3]==true)return;
+_tabDataExit[3]=true;
+  
+   //if(!custInfo.dataType ||custInfo.dataType!="2") return;
+   
+   var serviceCall = new ServiceCall();
+   var obj=new Object();
+   obj.sql="select code from pub_restriction where desc_china='"+custInfo.buzType+"'";
+   serviceCall.init("queryDataSvc");
+  var o= serviceCall.execute(obj); 
+  if(o.list && o.list.length){
+    var code=custInfo.custId+o.list[0].code
+    var oo=new Object();
+    oo.sTopDefId="700013";
+    oo.sSysLayerType="vip_ne";
+    oo.sResId=code;
+    oo.tableSqlMap="resShCir.maplayerIdSql";
+    serviceCall.init("queryForDtoSvc");
+    var oo2= serviceCall.execute(oo); 
+    if(oo2 && oo2.maplayerId){
+     frames["tuopFrame2"].location.href ="../../tuopo.jsp?mapLayerId="+oo2.maplayerId;
+    }else{
+       frames["tuopFrame2"].location.href ="noTuopo.html";
+    
+    }    
+    
+ }
+ }
+
+function init2(){		
+    setPrefDir("../../inc/tab/");
+    initTabs('dhtml_tabView1',Array('电路列表','两端设备列表','机房拓扑图','传输网元拓扑图'),0,"98%",450,null,null,Array(initGrid1,initGrid2,initGrid3,initGrid4));
+    
+	mygrid = new dhtmlXGridObject('cust_cir_grid');
+	mygrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+	mygrid.setHeader("业务类型,状态,编号,速率,国际国内编码,路由");
+	mygrid.setInitWidths("60,50,150,50,200,100");
+	mygrid.setColAlign("left,left,left,left,left,left");
+	mygrid.setColShow("block,block,block,block,block,block");
+	mygrid.setColId("buzType,oprState,circuitNo,rate,circuitId,route");
+	mygrid.setColTypes("ro,ro,ro,ro,ro,ed");
+	mygrid.setColSorting("str,str,str,str,str,str");
+	mygrid.setDblClick(_dataItemDbClick);
+ 	mygrid.init();
+
+	mygrid2 = new dhtmlXGridObject('cust_eqp_grid');
+	mygrid2.setImagePath("../../inc/dhtmlxGrid/imgs/");
+	mygrid2.setHeader("专业,机房名称,设备名称,设备编号");
+	mygrid2.setInitWidths("150,200,150,100");
+	mygrid2.setColAlign("left,left,left,left");
+	mygrid2.setColShow("block,block,block,block");
+	mygrid2.setColId("speciality,roomName,eqpName,eqpId");
+	mygrid2.setColTypes("ro,ro,ro,ed");
+	mygrid2.setColSorting("str,str,str,str");
+	mygrid2.setDblClick(_dataItemDbClick);
+ 	mygrid2.init();
+	
+	var treeItem=getSelectedItemData();
+	if(treeItem!=null){
+	_last_custInfo=treeItem.data;
+	initActiveTab();
+	
+	}
+	}
+	
+function coverdivIsShow2(isShow){
+ if(typeof(isShow)=="undefined"||isShow==null||isShow==false){
+  document.getElementById("coverdiv2").style.display="none";
+  document.getElementById("coverdiv-loading2").style.display="none";
+ }else{
+  document.getElementById("coverdiv2").style.display="block";
+  document.getElementById("coverdiv-loading2").style.display="block";
+ }
+}	
+
+
+</script>

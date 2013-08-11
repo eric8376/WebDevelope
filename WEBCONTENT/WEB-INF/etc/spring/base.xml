@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--bean id="dataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName"
+			value="jdbc/oracle/ResTxDataSource" />
+	</bean>-->
+	<!--bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:ORCL" />
+		<property name="username" value="user_bask_app" />
+		<property name="password" value="user_bask_app" />
+	</bean>-->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/hospital" />
+		<property name="username" value="root" />
+		<property name="password" value="lz8376" />
+	</bean>
+	 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource"><ref local="dataSource" /></property>
+		</bean>
+
+	 <bean id="nativeJdbcExtractor" 
+	       class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"
+	       lazy-init="true" />   
+	 
+	 <bean id="oracleLobHandler" 
+	       class="org.springframework.jdbc.support.lob.OracleLobHandler" 
+	       lazy-init="true">   
+	     <property name="nativeJdbcExtractor">   
+	         <ref local="nativeJdbcExtractor" />   
+	     </property>   
+	 </bean> 
+	
+	<bean id="jdbcTemplate" abstract="true">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+	<bean id="sqlMapClientTemplate" abstract="true"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean"
+		parent="jdbcTemplate">
+		<property name="lobHandler">   
+         <ref local="oracleLobHandler"/>   
+       </property>
+	</bean>
+	<bean id="sqlMapClient" parent="sqlMapClientTemplate">
+		<property name="configLocation">
+			<value>WEB-INF/etc/sql-map-config.xml</value>
+		</property>
+	</bean>
+	<bean id="allInOneDaoSupportTemplate" abstract="true">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient" />
+		</property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="txBizProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref local="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="modify*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="load*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="query*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="find*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="txDAOProxyTemplate" abstract="true"
+		parent="txBizProxyTemplate">
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="select*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="txCmdProxyTemplate" abstract="true"
+		parent="txBizProxyTemplate">
+		<property name="transactionAttributes">
+			<props> 
+				<prop key="execute">PROPAGATION_REQUIRED</prop>				
+			</props>
+		</property>
+	</bean>
+	<bean id="txHandleProxyTemplate" abstract="true"
+		parent="txBizProxyTemplate">
+		<property name="proxyTargetClass">
+			<value>true</value>
+		</property>
+	</bean>
+</beans>

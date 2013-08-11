@@ -1,0 +1,133 @@
+<project name="FO" default="java">
+	
+	<property name="WEB-INF" value="jsproot/WEB-INF" />
+	<property name="target.webapp" value="target/webappFO"/>
+	
+	
+	<target name="clean">
+        <ant dir="components/qeInterface" target="clean" />
+        <ant dir="components/common" target="clean" />
+		<ant dir="components/appCore" target="clean" />
+		<ant dir="components/individualCore" target="clean" />
+		<ant dir="components/medicareCore" target="clean" />
+		<ant dir="components/sbgQuoteInterface" target="clean" />
+		<ant dir="components/sbgCore" target="clean" />
+		<ant dir="components/quoteEngine" target="clean" />
+		<ant dir="components/issueSystem" target="clean" />
+		<ant dir="components/service" target="clean" />
+		<ant dir="components/webapp" target="clean" />
+		<ant dir="components/webappSBG" target="clean" />
+		<ant dir="components/webappIndividual" target="clean" />
+		<ant dir="components/webappMedicare" target="clean" />
+		<delete dir="${WEB-INF}/classes" quiet="true" />
+		<delete dir="${WEB-INF}/lib" quiet="true" />
+		<delete dir="${target.webapp}" quiet="true" />
+		<mkdir dir="${target.webapp}" />		
+	</target>
+	
+	<target name="jar">
+        <ant dir="components/qeInterface" target="jar" />
+        <ant dir="components/common" target="jar" />
+		<ant dir="components/appCore" target="jar" />
+		<ant dir="components/individualCore" target="jar" />
+		<ant dir="components/medicareCore"/>
+		<ant dir="components/sbgQuoteInterface" target="jar" />
+		<ant dir="components/sbgCore" target="jar" />
+		<ant dir="components/quoteEngine" target="jar" />
+		<ant dir="components/issueSystem" target="jar" />
+		<ant dir="components/service" target="jar" />
+		<ant dir="components/webapp" target="jar" />
+		<ant dir="components/webappSBG" target="jar" />
+		<ant dir="components/webappIndividual" target="jar" />
+		<ant dir="components/webappMedicare"/>
+	</target>
+	
+	
+	<target name="externalLibs">
+		<delete dir="${WEB-INF}/lib" quiet="true" />
+		<mkdir dir="${WEB-INF}/lib"/>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="lib">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="java" depends="prepare">
+		<copy toDir="${target.webapp}">
+				<fileset dir="jsproot"/>
+		</copy>
+	</target>
+	
+	<target name="prepare" depends="jar, externalLibs">
+		<!-- Delete the classes file in the WEB-INF directory that might be there is an eclipse build was done -->
+		<delete dir="${WEB-INF}/classes" quiet="true" />
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/qeInterface/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/common/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/appCore/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/individualCore/lib" />
+		</copy>
+        	<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/medicareCore/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/sbgQuoteInterface/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/sbgCore/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/quoteEngine/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/issueSystem/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/service/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/webapp/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/webappSBG/lib" />
+		</copy>
+        <copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/webappIndividual/lib" />
+		</copy>
+        <copy toDir="${WEB-INF}/lib">
+			<fileset dir="components/webappMedicare/lib" />
+		</copy>
+		<copy toDir="${WEB-INF}/classes">
+			<fileset dir="components/resource" />
+		</copy>
+		<tstamp>
+			<format property="build.version" pattern="MMddyy-HHmmss"/>
+		</tstamp>
+		
+		<property name="build.label" value=""/>
+		
+		<echo file="manifest.mf">
+Name: ehi.war
+Implementation-Title: eHealthInsurance Web Application
+Implementation-Version: ${java.version} ${build.version} ${build.label}
+Implementation-Vendor: eHealthInsurance Inc.
+        </echo>
+	
+	</target>
+	
+	<target name="libs" depends="externalLibs" />
+
+	<target name="all" depends="clean, java" />
+	
+	<target name="audit">
+		<ant dir="components/medicareCore" target="audit" />
+		<ant dir="components/webappMedicare" target="audit" />
+	</target>
+</project>

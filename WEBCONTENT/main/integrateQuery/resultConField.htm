@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>终端机房/光交名称查询</title>
+<link rel="stylesheet" href="css/integerate.css" type="text/css">
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/tab-view.js"></script>
+<link rel="STYLESHEET" type="text/css" href="../../inc/dhtmlxGrid/css/dhtmlXGrid.css"> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXCommon.js"></script>
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGrid.js"></script> 
+<script src="../../inc/dhtmlxGrid/js/dhtmlXGridCell.js"></script>
+<script src="../../inc/json/json.js"></script>
+
+<script language="javascript" type="text/javascript" src="js/integrateQuery.js"></script>
+<script language="javascript" type="text/javascript" src="js/popWin.js"></script>
+<style type="text/css">
+body table{
+	font-size:12px;
+}
+</style>
+</head>
+<body onload='init();'  >
+	<div style="position:absolute; left:2px; top:2px;height:20px width:600px;background-color: #F8F3F7;">
+			<span id="resInputSPAN" class="labeltxt">
+			资源名称:&nbsp;&nbsp;<input type="text" id="resName" onkeydown="isEnter(event.keyCode||event.which)">
+			</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input style='width:65px;align:right' type="button" id="queryBtn" value='查询(P)' onclick="dataList.pageNo=1;execQuery();">
+			<!--
+			<input style='width:75px' type="button" value='下一页（N）'>
+			<input style='width:65px' type="button" value='停止（S）'>
+			<input style='width:85px' type="button" value='保存结果（R）'>
+			<input style='width:65px' type="button" value='打印（P）'>
+			<input style='width:65px' type="button" value='确定（Q）'>
+			<input style='width:65px' type="button" value='取消（C）'>
+			<input style='width:85px' type="button" value='显示设置（S）'>
+			<span style='width:85px' >每页记录数（空为系统缺省值）</span>
+			<input style='width:50px' type="text">
+			<input type="checkbox">
+			<span style='width:50px'>统计总数</span>
+			-->			
+	</div>
+
+	<div id="FieldGridbox" style="background-color:white;overflow:hidden;border:0px solid blue;position:absolute; left:6px; top:36px;height:340px;width:99%;"></div>
+
+
+
+<div style="position:absolute; left:2px; top:375px;height:9px;width:95%;text-align:right;background-color: #F8F3F7;">
+<span class="span_mouseout" id="pageInfoSpan"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+<span onclick="dataList.firstPage();execQuery();" class="span">首页</span> 
+<span onclick="dataList.prePage();execQuery();" class="span">上一页</span>
+<span onclick="dataList.nextPage();execQuery();" class="span">下一页</span>
+<span onclick="dataList.lastPage();execQuery();" class="span">末页</span>
+</div>
+<div style="position:absolute; left:2px; top:408px;height:9px;width:95%;text-align:center;background-color: #F8F3F7;">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='确定' onclick="okBtnClick(FieldGrid)">
+<input style='width:65px;align:right' class="button_blue" type="button" id="queryBtn" value='取消' onclick="window.close();">
+</div>
+</body>
+<script>
+var dataList=new DataList(null,0,15,1);
+var diaLogParam=window.dialogArguments;
+		
+function init(){
+ document.title=diaLogParam.winTitle+"查询";
+ if(diaLogParam.winTitle.indexOf("编码")!=-1)
+  document.getElementById("resInputSPAN").innerHTML="资源编码:&nbsp;&nbsp;<input type=\"text\" id=\"resNo\" onkeydown=\"isEnter(event.keyCode||event.which)\">"
+ FieldGrid = new dhtmlXGridObject('FieldGridbox');
+ FieldGrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+ FieldGrid.setHeader("资源编码,资源名称,资源类型"); 
+ FieldGrid.setInitWidths("80,185,100")
+ FieldGrid.setColAlign("left,left,left")
+ FieldGrid.setColShow("block,block,block");
+ FieldGrid.setColId("resNo,resName,resTypeDesc")
+ //FieldGrid.setMultiselect(true) 
+ FieldGrid.setColTypes("ro,ro,ro"); 
+ FieldGrid.setColSorting("str,str,str")
+ FieldGrid.init();
+ FieldGrid.setDblClick(_dataItemDbClick);
+ 
+ document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+}
+
+function execQuery(){
+	 dataList.count=parseInt(document.all.pageCount.value);
+	 var serviceCall = new ServiceCall();
+	 
+	 var obj=new Object();
+	 obj.pageIndex=dataList.pageNo.toString();//第几页
+	 obj.pageSize=dataList.count.toString();//每页大小
+	 //obj.orderBy="order by res_type_id,res_id";
+	 obj.needFieldConvert="1";
+	 	 	 
+	 obj.tableSqlMap="CircuitQuery.selectResStep";
+	 obj.tableCountSqlMap="CircuitQuery.selectResCount";
+	 obj.resTypeIds=new Array();
+	 //obj.resTypeIds=diaLogParam.resType;直接传数组有问题
+	 for(i=0;i<diaLogParam.resType.length;i++){
+	 	obj.resTypeIds.push(diaLogParam.resType[i].toString());
+	 }
+	 resNameObj=document.getElementById("resName");
+	 resNoObj=document.getElementById("resNo");
+	 if(resNameObj&&resNameObj.value&&resNameObj.value!="")
+	 	obj.resName=resNameObj.value ;//这个是用户输入的内容,如果用户没有输入，不要传这个属性
+	 if(resNoObj&&resNoObj.value&&resNoObj.value!="")
+	 	obj.resNo=resNoObj.value ;//这个是用户输入的内容,如果用户没有输入，不要传这个属性	 	
+	 serviceCall.init("queryForStepSvc");
+	 
+	 var map=serviceCall.execute(obj);
+	 if(map&&map.pageCount){
+	 	dataList.maxPageNo=map.pageCount;
+	 	dataList.total=map.recordCount;	
+	 }else{
+	 	dataList.maxPageNo=0;
+	 	dataList.total=0;	 
+	 }
+	 if(!map||!map.list||!map.list.length)FieldGrid.clearAll();
+	 else FieldGrid.loadData(map.list);
+
+	document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+	return 0;	 
+	 
+}
+</script>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../style/base.css" />
+<script language="javascript" src="../../inc/json/json.js"></script>
+<link rel="stylesheet" href="../../inc/other/table/table.css" type="text/css" media="screen">
+<script type="text/javascript" src="../../inc/other/table/table.js"></script>
+<body >
+	<div  id="tab1">
+    <div id="coverdiv"  style="display:none;z-index:1000;filter:alpha(opacity=30);Opacity:0.3; background-color:#F8F4E2; position:absolute; left:5px; top:5px;width:100%;height:100%"></div>
+    <div id="coverdiv-loading" style="display:none;z-index:1001; position:absolute; left:100px; top:200px;"><img src="../../images/loading.gif"/>数据加载...</div>
+	<div  id="tableDiv" style="width:100%;height:100%;"> 
+	        <table   id="scrollTable"  > 
+	        <thead> 
+            <TR>   
+            <TD   nowrap style="width:150px" id="buzType" width="150px">业务类型</TD>   
+            <TD   nowrap style="width:50px" id="oprState">状态</TD>   
+            <TD   nowrap id="circuitNo" style="width:100px" width="100px">编号</TD>  
+            <TD   nowrap id="rate" style="width:50px" >速率</TD> 
+            <TD   nowrap id="formalCircuitNo" style="width:100px" >国际国内编码</TD> 
+            <TD   nowrap id="route" style="width:600px" >路由</TD>  
+           </TR>  
+           </thead>
+           <tbody id="scrollTable_tby">
+           </tbody>
+            </table> 
+
+</div> 
+</body>
+</html>
+<script>
+function GetUrlParameter(param){
+  var url = window.location.search;
+  var pos1 = 0, pos2 = 0;
+  pos1 = url.indexOf("&"+ param +"=");
+  if(pos1<0) pos1 = url.indexOf("?"+ param +"=");
+  if(pos1>-1){
+    pos2 = url.indexOf("&",pos1+1);
+    if(pos2==-1) pos2 = url.length;
+    return unescape(url.substring(pos1+param.length+2, pos2));
+  }else return null;
+}
+var _last_custInfo=null;
+var _tb1;
+function init(custInfo){
+alert(1);
+_last_custInfo=custInfo;
+_tb1=new DataGrid("tableDiv","scrollTable",{});
+initGrid1();
+}
+
+function initGrid1(){
+
+var custInfo=_last_custInfo;
+if (custInfo==null)return;
+var custId=custInfo.custId;
+var dataType=custInfo.dataType;
+   
+   coverdivIsShow(true);
+   var serviceCall = new ServiceCall(true,initData1);
+   var obj=new Object();
+   if(typeof(custId)=="undefined"||custId==null||custId==""){
+   obj.sql="select distinct * from vw_dat_sh_cust_cir_query ";
+   }else{
+   obj.sql="select distinct * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"'";
+   if(dataType=="1"){
+     obj.sql = "select distinct * from vw_dat_sh_cust_cir_query where cust_id='"+custId+"' and buz_type='"+custInfo.custName+"' ";
+   }else if(dataType=="2"){
+     obj.sql="select distinct * from vw_dat_sh_cust_cir_query where circuit_id='"+custInfo.circuitId+"' and cust_id='"+custId+"'";
+     
+   }  
+   }
+   serviceCall.init("queryDataSvc");
+   serviceCall.execute(obj);
+}
+function initData1(rt){
+  
+  if(rt!=null && rt.list && rt.list.length>0){
+  	for(i=0;i<rt.list.length;i++){
+  		rt.list[i].route="<input type='text' style='width:100%;border:1px;'  name='rout_textArea_"+i+"' id='rout_textArea_"+i+"' readonly>";
+  	}
+  	var len=rt.list.length;
+  	for(i=0;i<30;i++)
+  	 rt.list.push(rt.list[0]);
+    _tb1.loadData(rt.list);
+    for(i=0;i<len;i++){
+      var serviceCallR = new ServiceCall();
+      serviceCallR.init("txtRouteQrySvc");
+      var route=serviceCallR.execute({"resType":"circuit","resId":rt.list[i].circuitId.toString()});
+      if(route!=null){
+      	//alert(route);
+       document.getElementById("rout_textArea_"+i).value=route.replace(/<br>/ig,'\n');
+      }
+    }
+    //_tb1.loadData(rt.list);
+    
+  }else{
+  _tb1.clearn();
+  }
+  
+   coverdivIsShow(false); 
+  
+}
+function coverdivIsShow(isShow){
+ if(typeof(isShow)=="undefined"||isShow==null||isShow==false){
+  document.getElementById("coverdiv").style.display="none";
+  document.getElementById("coverdiv-loading").style.display="none";
+ }else{
+  document.getElementById("coverdiv").style.display="block";
+  document.getElementById("coverdiv-loading").style.display="block";
+ }
+}	
+</script>

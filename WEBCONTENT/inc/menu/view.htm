@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题 1</title>
+<link href="styles/_MenuTree.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="_MenuTree.js"></script>
+</head>
+
+<body style="padding-left:10px;">
+
+<script type="text/javascript">
+	// 自定义获取网页参数函数
+	function GetQuery(str)
+	{
+		var reg = new RegExp("[\?&]" + str + "=([^&]*)&*", "ig");
+		if (reg.test(location.search)) return RegExp.$1;
+		return "";
+	}
+	var tree = GetQuery("tree");
+	var urlPrefix = "?tree=" + tree + "&";
+	// 父菜单树同步
+	try
+	{
+		parent.direct.Mark(location.pathname + "?tree=" + GetQuery("tree"));
+	}
+	catch(e)
+	{
+	}
+	// 格式[层,菜单文字,链接,Title,图标,Target]
+	// WINXP 菜单树数据源
+	var arrWINXP = new Array(
+		[0,"系统任务",,"这些任务应用到您的计算机或选择的硬件设备。","root"],
+			[1,"查看系统信息","#","显示您计算机的信息，例如处理器速度和安装的内存总数。","system"],
+			[1,"添加删除程序","#","提供添加一个新程序，或更改或删除一个现有程序所需要的步骤。","setup"],
+			[1,"更改一个设置","#","提供自定义您的计算机的外观和功能的选项。","control"],
+		[0,"其他位置",,"这些链接打开其他的文件夹，并使您能快速转到其它有用的位置。","root"],
+			[1,"网上邻居","#","显示到网站，网络计算机和 FTP 站点的快捷方式。","net"],
+			[1,"我的文档","#","包含信件，报告贺其它文档以及文件。","document"],
+			[1,"控制面板","#","提供自定义您的计算机的外观和功能的选项。","control"]
+	);
+	// CSDN 菜单树数据源
+	var arrCSDN = new Array(
+		[0,"CSDN社区起始点",urlPrefix + "Link=1","社区起始点","root"],
+		[0,"我感兴趣的社区",urlPrefix + "Link=2"],
+			[1,"配置我感兴趣的社区",urlPrefix + "Link=3"],
+			 [2,"测试"],
+		[0,"我的技术社区",urlPrefix + "Link=4"],
+			[1,"我的帖子",urlPrefix + "Link=5"],
+			[1,"我的博客",urlPrefix + "Link=6"],
+			[1,"我的简历",urlPrefix + "Link=7"],
+			[1,"新设密码",urlPrefix + "Link=8"],
+		[0,"开发语言",urlPrefix + "Link=9"],
+			[1,"VC/MFC",urlPrefix + "Link=10"],
+			[1,"VB",urlPrefix + "Link=11"],
+			[1,"C/C++",urlPrefix + "Link=12"],
+		[0,"Java 技术",urlPrefix + "Link=13"],
+			[1,"J2SE / 基础类",urlPrefix + "Link=14"],
+			[1,"J2SE / 扩展类",urlPrefix + "Link=15"],
+			[1,"WEB 开发",urlPrefix + "Link=16"],
+		[0,".Net 技术",urlPrefix + "Link=17"],
+			[1,"C#",urlPrefix + "Link=18"],
+			[1,"ASP.NET",urlPrefix + "Link=19"],
+			[1,"非技术区",urlPrefix + "Link=20"]
+	);
+	
+	switch(tree)
+	{
+		case "0":
+			var WINXP = new _MenuTree("WINXP", arrWINXP, "images/WINXP/");
+			WINXP.Draw(null,1);
+			break;
+		case "1":
+			var CSDN = new _MenuTree("CSDN", arrCSDN, "images/CSDN/");
+			CSDN.LastIconName = "last";
+			CSDN.Draw();
+			CSDN.Mark(location.pathname + location.search);
+			break;
+	}
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Language" content="zh-cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题 1</title>
+</head>
+
+<body style="font-size:12px;">
+
+<h3>
+<script type="text/javascript">
+	try
+	{
+		if(location.search)
+		{
+			document.write("打开了：" + location.search.replace(/\?id=/,"Node "));
+			parent.player.Mark(location.pathname + location.search);
+		}
+	}
+	catch(e)
+	{
+	}
+</script>
+</h3>
+<p>下面的链接对应右边菜单树中的节点，点击链接查看菜单树的同步！</p>
+<ul>
+	<li><a href="?id=01">Node 01</a></li>
+	<li><a href="?id=02">Node 02</a></li>
+	<li><a href="?id=05">Node 05</a></li>
+	<li><a href="?id=06">Node 06</a></li>
+	<li><a href="?id=08">Node 08</a></li>
+	<li><a href="?id=09">Node 09</a></li>
+	<li><a href="?id=11">Node 11</a></li>
+	<li><a href="?id=12">Node 12</a></li>
+	<li><a href="?id=13">Node 13</a></li>
+	<li><a href="?id=14">Node 14</a></li>
+	<li><a href="?id=15">Node 15</a></li>
+</ul>
+<p>下面的链接对无法应菜单树中的节点，点击链接菜单树无变化！</p>
+<ul>
+	<li><a href="?id=03">Node 03</a></li>
+	<li><a href="?id=07">Node 07</a></li>
+	<li><a href="?id=10">Node 10</a></li>
+</ul>
+
+</body>
+
+</html>

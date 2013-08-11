@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+        xmlns:context="http://www.springframework.org/schema/context"  
+        xmlns:mvc="http://www.springframework.org/schema/mvc"  
+        xmlns:util="http://www.springframework.org/schema/util"   
+        xsi:schemaLocation="  
+          http://www.springframework.org/schema/beans  
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+          http://www.springframework.org/schema/context  
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+          http://www.springframework.org/schema/mvc      
+          http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd  
+          http://www.springframework.org/schema/util   
+          http://www.springframework.org/schema/util/spring-util-3.0.xsd">  
+ <mvc:annotation-driven /> 
+ <context:component-scan base-package="com.microwill.prfrmn.hospital"/>
+ <context:component-scan base-package="com.microwill.prfrmn.bureau"/>
+	<!-- bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="characterEncodingInterceptor" />
+				<ref bean="loginCheckInterceptor" />
+			</list>
+		</property-->
+		<!--property name="mappings">
+			<props>
+				<prop key="/logon.spr">logon</prop>
+				<prop key="/workbench.spr">workbench</prop>
+				<prop key="/manage.spr">manage</prop>
+				<prop key="/manageOperation.spr">manageOperation</prop>
+				<prop key="/authorize.spr">authorize</prop>
+
+
+			</props>
+		</property>
+	</bean -->
+	
+    <!--发送消息控制器-->
+    <!-- bean id="logon" class="com.microwill.prfrmn.hospital.web.LogonController" parent="baseMultiActionController" autowire="byName"/>
+    <bean id="workbench" class="com.microwill.prfrmn.hospital.web.WorkBenchController" parent="baseMultiActionController" autowire="byName"/>
+    <bean id="manage" class="com.microwill.prfrmn.hospital.web.ManageController" parent="baseMultiActionController" autowire="byName"/>
+    <bean id="manageOperation" class="com.microwill.prfrmn.hospital.web.ManageOperactionController" parent="baseMultiActionController" autowire="byName"/>
+    <bean id="authorize" class="com.microwill.prfrmn.hospital.web.AuthorizeController" parent="baseMultiActionController" autowire="byName"/ -->
+    <!-- bean id="characterEncodingInterceptor" class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor"></bean-->
+	<!--bean id="loginCheckInterceptor" class="com.microwill.framework.web.interceptor.LoginCheckInterceptor"></bean--> 
+    <mvc:interceptors> 
+     <bean class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor" /> 
+     <bean class="com.microwill.framework.web.interceptor.LoginCheckInterceptor" />   
+    </mvc:interceptors> 
+        <!-- 多个拦截器,顺序执行 -->  
+        <!--mvc:interceptor >  
+           <mvc:mapping path="/*" /--><!-- 如果不配置或/*,将拦截所有的Controller -->  
+           <!--bean id="characterEncodingInterceptor" class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor"></bean>
+		   <bean id="loginCheckInterceptor" class="com.microwill.framework.web.interceptor.LoginCheckInterceptor"></bean>    
+        </mvc:interceptor-->  
+       
+		 
+</beans>
+
+	 	
+		 

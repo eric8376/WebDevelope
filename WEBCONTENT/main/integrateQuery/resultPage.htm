@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>查询结果</title>
+<link rel="stylesheet" href="css/integerate.css" type="text/css">
+<link rel="stylesheet" href="css/tab-view.css" type="text/css" media="screen">
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/tab-view.js"></script>
+<script src="../../inc/json/json.js"></script>
+<script src="../../inc/js/common.js"></script>
+<script language="javascript" type="text/javascript" src="js/integrateQuery.js"></script>
+<script language="javascript" type="text/javascript" src="js/resultPage.js"></script>
+
+<style type="text/css">
+body table{
+	font-size:12px;
+}
+
+</style>
+<?XML:NAMESPACE PREFIX="ZTESOFT" ?>
+<?IMPORT NAMESPACE="ZTESOFT" IMPLEMENTATION="../../inc/htc/query/DataList.htc" ?>
+</head>
+<body onload='init();'  ">
+	<div style="position:absolute; left:2px; top:2px;height:20px width:600px;background-color: #F8F3F7;">
+			<input  type="button" class="button_blue" value='查询' onclick="dataList.pageNo=1;execQuery()">
+			<input  type="button" class="button_blue" value='清空' onclick="clearContion()">
+			<input  type="button" class="button_blue" value='停止' onclick="stopQuery()">
+			<input  type="button" class="button_blue" value='导出结果' onclick="saveAll()">
+			<input  type="button" class="button_blue" id="interBtn" value='光路-电路' onclick="queryInternal()">
+			<input  type="button" class="button_blue" id="ipBtn" value='IP细则' onclick="queryIPDetail()">
+			<input  type="button" class="button_blue" id="routeBtn" value='路由' onclick="queryRoute()">
+			<!--
+			<input style='width:75px' type="button" value='下一页（N）'>
+			<input style='width:85px' type="button" value='保存结果（R）'>
+			<input style='width:65px' type="button" value='打印（P）'>
+			<input style='width:65px' type="button" value='确定（Q）'>
+			<input style='width:85px' type="button" value='显示设置（S）'>
+			<span style='width:85px' >每页记录数（空为系统缺省值）</span>
+			<input style='width:50px' type="text">
+			<input type="checkbox">
+			<span style='width:50px'>统计总数</span>
+			-->			
+	</div>
+	    <div id="coverdiv-loading" style="display:none;z-index:1001; position:absolute; left:100px; top:200px;"><img src="../../images/loading.gif"/>数据加载...</div>
+	<div id="results_tabView" style="position:absolute; left:2px; top:30px;">
+		<div class="dhtmlgoodies_aTab">
+    <ZTESOFT:treelist id="circuitGrid" width="100%" height="400" onItemDbClick="_dataItemDbClick(this.selectedItem)" 
+    showTitle="true" showCheck="true" checkAll="false" sort="true">
+      <ZTESOFT:columns>
+      	<ZTESOFT:column width="100" display="true" displayText="专业类型" propertyName="speciality" sortType="String" />
+      	<ZTESOFT:column width="100" display="true" displayText="业务类型" propertyName="operationType" sortType="String" />
+      	<ZTESOFT:column width="100" display="true" displayText="电路状态" propertyName="oprState" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="电路编码" propertyName="circuitNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="机房名称" propertyName="roomName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="客户名称" propertyName="custName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="客户服务等级" propertyName="userClass" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="客户类型" propertyName="userType" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="业务受理号" propertyName="disNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="电路速率" propertyName="circuitRateName" sortType="String" />
+        <ZTESOFT:column width="180" display="true" displayText="国内/国际电路编码" propertyName="circuitNo1" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="第三方电路编码" propertyName="circuitNo3" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="设备名称" propertyName="eqpName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="端口名称" propertyName="portName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="A端接入地址" propertyName="custAccessAddress" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="A端联系人" propertyName="aPrinciple" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="Z端接入地址" propertyName="zCustAccessAddress" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="Z端联系人" propertyName="zPrinciple" sortType="String" />
+        <ZTESOFT:column width="150" display="true" displayText="接入说明" propertyName="accessDesc" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="VLAN" propertyName="vlanId" sortType="String" />
+ 		
+ 		<ZTESOFT:column width="100" display="true" displayText="RD" propertyName="rd" sortType="String" />
+		<ZTESOFT:column width="100" display="true" displayText="RT IMPORT" propertyName="rtImport" sortType="String" />
+		<ZTESOFT:column width="100" display="true" displayText="RT EXPORT" propertyName="rtExport" sortType="String" />
+		<ZTESOFT:column width="100" display="true" displayText="VRF" propertyName="vrf" sortType="String" />
+        <!-- 非交换专业字段 -->
+        <ZTESOFT:column width="100" display="true" displayText="合同号" propertyName="contractNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="开通时间" propertyName="openTime" sortType="String" />    
+        <ZTESOFT:column width="100" display="true" displayText="IP地址" propertyName="ipSegment" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="全程路由" propertyName="circuitRoute" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="客户归属名" propertyName="belongTo" sortType="String" />
+        <!-- 专业字段? -->
+        <ZTESOFT:column width="100" display="true" displayText="原联通电路编码" propertyName="unicomNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="联系人电话" propertyName="linkTele" sortType="String" />        
+         <!-- 交换专业的字段 -->        
+        <ZTESOFT:column width="100" display="true" displayText="本端交换节点" propertyName="excANodeNo" sortType="String" />     
+        <ZTESOFT:column width="100" display="true" displayText="本端交换端口" propertyName="excAPortNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="对端交换节点" propertyName="excZNodeNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="对端交换端口" propertyName="excZPortNo" sortType="String" />
+        <!-- 客户等级? -->
+        <ZTESOFT:column width="100" display="true" displayText="产品等级" propertyName="excProductgrade" sortType="String" />     
+        <ZTESOFT:column width="100" display="true" displayText="计费中继号" propertyName="excBillingrelayno" sortType="String" />
+		<!-- 交换专业的字段 --> 
+        <ZTESOFT:column display="false" displayText="电路ID" propertyName="circuitId" sortType="String" />
+        <ZTESOFT:column display="false" displayText="oprStateId" propertyName="oprStateId" sortType="String" />
+        <ZTESOFT:column display="false" displayText="资源类型Id" propertyName="resTypeId" sortType="String" /> 
+      </ZTESOFT:columns>
+    </ZTESOFT:treelist>			
+		</div>
+		<div class="dhtmlgoodies_aTab">
+    <ZTESOFT:treelist id="opticGrid" width="100%" height="400" onItemDbClick="_dataItemDbClick(this.selectedItem)" 
+    showTitle="true" showCheck="true" checkAll="false" sort="true">
+      <ZTESOFT:columns>                
+        <ZTESOFT:column width="100" display="true" displayText="光路编码" propertyName="optRoadNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="光路名称" propertyName="optRoadName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="业务状态" propertyName="oprStateName" sortType="String" />
+         <ZTESOFT:column width="100" display="true" displayText="光路芯数" propertyName="optPairNum" sortType="String" />     
+        <ZTESOFT:column width="100" display="true" displayText="光路级别" propertyName="loadLevelName" sortType="String" />
+         <ZTESOFT:column width="100" display="true" displayText="A端机房/光交名称" propertyName="beginRoomName" sortType="String" />     
+        <ZTESOFT:column width="100" display="true" displayText="Z端机房/光交名称" propertyName="endRoomName" sortType="String" />              
+        <ZTESOFT:column width="200" display="true" displayText="A端用户终端设备描述" propertyName="termDesc" sortType="String" />     
+        <ZTESOFT:column width="200" display="true" displayText="Z端用户终端设备描述" propertyName="zTermDesc" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="调度单号" propertyName="dispatchNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="A端设备名称" propertyName="aEqpName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="A端设备端口名称" propertyName="aPortNo" sortType="String" />     
+        <ZTESOFT:column width="100" display="true" displayText="z端设备名称" propertyName="zEqpName" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="z端设备端口名称" propertyName="zPortNo" sortType="String" />
+        <ZTESOFT:column width="100" display="true" displayText="全程路由" propertyName="optRoute" sortType="String" />
+        <ZTESOFT:column display="false" displayText="光路ID" propertyName="optRoadId" sortType="String" />
+        <ZTESOFT:column display="false" displayText="oprStateId" propertyName="oprStateId" sortType="String" />
+      </ZTESOFT:columns>
+    </ZTESOFT:treelist>		
+		</div>
+	</div>
+	
+	
+<div style="position:absolute; left:2px; top:460px;height:19px;width:95%;text-align:right;background-color: #F8F3F7;">
+<span class="span_mouseout" id="pageInfoSpan"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+<span onclick="dataList.firstPage();execQuery();" class="span">首页</span> 
+<span onclick="dataList.prePage();execQuery();" class="span">上一页</span>
+<span onclick="dataList.nextPage();execQuery();" class="span">下一页</span>
+<span onclick="dataList.lastPage();execQuery();" class="span">末页</span>
+</div>
+
+</body>
+<script>
+initTabs('results_tabView',Array('电路','光路'),0,window.screen.width-70,300);
+document.getElementById("tabTabresults_tabView_0").onclick=setTabClick;//自定义标签单击
+document.getElementById("tabTabresults_tabView_1").onclick=setTabClick;
+var tabId2Grid=new Array();
+
+var dataList=new DataList(null,0,20,1);
+
+var checkedId=new Object();//存偖复选的行,key:rowId,value=1;
+checkedId.hasNum=0;//记录key个数
+
+
+function init(){
+/*
+ circuitGrid = new dhtmlXGridObject('circuitGridbox');
+ circuitGrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+ circuitGrid.setHeader("-,机房名称,电路编码,电路状态,设备名称,设备端口,客户名称,业务类型,带宽,国内/国际电路编码,第三方电路编码,客户级别路编码,客户类型,本端接入,对端接入地址,联系人电地址,电路VLAN,IP地址地址,全程路由,本端交换节点,本端交换端口,对端交换节点,对端交换端口,产品等级,计费中继号,专业名称,原联通电路编码"); //全程路由后加交换字段
+ circuitGrid.setInitWidths("20,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,80,150")
+ circuitGrid.setColAlign("left,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center,center")
+ circuitGrid.setColShow("block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block");
+ //var showStr=getCookie("showStr")
+ //circuitGrid.setColShow(showStr);
+ circuitGrid.setColId(",roomName,circuitNo,oprState,eqpName,portName,custName,operationType,circuitRateName,circuitNo1,circuitNo3,userClass,userType,custAccessAddress,zCustAccessAddress,linkTele,vlanId,ipSegment,circuitRoute,excANodeNo,excAPortNo,excZNodeNo,excZPortNo,excProductgrade,excBillingrelayno,speciality,unicomNo")//circuitRoute后加交换字段
+ circuitGrid.setMultiselect(true) 
+ circuitGrid.setColTypes("ch,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro")
+ circuitGrid.setColSorting("int,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str")
+ circuitGrid.init(); 
+ //circuitGrid.loadData(da);
+ //circuitGrid.setOnRowSelectHandler(clicked);
+ circuitGrid.enableMultiline(false);
+ circuitGrid.setDblClick(_dataItemDbClick);
+ circuitGrid.setOnCheckHandler(doOnCheck);
+
+ 
+ opticGrid = new dhtmlXGridObject('opticGridbox');
+ opticGrid.setImagePath("../../inc/dhtmlxGrid/imgs/");
+ opticGrid.setHeader("-,光路编码,光路名称,A端用户终端设备描述,Z端用户终端设备描述,A端设备名称,A端设备端口名称,z端设备名称,z端设备端口名称,A端机房/光交名称,Z端机房/光交名称,业务状态,光路芯数,光路级别,调度单号"); 
+ opticGrid.setInitWidths("20,90,180,200,200,200,200,200,200,200,200,80,90,90,90")
+ opticGrid.setColAlign("left,center,center,center,center,center,center,center,center,center,center,center,center,center,center")
+ opticGrid.setColShow("block,block,block,block,block,block,block,block,block,block,block,block,block,block,block");
+ opticGrid.setColId(",optRoadNo,optRoadName,termDesc,zTermDesc,aEqpName,aPortNo,zEqpName,zPortNo,beginRoomName,endRoomName,oprStateName,optPairNum,loadLevelName,dispatchNo")
+ opticGrid.setMultiselect(true) 
+ opticGrid.setColTypes("ch,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro"); 
+ opticGrid.setColSorting("int,str,str,str,str,str,str,str,str,str,str,str,str,str,str")
+ opticGrid.init();
+ opticGrid.enableMultiline(false);
+ opticGrid.setDblClick(_dataItemDbClick);
+ opticGrid.setOnCheckHandler(doOnCheck);
+ */
+ document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+ tabId2Grid[0]=circuitGrid;
+ tabId2Grid[1]=opticGrid;
+ return;
+ 
+}
+
+function execQuery(){
+	var obj=window.parent.frames[0].getQuery();
+	if(!obj)return;
+	
+	var tabIndex=obj.tabIndex;
+	
+	dataList.count=parseInt(document.all.pageCount.value);
+	var serviceCall = new ServiceCall(true,loadGrid);
+	 obj.pageIndex=dataList.pageNo.toString();//第几页
+
+	 obj.pageSize=dataList.count.toString();//每页大小
+	 obj.needFieldConvert="1";
+	 
+	 if(Math.floor(tabIndex/4)){//查询光路
+		 //obj.orderBy=" order by OPT_ROAD_ID";
+		 obj.tableSqlMap="CircuitQuery.selectOptRoadStep";
+		 obj.tableCountSqlMap="CircuitQuery.selectOptRoadCount";
+		 serviceCall.init("queryForOptRoadStepSvc");
+	 }else{//查询电路
+	     if(tabIndex==0){
+	         obj.tableSqlMap="CircuitQuery.selectCommonCircuitStep";
+			 obj.tableCountSqlMap="CircuitQuery.selectCommonCircuitCount";
+	     }else if(tabIndex<2){//查询传输
+			 obj.tableSqlMap="CircuitQuery.selectTrsCircuitStep";
+			 obj.tableCountSqlMap="CircuitQuery.selectTrsCircuitCount";
+		 }else{//查询数据或交换
+			 obj.tableSqlMap="CircuitQuery.selectLogCircuitStep";
+			 obj.tableCountSqlMap="CircuitQuery.selectLogCircuitCount";
+			 obj.speciality=(tabIndex==2?"数据":"交换");	 
+		 }
+		   
+		 serviceCall.init("queryForStepSvc");	 	
+	 }
+	 var conditions=0;
+	 for(key in obj.formInfo){
+	 	if(obj.formInfo[key]!=""){
+			if(key.indexOf("circuitNo")!=-1||key=="optRoadNo"||key=="speciality"){
+				obj[key]=new Array();
+				for(var k=0;k<obj.formInfo[key].length;k++)
+					obj[key].push(obj.formInfo[key][k]);
+				++conditions;
+				continue;
+			}	 			
+	 		obj[key]=obj.formInfo[key];
+	 		if(key!="openTimeComparator")
+	 			++conditions;
+	 	}
+	 }
+	 if(!conditions){
+	 	alert("没有任何查询条件,至少应当填写一项条件");
+	 	return;
+	 }
+	 delete obj.formInfo;
+	 delete obj.tabIndex;
+	 
+	 showTab("results_tabView",Math.floor(tabIndex/4));
+	 document.getElementById("coverdiv-loading").style.display="block";
+	 var map=serviceCall.execute(obj);
+	return 0;	
+}
+
+function saveAll(){
+	var obj=window.parent.frames[0].getQuery();
+	if(!obj)return;
+	var exportUrl = "/RES/ExportExcelServlet";
+	var condition = "";
+	var resType = "";
+	var tabIndex=obj.tabIndex;
+	if(Math.floor(tabIndex/4)){//查询光路
+		 //obj.orderBy=" order by OPT_ROAD_ID";
+		 obj.tableSqlMap="CircuitQuery.selectOptRoadStep";
+		// obj.tableCountSqlMap="CircuitQuery.selectOptRoadCount";
+		// serviceCall.init("queryForOptRoadStepSvc");
+		resType = "opt";
+	 }else{//查询电路
+	 	resType = "circuit";
+	 	if(tabIndex==0)obj.tableSqlMap="CircuitQuery.selectCommonCircuitStep";
+	 	else if(tabIndex<2){//查询传输
+			 obj.tableSqlMap="CircuitQuery.selectTrsCircuitStep";
+			// obj.tableCountSqlMap="CircuitQuery.selectTrsCircuitCount";
+		 }else{//查询数据或交换
+			 obj.tableSqlMap="CircuitQuery.selectLogCircuitStep";
+			// obj.tableCountSqlMap="CircuitQuery.selectLogCircuitCount";
+			 obj.speciality=(tabIndex==2?"数据":"交换");	 
+		 } 	
+	 }
+	 exportUrl += "?resType=" + resType;
+	 for(key in obj.formInfo){
+	 	if(obj.formInfo[key]!="")
+	 		condition += "&" + key + "=" + obj.formInfo[key];
+	 }
+	 condition += "&tableSqlMap=" + obj.tableSqlMap;
+	 if(obj.speciality)
+	 condition += "&speciality=" + obj.speciality;
+	 exportUrl += condition;
+	//alert(objectDetail(exportUrl));
+	window.location.href = exportUrl;
+}
+function queryInternal(){
+	var currentTabId=parseInt(activeTabIndex["results_tabView"]);
+	var currentGrid=tabId2Grid[currentTabId];
+	//var rows=new Array();
+	
+	var obj=new Object();
+	obj.pageIndex="1";//第几页
+	obj.pageSize=dataList.count.toString();//每页大小
+	obj.needFieldConvert="1";
+		
+	obj.relativeCircuitIds=new Array();//电路查光路
+	obj.relativeOptRoadIds=new Array();//光路查电路
+/*	
+	for(key in checkedId){
+		if(key=="hasNum")continue;
+		var itemRow=currentGrid.getRowById(parseInt(key));
+		var itemData=itemRow.grid.gridDataArray[itemRow.idd-1]
+		//rows.push(itemData.grid.gridDataArray[itemData.idd-1]);
+		if(!currentTabId){
+			obj.relativeCircuitIds.push(itemData.circuitId);
+		}else{
+			obj.relativeOptRoadIds.push(itemData.optRoadId);
+		}
+		//delete checkedId[key];清理已交给clearChecked
+	}
+*/
+	 if(!currentGrid.checkedItems.length){
+	 	alert("请先选择结果列表中的数据，然后再查询。");
+	 	return;
+	 }
+	 for(var i=0;i<currentGrid.checkedItems.length;i++){
+		 if(!currentTabId){
+				obj.relativeCircuitIds.push(currentGrid.checkedItems[i].circuitId);
+		}else{
+				obj.relativeOptRoadIds.push(currentGrid.checkedItems[i].optRoadId);
+		}
+	}
+	
+	 var serviceCall = new ServiceCall(true,loadGrid);
+	 if(!currentTabId){
+		 obj.tableSqlMap="CircuitQuery.selectOptRoadStep";
+		 obj.tableCountSqlMap="CircuitQuery.selectOptRoadCount";
+		 //obj.orderBy="OPT_ROAD_ID";
+		 delete obj.relativeOptRoadIds;
+		 serviceCall.init("queryForOptRoadStepSvc");
+	 }else{
+		 obj.tableSqlMap="CircuitQuery.selectCommonCircuitStep";
+		 obj.tableCountSqlMap="CircuitQuery.selectCommonCircuitCount";
+		 //obj.orderBy="circuit_id";
+		 delete obj.relativeCircuitIds;
+		 serviceCall.init("queryForStepSvc");	 
+	 }
+	 document.getElementById("coverdiv-loading").style.display="block";
+	 showTab("results_tabView",1-currentTabId);
+	 var targetGrid=tabId2Grid[parseInt(activeTabIndex["results_tabView"])];
+	 /*
+	 if(targetGrid.getRowsNum())
+	 	targetGrid.clearAll();
+	 */	
+	 if(targetGrid.allItems&&targetGrid.allItems.length){
+		for(var i=targetGrid.allItems.length-1;i>-1;i--)targetGrid.allItems[i].remove();
+	}
+	 var map=serviceCall.execute(obj);
+	 	document.all.pageInfoSpan.innerHTML="每页<input type='text' style='height:12px;width:12px' id='pageCount' value='"+dataList.count+"'>条 总共"+dataList.total+"条 第"+dataList.pageNo+"/"+dataList.maxPageNo+"页";
+	 return 0;
+}
+
+function queryIPDetail(){
+	 if(parseInt(activeTabIndex["results_tabView"])){
+	 	alert("您所选择的数据是光路中的数据，请选择电路数据然后查询ＩＰ细则。");
+	 	return;
+	 }
+	var serviceCall = new ServiceCall();
+	var obj=new Object();
+	obj.circuitList=new Array();
+	serviceCall.init("ipSegmenteQrySvc");	 
+	 if(!circuitGrid.checkedItems||!circuitGrid.checkedItems.length){
+		 for(var i=0;i<circuitGrid.allItems.length;i++){
+		 	 var tempObj=new Object();
+			 tempObj.circuitId = circuitGrid.allItems[i].circuitId;
+			 tempObj.oprStateId = circuitGrid.allItems[i].oprStateId;//业务状态
+			 obj.circuitList.push(tempObj);
+		 }
+	 }else{
+		 for(var i=0;i<circuitGrid.checkedItems.length;i++){
+		 	 var tempObj=new Object();
+			 tempObj.circuitId = circuitGrid.checkedItems[i].circuitId;
+			 tempObj.oprStateId = circuitGrid.checkedItems[i].oprStateId;//业务状态
+			 obj.circuitList.push(tempObj);
+		 }
+	 }
+	var list=serviceCall.execute(obj);
+	if(!list||!list.length)return;
+	var gridList=circuitGrid.allItems;
+	if(circuitGrid.checkedItems&&circuitGrid.checkedItems.length)gridList=circuitGrid.checkedItems;
+	for(var i=0;i<gridList.length;i++){
+		for(var j=0;j<list.length;j++){
+			if(list[j]&&list[j].circuitId==gridList[i].circuitId&&list[j].ipSegment!=""){
+				gridList[i].ipSegment=list[j].ipSegment;
+				gridList[i].refresh();
+				break;
+			}
+		}
+	}		 
+}
+
+function queryRoute(){
+	 var currGrid=circuitGrid;
+	 if(parseInt(activeTabIndex["results_tabView"])){
+		currGrid=opticGrid;
+	 }
+	 document.getElementById("coverdiv-loading").style.display="block";
+		 var serviceCall = new ServiceCall(true,afetQryRt);
+		 var obj=new Object();
+		 
+		 obj.resList=new Array();
+		 serviceCall.init("batchTxtRouteQrySvc"); 
+	 if(!currGrid.checkedItems||!currGrid.checkedItems.length){
+		 for(var i=0;i<currGrid.allItems.length;i++){
+		 	 var tempObj=new Object();
+			 tempObj.resId=currGrid.allItems[i].circuitId||currGrid.allItems[i].optRoadId;
+			 tempObj.oprStateId=currGrid.allItems[i].oprStateId;
+			 tempObj.resType="circuit";//resList[1].resType = "optical";//光路类型
+			 if(parseInt(activeTabIndex["results_tabView"]))tempObj.resType="optical";
+			 obj.resList.push(tempObj);	 
+		 }
+	 }else{
+		 for(var i=0;i<currGrid.checkedItems.length;i++){
+		 	 var tempObj=new Object();
+			 tempObj.resId=currGrid.checkedItems[i].circuitId||currGrid.checkedItems[i].optRoadId;
+			 tempObj.oprStateId=currGrid.checkedItems[i].oprStateId;
+			 tempObj.resType="circuit";//resList[1].resType = "optical";//光路类型
+			 if(parseInt(activeTabIndex["results_tabView"]))tempObj.resType="optical";
+			 obj.resList.push(tempObj);
+		 }
+	 }
+	 var txtRoute=serviceCall.execute(obj);
+}
+
+function afetQryRt(list){//电路路由
+	if(!list||!list.length)return;
+	 var currGrid=circuitGrid;
+	 if(parseInt(activeTabIndex["results_tabView"])){
+		currGrid=opticGrid;
+	 }	
+	var gridList=currGrid.allItems;
+	if(currGrid.checkedItems&&currGrid.checkedItems.length)gridList=currGrid.checkedItems;
+	if(!parseInt(activeTabIndex["results_tabView"])){
+		for(var i=0;i<gridList.length;i++){
+			for(var j=0;j<list.length;j++){
+				if(list[j]&&list[j].resId==gridList[i].circuitId&&list[j].txtRoute!=""){
+					gridList[i].circuitRoute=list[j].txtRoute.replace(/(\\n)|(\n)/g," ");
+					gridList[i].refresh();
+					break;
+				}
+			}
+		}
+	}else{//光路路由
+		for(var i=0;i<gridList.length;i++){
+			for(var j=0;j<list.length;j++){
+				if(list[j]&&list[j].resId==gridList[i].optRoadId&&list[j].txtRoute!=""){
+					gridList[i].optRoute=list[j].txtRoute.replace(/(\\n)|(\n)/g," ");
+					gridList[i].refresh();
+					break;
+				}
+			}
+		}	
+	}			
+	document.getElementById("coverdiv-loading").style.display="none";
+}
+
+function stopQuery(){
+ document.getElementById("coverdiv-loading").style.display="none";
+}
+</script>
+</html>

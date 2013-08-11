@@ -1,0 +1,79 @@
+<html>
+<link rel="stylesheet" href="table.css" type="text/css" media="screen">
+<script type="text/javascript" src="table.js"></script>
+
+<body bgcolor="#FFFFFF" > 
+<div  id="tableDiv" style="height:300px;width:100%;"> 
+	        <table   id="scrollTable"  > 
+	        	<thead>
+            <TR >   
+            <TD   nowrap   style="width:100px" id="col1" style="sort:int;cursor:pointer">HeaderA</TD>   
+            <TD   nowrap   style="width:60px" id="col2">HeaderB</TD>   
+            <TD   nowrap   id="col3" style="width:70px" >HeaderC</TD>
+            
+            <TD   nowrap  id="col4" style="width:200px" >Headerd</TD>
+               
+           </TR>  
+           
+          </thead>
+         
+          </table> 
+
+</div> 
+<input type="button" value="loadData" onclick="loadData()">
+<input type="button" value="getCheckedItems" onclick="getCheckedItems()">
+<input type="button" value="addItem" onclick="addItem()">
+<input type="button" value="deleteItem" onclick="deleteItem()">
+<input type="button" value="sort" onclick="sort()">
+</body>
+</html>
+ <script>
+var tb=new DataGrid("tableDiv","scrollTable",{"showCheck":true,"trDblClick":clk});
+
+function loadData(){
+	var dl=new Array(0);
+	for(i=1;i<20;i++)
+	{
+			var o=new Object();
+			if(i%5!=0){
+			o.col1=i;
+			
+		  }
+				 
+			if(i%7==0){
+				o.col1="-"+i;
+				o.color="red";
+			}
+			o.col2=i+"_2";
+			o.col3=i+"_3";
+			o.col4="<button onclick='del(this.parentNode.parentNode.parentNode)'>ɾ��</button>"
+			dl.push(o);
+		}
+
+	tb.loadData(dl);
+}
+function addItem(){
+	var i=tb.getItemCount();
+	var o=new Object();
+			o.col1=i+"_1";
+			o.col2=i+"_2";
+			o.col3=i+"_3";
+	tb.insertData(o);
+}
+function deleteItem(){
+	tb.remove(0);
+}
+function clk(selectItem){
+	alert(selectItem.col1);
+}
+function del(item){
+item.remove();
+}
+function sort(){
+	
+	tb.sort("col1","int");
+}
+function getCheckedItems(){
+	alert(tb.getCheckedItems()[0].col1);
+}
+  	</script>  
