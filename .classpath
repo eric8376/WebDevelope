@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="subsystem/hospital/main"/>
+	<classpathentry kind="src" path="subsystem/bureau/test"/>
+	<classpathentry kind="src" path="subsystem/bureau/main"/>
 	<classpathentry kind="src" path="subsystem/framework/test"/>
-	<classpathentry kind="src" path="subsystem/bureau/src/test"/>
-	<classpathentry kind="src" path="subsystem/bureau/src/main"/>
 	<classpathentry kind="src" path="subsystem/hospital/test"/>
 	<classpathentry kind="src" path="subsystem/framework/main"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
