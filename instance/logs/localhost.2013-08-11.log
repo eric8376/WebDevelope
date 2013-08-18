@@ -6,3 +6,101 @@ INFO: Initializing Spring FrameworkServlet 'spring'
 INFO: Initializing Spring root WebApplicationContext
 八月 11, 2013 4:23:21 下午 org.apache.catalina.core.ApplicationContext log
 INFO: Initializing Spring root WebApplicationContext
+八月 11, 2013 4:33:45 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring FrameworkServlet 'spring'
+八月 11, 2013 5:08:31 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+八月 11, 2013 5:08:45 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring FrameworkServlet 'spring'
+八月 11, 2013 5:08:50 下午 org.apache.catalina.core.ApplicationDispatcher invoke
+SEVERE: Servlet.service() for servlet jsp threw exception
+java.lang.NullPointerException
+	at org.apache.jsp.WEB_002dINF.jsp.performance.bureau.workbench_jsp._jspService(workbench_jsp.java:86)
+	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:388)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:313)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:260)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:646)
+	at org.apache.catalina.core.ApplicationDispatcher.doInclude(ApplicationDispatcher.java:551)
+	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:488)
+	at org.springframework.web.servlet.view.InternalResourceView.renderMergedOutputModel(InternalResourceView.java:229)
+	at org.springframework.web.servlet.view.AbstractView.render(AbstractView.java:264)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1208)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:992)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:939)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:856)
+	at com.microwill.framework.web.AppServlet.doService(AppServlet.java:21)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:915)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:811)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:617)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:796)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:293)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:859)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:602)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+	at java.lang.Thread.run(Thread.java:722)
+
+八月 11, 2013 5:08:50 下午 org.apache.catalina.core.StandardWrapperValve invoke
+SEVERE: Servlet.service() for servlet spring threw exception
+java.lang.NullPointerException
+	at org.apache.jsp.WEB_002dINF.jsp.performance.bureau.workbench_jsp._jspService(workbench_jsp.java:86)
+	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:388)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:313)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:260)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:646)
+	at org.apache.catalina.core.ApplicationDispatcher.doInclude(ApplicationDispatcher.java:551)
+	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:488)
+	at org.springframework.web.servlet.view.InternalResourceView.renderMergedOutputModel(InternalResourceView.java:229)
+	at org.springframework.web.servlet.view.AbstractView.render(AbstractView.java:264)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1208)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:992)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:939)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:856)
+	at com.microwill.framework.web.AppServlet.doService(AppServlet.java:21)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:915)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:811)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:617)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:796)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:293)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:859)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:602)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+	at java.lang.Thread.run(Thread.java:722)
+
+八月 11, 2013 10:14:55 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+八月 11, 2013 10:15:21 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring FrameworkServlet 'spring'
+八月 11, 2013 10:18:31 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Destroying Spring FrameworkServlet 'spring'
+八月 11, 2013 10:18:31 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+八月 11, 2013 10:19:02 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+八月 11, 2013 10:19:16 下午 org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring FrameworkServlet 'spring'
