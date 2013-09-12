@@ -29,7 +29,7 @@ var myForm, formData;
 		        myForm.attachEvent("onEnter", login);
 		}	
 		function login(){
-			myForm.send(contextPath+"logon.spr","post",function(respon){
+			myForm.send(contextPath+"/logon.spr","post",function(respon){
 				var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");
 				if(res.result=='success')
 				{

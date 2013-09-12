@@ -39,29 +39,31 @@ a:active {color: #0000FF}
 </head>
 <body>
 
-<div style="background: url(../images/performance/hospital/banner.jpg);height:90px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
+<div id="headerDiv" style="background: url(../images/performance/hospital/banner.jpg);height:80px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
+<div id="toolbarObj"></div>
 <div id="parentId" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;"></div>
-<div id="controlPanel" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;padding:0px;margin:0px;border:0px;">
-<ul id="controllist" style="width: 100%; height: 100%;padding:20px 0px 20px 0px;margin:0px;border:0px;text-align:left;list-style-type:none;text-indent:4em;">
-<li class="fn"><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=recordManage');" >记录管理</a></li>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=searchRecord');">记录搜索</a></li>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=changePassword');">用户控制面板</a></li>
+
+
+
+<div id="controlPanel" style="position: relative; height:800px;  width: 100%; aborder: #B5CDE4 1px solid;padding:0px;margin:0px;border:0px;">
+<ul id="controllist" style="width: 100%; height: 100%;padding:10px 0px 10px 0px;margin:0px;border:0px;text-align:left;list-style-type:none;text-indent:2em;">
+<li class="fn"><a href="#" onclick="loadPage('manage.spr?action=recordManage');" >记录管理</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=searchRecord');">记录搜索</a></li>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0")||loginedUserInfo.get("bm").equals("bm"))){ 
 %>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=addRecord');">记录录入</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=addRecord');">记录录入</a></li>
 <% }%>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0")||loginedUserInfo.get("jb").equals("2"))){ 
 %>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=userManage');">用户管理</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=userManage');">用户管理</a></li>
 <% }%>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0"))){ 
 %>
-<!-- li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=roleManage');">角色管理</a></li-->
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=roomManage&roomType=ks');">科室管理</a></li>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=roomManage&roomType=bm');">部门管理</a></li>
-<li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=projectManage');">项目管理</a></li>
+<!-- li><a href="#" onclick="loadPage('manage.spr?action=roleManage');">角色管理</a></li-->
+<li><a href="#" onclick="loadPage('manage.spr?action=roomManage&roomType=ks');">科室管理</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=roomManage&roomType=bm');">部门管理</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=projectManage');">项目管理</a></li>
 <% }%>
-<li><a href="logon.spr?action=signout" >退出</a></li>
 </ul>
 
 </div>
