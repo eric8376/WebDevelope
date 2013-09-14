@@ -72,7 +72,7 @@ function doOnLoad() {
     		" on t1.dict_id=t2.parent_id "+
     		" group by t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\")')";
     
-	var data=toGridData(db.queryForList(sql),'dictId');
+	var data=toGridData(db.queryForList(sql),'dict_id');
 	grid.parse(data,"json");
  
 }

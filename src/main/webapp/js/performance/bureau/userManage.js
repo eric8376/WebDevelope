@@ -38,7 +38,7 @@ function doOnLoad() {
 	 	grid.init();
 	    var filterCondition="and hosp_id='"+parent.loginedUserInfo.hospId+"'"+getUserTypeSql();
 	    var sql="select user_id,user_name,real_name,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\")')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\")') as au from bureau.t_per_user where 1=1 "+filterCondition;
-		var data=toGridData(db.queryForList(sql),'userId');
+		var data=toGridData(db.queryForList(sql),'user_id');
 		grid.parse(data,"json");
  
 }

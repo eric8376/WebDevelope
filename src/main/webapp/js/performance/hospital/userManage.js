@@ -78,7 +78,7 @@ function doOnLoad() {
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));
-	var data=toGridData(rt.list,'userId');
+	var data=toGridData(rt.list,'user_id');
 	//alert(data);
 	grid.parse(data,"json");
 	

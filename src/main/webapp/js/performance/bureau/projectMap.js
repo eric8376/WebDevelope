@@ -47,7 +47,7 @@ function doOnLoad() {
    
     var projectId=getParam('projectId');
     var sql="select dict_id,dict_text,if(t2.son_id is null,0,1),if(t2.son_id is null,0,1) as init_value from (select * from "+viewName+" where hosp_id='"+parent.loginedUserInfo.hospId+"')  t1 left join bureau.t_per_dict_map  t2 on t1.dict_id=t2.son_id and parent_id='"+projectId+"'";
-	var data=toGridData(db.queryForList(sql),'dictId');
+	var data=toGridData(db.queryForList(sql),'dict_id');
 	grid.parse(data,"json");
 	 
 }

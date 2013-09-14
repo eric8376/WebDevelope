@@ -22,6 +22,8 @@ dhtmlxEvent(window,"load", doOnLoad);
                 {type:"hidden", name:"recordId"},
                 {type:"combo", name: 'xm', label:'项目:',options:toComboData(parent.getXMList(),"dict_id","dict_text")},
                 {type:"combo", name: 'hj', label:'关键环节:',options:null},
+                {type: "newcolumn", offset:20},
+
                 {type:"combo", name:"zb", label:"一级指标:",options:null},
 				{type:"combo", name:"owner", label:"医疗机构:",options:list3,filtering:true,value:""},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d"},

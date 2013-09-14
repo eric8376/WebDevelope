@@ -71,6 +71,12 @@ public class ManageController extends BaseMultiActionController {
 			HttpServletResponse response) throws Exception {
 		return new ModelAndView("/performance/hospital/workbench"); 
 	}
+	@RequestMapping(params = "action=recordAnalysis")
+	public ModelAndView recordAnalysis(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		return new ModelAndView("/performance/bureau/recordAnalysis");
+	}
 	@RequestMapping(params = "action=recordManage")
 	public ModelAndView recordManage(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

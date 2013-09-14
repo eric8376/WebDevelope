@@ -8,7 +8,7 @@
 <title>医院全面质量与绩效考核系统</title>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/inc/json/json.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/prototype.js"></script>
+
 <script language="javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/workbench.js"></script>
@@ -23,10 +23,7 @@ loginedUserInfo.ks='<%=loginedUserInfo.get("ks") %>';
 loginedUserInfo.jb='<%=loginedUserInfo.get("jb") %>';
 loginedUserInfo.bm='<%=loginedUserInfo.get("bm") %>';
 loginedUserInfo.hospId='<%=loginedUserInfo.get("hosp_id") %>';
-function changeBg(obj){
-	$('li').removeClass('fn');
-	$(obj).parent().addClass('fn');
-}
+
 </script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <style type="text/css">
@@ -41,13 +38,14 @@ a:active {color: #0000FF}
 
 <div id="headerDiv" style="background: url(../images/performance/hospital/banner.jpg);height:80px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
 <div id="toolbarObj"></div>
-<div id="parentId" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;"></div>
+<div id="parentId" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;"><div class="dhtmlxTree" 
+        id="treeboxbox_tree"
+        setImagePath="<%=request.getContextPath()%>/js/dhtmlx/imgs/"
+        style="width:150px; ">
 
-
-
-<div id="controlPanel" style="position: relative; height:800px;  width: 100%; aborder: #B5CDE4 1px solid;padding:0px;margin:0px;border:0px;">
-<ul id="controllist" style="width: 100%; height: 100%;padding:10px 0px 10px 0px;margin:0px;border:0px;text-align:left;list-style-type:none;text-indent:2em;">
-<li class="fn"><a href="#" onclick="loadPage('manage.spr?action=recordManage');" >记录管理</a></li>
+<ul>
+<li><a href="#" onclick="loadPage('manage.spr?action=recordAnalysis');" >记录分析</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=recordManage');" >记录管理</a></li>
 <li><a href="#" onclick="loadPage('manage.spr?action=searchRecord');">记录搜索</a></li>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0")||loginedUserInfo.get("bm").equals("bm"))){ 
 %>
@@ -59,13 +57,18 @@ a:active {color: #0000FF}
 <% }%>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0"))){ 
 %>
-<!-- li><a href="#" onclick="loadPage('manage.spr?action=roleManage');">角色管理</a></li-->
+
 <li><a href="#" onclick="loadPage('manage.spr?action=roomManage&roomType=ks');">科室管理</a></li>
 <li><a href="#" onclick="loadPage('manage.spr?action=roomManage&roomType=bm');">部门管理</a></li>
 <li><a href="#" onclick="loadPage('manage.spr?action=projectManage');">项目管理</a></li>
 <% }%>
 </ul>
+</ul>
 
-</div>
+</div></div>
+
+
+
+ 
 </body>
 </html>

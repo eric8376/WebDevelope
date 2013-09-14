@@ -9,26 +9,26 @@ dhtmlxEvent(window,"load", doOnLoad);
 			     serviceCall = new ServiceCall();
 			     serviceCall.init("queryDataSvc");
 				var rt2= serviceCall.execute(obj);
-				dhtmlx.skin = "dhx_skyblue";
+				//dhtmlx.skin = "dhx_skyblue";
 				window.dhx_globalImgPath = parent.contextPath+"/js/dhtmlx/imgs/";
-			
+				
 		        formData = [
 				{
 				    type: "settings",
 				    position: "label-left",
 				    labelWidth: 240,
-				    inputWidth: 300
+				    inputWidth: 150
 				},
-                { type: "fieldset", name: "data", label: "项目信息", inputWidth: "auto", list:[
+                { type: "fieldset", name: "data", label: "项目信息", inputWidth: 900, list:[
                 {type:"hidden", name:"recordId"},                                                                        
                 {type:"combo", name:"ks", label:"当事科室:",options:rt2.list,readonly:1},
 				{type:"combo", name: 'xm', label:'项目名称:',readonly:1,options:toComboData(parent.getXMList(),"dict_id","dict_text")},
 				{type:"input", name:"owner", label:"当事人:"},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d"},
 				{type:"input", name:"hospid", label:"住院号:"},
-				{type:"input", name:"results", label:"检查事项/结果:",rows:6},
-				{type:"input", name:"dianping", label:"点评:",rows: 6},
-				{type:"input", name:"kaohe", label:"考核分:"},
+				{type:"input", name:"results", label:"检查事项/结果:",rows:6,inputWidth :400},
+				{type:"input", name:"dianping", label:"点评:",rows: 6,inputWidth :400},
+				{type:"input", name:"kaohe", label:"考核分:",inputWidth :50},
 				{type:"button", name:"save", value:"确认保存"}] 
 			   }
                         ]

@@ -1,5 +1,5 @@
 dhtmlxEvent(window,"load", doOnLoad);
-var dhxLayout,toolbar,statusbar;
+var dhxLayout,toolbar,statusbar,dhxTree;
 function doOnLoad() {
 	dhxLayout = new dhtmlXLayoutObject("parentId", "3W");
 	dhxLayout.progressOn();
@@ -22,10 +22,11 @@ function doOnLoad() {
 	statusbar = dhxLayout.attachStatusBar();
 	/*状态栏*/
 	/*菜单栏*/
+	dhxTree=dhxLayout.cells("a").attachObject("treeboxbox_tree");
 	dhxLayout.cells("a").setText("我的菜单");
 	dhxLayout.cells("a").setWidth(150);
 	
-	dhxLayout.cells("a").attachObject("controlPanel");
+	
     dhxLayout.cells("b").hideHeader();
     /*菜单栏*/
     /*过滤栏*/
@@ -50,7 +51,7 @@ function doOnLoad() {
 	tabbar.addTab("a2", "项目","70px");
 	var grid1 = tabbar.cells("a2").attachGrid();
     grid1.setSkin("dhx_skyblue");
-    grid1.setImagePath("../../../dhtmlxGrid/codebase/imgs/");
+    grid1.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     grid1.setHeader("序号,项目");
     grid1.setNoHeader(true);
 

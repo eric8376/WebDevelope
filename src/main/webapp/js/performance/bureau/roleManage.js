@@ -62,7 +62,7 @@ function doOnLoad() {
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));
-	var data=toGridData(rt.list,'dictId');
+	var data=toGridData(rt.list,'dict_id');
 	grid.parse(data,"json");
 	
     

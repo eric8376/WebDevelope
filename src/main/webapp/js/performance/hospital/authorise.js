@@ -41,7 +41,7 @@ function doOnLoad() {
     obj.sql="select dict_id,dict_text,if(t2.role_id is null,0,1),if(t2.role_id is null,0,1) as init_value from t_per_role  t1 left join t_per_user_role  t2 on t1.dict_id=t2.role_id and user_id='"+userId+"'";
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
-	var data=toGridData(rt.list,'dictId');
+	var data=toGridData(rt.list,'dict_id');
 	grid.parse(data,"json");
 	
     

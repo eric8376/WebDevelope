@@ -85,7 +85,7 @@ function loadData(conditionSql){
 	    page=new Page(25,res.totalCount);
 	}
 	
-	var data=toGridData(res.list.value,'record_id');
+	var data=toGridData(res.list,'record_id');
 	//alert(data);
 	grid.clearAll();
 	grid.parse(data,"json");
