@@ -30,7 +30,7 @@ function doAnalysis(){
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
-	data=db.queryForList("select "+keyIndex+" as keyindex,sum(kaohe) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
+	data=db.queryForList("select "+keyIndex+" as keyindex,sum(kaohe) as number from hospital.t_per_record where 1=1 "+condition+"group by "+keyIndex+ " ");
 	if(chartType=="pie"){
 	createPieChart();
 	}else if(chartType=="bar"){
@@ -124,7 +124,7 @@ function createPieChart(){
 function loadSearchForm(){
 	//owner
  	
-    var sql="select user_name as value ,user_name as text from bureau.t_per_record where user_name is  not null group by user_name ";
+    var sql="select user_name as value ,user_name as text from hospital.t_per_record where user_name is  not null group by user_name ";
    var list2= db.queryForList(sql)
    list2.unshift({value:'ALL',text:"全部"});
 	var list3=toComboData(parent.getXMList(),'dict_id','dict_text');

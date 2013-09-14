@@ -45,7 +45,7 @@ function doOnLoad() {
     grid.setSkin("dhx_skyblue");
     grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     grid.setHeader("用户号,用户名,姓名,部门类型,所属科室,级别,删除,权限管理");
-    grid.setInitWidths("0,100,100,150,150,100,150，150");
+    grid.setInitWidths("0,100,100,150,150,100,150,150");
     grid.setColAlign("center,center,center,center,center,center,center,center");
     grid.setColTypes("ro,ro,ro,co,co,co,link,link");
     grid.setColSorting("str,str,str,str,str,str,str,str");

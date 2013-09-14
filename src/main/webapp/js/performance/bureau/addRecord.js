@@ -86,17 +86,17 @@ dhtmlxEvent(window,"load", doOnLoad);
 				    var sql="select * from bureau.t_per_record where record_id='"+recordId+"'";
 				    var list=db.queryForList(sql);
 					myForm.setItemValue("recordId",recordId);
-					myForm.getCombo("owner").setComboValue(list[0].userName);
+					myForm.getCombo("owner").setComboValue(list[0].user_name);
 					
-					myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",list[0].checkTime);
-					myForm.getInput("checktime").setValue(list[0].checkTime);
+					myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",list[0].check_time);
+					myForm.getInput("checktime").setValue(list[0].check_time);
 					myForm.getInput("hospid").setValue(list[0].zyh);
 					myForm.getInput("results").setValue(list[0].result);
 					myForm.getInput("dianping").setValue(list[0].dianping);
 					myForm.getInput("kaohe").setValue(list[0].kaohe);
-					myForm.getCombo("xm").setComboValue(list[0].xmId);
-					myForm.getCombo("hj").setComboValue(list[0].hjId);
-					myForm.getCombo("zb").setComboValue(list[0].zbId);
+					myForm.getCombo("xm").setComboValue(list[0].xm_id);
+					myForm.getCombo("hj").setComboValue(list[0].hj_id);
+					myForm.getCombo("zb").setComboValue(list[0].zb_id);
 					user=list[0];
 					
 	         
