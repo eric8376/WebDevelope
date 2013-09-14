@@ -14,6 +14,9 @@ where t1.一级项目=t2.dict_text  and t2.hosp_id='MB';
 update  sheet1 t1,t_per_ks t2 set t1.ks_id=t2.dict_id
 where t1.当事科室=t2.dict_text  and t2.hosp_id='MB';
 update  sheet1 set hosp_id='MB';
-4、将sheet1表导入最终表
+4、初始化项目科室关联表
+
+5、将sheet1表导入最终表
 insert into t_per_record(record_id,user_name,check_time,zyh,result,dianping,kaohe,ks_id,xm_id,hosp_id)
 select uuid(),当事人,记录时间,项目编码,检查事实,考核点评,考核扣分,ks_id,xm_id,hosp_id from sheet1
+5、显示列不能为null可以为空字符串
