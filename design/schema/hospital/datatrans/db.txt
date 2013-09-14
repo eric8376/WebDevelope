@@ -1,0 +1,19 @@
+1、将excel表导入到数据库sheet1表中
+2、重建数据字典表
+insert into t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) 
+select uuid(),'1' ,bm ,'bm','MB' from 管理   group by bm;
+insert into t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) 
+select uuid(),'1' ,当事科室 ,'ks','MB' from sheet1   group by 当事科室;
+
+insert into t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) 
+select uuid(),'1' ,一级项目 ,'ks','MB' from sheet1  group by 一级项目;
+3、反向关联数据表
+sheet1新增hosp_id,xm_id,ks_id
+update  sheet1 t1,t_per_xm t2 set t1.xm_id=t2.dict_id
+where t1.一级项目=t2.dict_text  and t2.hosp_id='MB';
+update  sheet1 t1,t_per_ks t2 set t1.ks_id=t2.dict_id
+where t1.当事科室=t2.dict_text  and t2.hosp_id='MB';
+update  sheet1 set hosp_id='MB';
+4、将sheet1表导入最终表
+insert into t_per_record(record_id,user_name,check_time,zyh,result,dianping,kaohe,ks_id,xm_id,hosp_id)
+select uuid(),当事人,记录时间,项目编码,检查事实,考核点评,考核扣分,ks_id,xm_id,hosp_id from sheet1

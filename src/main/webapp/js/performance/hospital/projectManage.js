@@ -44,12 +44,12 @@ function doOnLoad() {
     var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
     obj.sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\")') ,GROUP_CONCAT(t2.ks_text) as group_ks" +
     		" from (select * from t_per_xm where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,xm_id from t_per_xm_ks k1,hospital.t_dict_table k2 where k1.ks_id=k2.dict_id ) t2 " +
-    		" on t1.dict_id=t2.xm_id "
+    		" on t1.dict_id=t2.xm_id "+
     		" group by t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\")')";
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));
-	var data=toGridData(rt.list,'dictId');
+	var data=toGridData(rt.list,'dict_id');
 	grid.parse(data,"json");
 	
     
