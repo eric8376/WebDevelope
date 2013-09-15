@@ -67,10 +67,10 @@ function doOnLoad() {
     grid.init();
    
     var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
-    var sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\")') ,GROUP_CONCAT(t2.ks_text) as group_ks" +
+    var sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') ,GROUP_CONCAT(t2.ks_text) as group_ks" +
     		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from bureau.t_per_dict_map k1,bureau.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
     		" on t1.dict_id=t2.parent_id "+
-    		" group by t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\")')";
+    		" group by t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self')";
     
 	var data=toGridData(db.queryForList(sql),'dict_id');
 	grid.parse(data,"json");

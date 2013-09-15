@@ -81,7 +81,7 @@ function doOnLoad() {
     if(parent.loginedUserInfo.jb=='2'){
     	filterCondition+=" and ks='"+parent.loginedUserInfo.ks+"'";
     }
-    obj.sql="select user_id,user_name,real_name,BM,KS,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\")')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\")') as au from t_per_user where 1=1 "+filterCondition;
+    obj.sql="select user_id,user_name,real_name,BM,KS,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\");^_self')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\");^_self') as au from t_per_user where 1=1 "+filterCondition;
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));

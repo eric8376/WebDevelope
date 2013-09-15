@@ -58,7 +58,7 @@ function doOnLoad() {
     grid.init();
     var serviceCall = new ServiceCall();
     var obj=new Object();
-    obj.sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\")'),CONCAT('Manage^javascript:doManage(\"',dict_id,'\")') from bureau.t_per_role";
+    obj.sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self'),CONCAT('Manage^javascript:doManage(\"',dict_id,'\");^_self') from bureau.t_per_role";
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));

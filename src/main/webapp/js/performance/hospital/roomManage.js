@@ -51,7 +51,7 @@ function doOnLoad() {
     var serviceCall = new ServiceCall();
     var obj=new Object();
     var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
-    obj.sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\")') from "+viewName+" where 1=1 "+filterCondition;
+    obj.sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	//alert(Object.toJSON(rt));

@@ -28,7 +28,7 @@ a:active {color: #0000FF}
 </head>
 <body>
 <div id="toolbarObj"></div>
-<div id="gridbox" style="position: relative;   width:100%; height: 570px; aborder: #B5CDE4 1px solid;"></div>
+<div id="gridbox" style="position: relative;   width:100%; height: 540px; aborder: #B5CDE4 1px solid;"></div>
 <div id="pageToolbarObj"></div>
 
 </body>

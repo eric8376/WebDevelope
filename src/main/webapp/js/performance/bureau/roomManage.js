@@ -55,7 +55,7 @@ function doOnLoad() {
     grid.init();
     
     var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
-    var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\")') from "+viewName+" where 1=1 "+filterCondition;
+    var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
 	var data=toGridData(db.queryForList(sql),'dict_id');
 	grid.parse(data,"json");
  
