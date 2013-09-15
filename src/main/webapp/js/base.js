@@ -158,7 +158,10 @@ function ServiceCall(async,callBackFunction)
       	{
 	  		var rt = JSON.parse(rtStr);
 	  		//alert("rt.value="+rt.value);
-	  		if(rt.value)
+	  		if(rt&&window.isIE){
+	  			return rt;
+	  		}
+	  		else if(rt.value)
 	  		{
 	  			return rt.value;
 	  		}else if(rt.exception)
