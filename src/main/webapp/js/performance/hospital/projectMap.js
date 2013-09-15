@@ -38,7 +38,7 @@ function doOnLoad() {
     var serviceCall = new ServiceCall();
     var obj=new Object();
     var projectId=getParam('projectId');
-    obj.sql="select dict_id,dict_text,if(t2.ks_id is null,0,1),if(t2.ks_id is null,0,1) as init_value from (select * from t_per_bm where 1=1 and  hosp_id='"+parent.loginedUserInfo.hospId+"')t1 left join t_per_xm_ks  t2 on t1.dict_id=t2.ks_id and xm_id='"+projectId+"'";
+    obj.sql="select dict_id,dict_text,if(t2.ks_id is null,0,1),if(t2.ks_id is null,0,1) as init_value from (select * from t_per_bm where 1=1 and  hosp_id='"+parent.loginedUserInfo.hospId+"') t1 left join t_per_xm_ks  t2 on t1.dict_id=t2.ks_id and xm_id='"+projectId+"'";
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	var data=toGridData(rt.list,'dict_id');

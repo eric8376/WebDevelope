@@ -9,7 +9,7 @@
 
 <script language="javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/recordAnalysis.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/recordAnalysis.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <style>
 .dhx_axis_item_x{

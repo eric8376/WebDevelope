@@ -1,6 +1,10 @@
 dhtmlxEvent(window,"load", doOnLoad);
 var roomType;
 function doDelete(id){
+	if(parent.loginedUserInfo.jb!='0'){
+		alert("非管理员不能删除");
+		return;
+	}
 	if(!confirm("确定要删除吗？")){
 		return;
 	}

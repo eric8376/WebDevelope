@@ -26,8 +26,9 @@ dhtmlxEvent(window,"load", doOnLoad);
 				{type:"input", name:"owner", label:"当事人:"},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d"},
 				{type:"input", name:"hospid", label:"住院号:"},
-				{type:"input", name:"results", label:"检查事项/结果:",rows:6,inputWidth :400},
-				{type:"input", name:"dianping", label:"点评:",rows: 6,inputWidth :400},
+				{type:"input", name:"results", label:"检查事项/结果:",rows:5,inputWidth :400},
+				{type:"input", name:"dianping", label:"点评:",rows: 5,inputWidth :400},
+				{type:"input", name:"beizhu", label:"备注:",rows: 5,inputWidth :400},
 				{type:"input", name:"kaohe", label:"考核分:",inputWidth :50},
 				{type:"button", name:"save", value:"确认保存"}] 
 			   }
@@ -50,6 +51,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 						myForm.getInput("hospid").setValue(result.list[0].zyh);
 						myForm.getInput("results").setValue(result.list[0].result);
 						myForm.getInput("dianping").setValue(result.list[0].dianping);
+						myForm.getInput("beizhu").setValue(result.list[0].beizhu);
 						myForm.getInput("kaohe").setValue(result.list[0].kaohe);
 						myForm.getCombo("xm").setComboValue(result.list[0].xm_id);
 						myForm.getCombo("ks").setComboValue(result.list[0].ks_id);

@@ -11,10 +11,25 @@
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/recordManage.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<style type="text/css">
+.fn{
+background-color:#b6cdec;
+}
+a:hover {color: #FF00FF}
+a:active {color: #0000FF}
+ html, body {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0px;
+                      overflow: hidden;
+              }
+
+</style>
 </head>
 <body>
 <div id="toolbarObj"></div>
-<div id="gridbox" style="position: relative;   width:100%; height: 550px; aborder: #B5CDE4 1px solid;"></div>
+<div id="gridbox" style="position: relative;   width:100%; height: 570px; aborder: #B5CDE4 1px solid;"></div>
 <div id="pageToolbarObj"></div>
+
 </body>
 </html>

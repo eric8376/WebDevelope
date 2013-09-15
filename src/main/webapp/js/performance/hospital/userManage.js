@@ -2,6 +2,13 @@ dhtmlxEvent(window,"load", doOnLoad);
 var grid,toolbar;
 function doDelete(id){
 	if(id!=null){
+		if(parent.loginedUserInfo.jb!='0'){
+			alert("非管理员不能删除");
+			return;
+		}
+		if(!confirm("确定要删除吗？")){
+			return;
+		}
 		dhtmlxAjax.post("manageOperation.spr?action=deleteUser","userId="+id,function(respon){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')

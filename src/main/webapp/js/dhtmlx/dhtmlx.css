@@ -479,7 +479,7 @@ div.gridbox table.hdr td div.hdrcell{overflow:hidden}
 div.gridbox table.obj td {border: 1px solid; border-color : white Gray Gray white; font-family:Arial; font-size:12px; -moz-user-select:none; -moz-user-select:-moz-none; 
  overflow:hidden; padding-top:0px; padding-bottom:0px; empty-cells:show}
 div.gridbox table.obj th, div.gridbox table.hdr th{padding:0px 0px 0px 0px ; margin:0px 0px 0px 0px}
-div.gridbox table.row20px tr td{height:40px; white-space: nowrap; padding:0px}
+div.gridbox table.row20px tr td{height:30px; white-space: nowrap; padding:0px}
 div.gridbox .objbox {background-color:white; position:relative; -webkit-overflow-scrolling: touch}
 div.gridbox table.obj td span.space, div.gridbox table.obj td img.space{width:18px}
 div.gridbox table.obj tr.rowselected td.cellselected, div.gridbox table.obj td.cellselected {background-color:#d8d8d8; color:black;}

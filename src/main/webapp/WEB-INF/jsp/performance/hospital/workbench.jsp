@@ -32,13 +32,20 @@ background-color:#b6cdec;
 }
 a:hover {color: #FF00FF}
 a:active {color: #0000FF}
+ html, body {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0px;
+                      overflow: hidden;
+              }
+
 </style>
 </head>
 <body>
 
-<div id="headerDiv" style="background: url(../images/performance/hospital/banner.jpg);height:80px;width:100%;padding:0px;margin:0px;border:0px;">&nbsp;</div>
-<div id="toolbarObj"></div>
-<div id="parentId" style="position: relative;   width: 100%; height: 600px; aborder: #B5CDE4 1px solid;"><div class="dhtmlxTree" 
+
+
+<div class="dhtmlxTree" 
         id="treeboxbox_tree"
         setImagePath="<%=request.getContextPath()%>/js/dhtmlx/imgs/"
         style="width:150px; ">
@@ -49,7 +56,7 @@ a:active {color: #0000FF}
 <li><a href="#" onclick="loadPage('manage.spr?action=searchRecord');">记录搜索</a></li>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0")||loginedUserInfo.get("bm").equals("bm"))){ 
 %>
-<li><a href="#" onclick="loadPage('manage.spr?action=addRecord');">记录录入</a></li>
+<li><a href="#" onclick="loadPage('manage.spr?action=addRecord&operation=add');">记录录入</a></li>
 <% }%>
 <%if(loginedUserInfo!=null&&(loginedUserInfo.get("jb").equals("0")||loginedUserInfo.get("jb").equals("2"))){ 
 %>
@@ -65,8 +72,7 @@ a:active {color: #0000FF}
 </ul>
 </ul>
 
-</div></div>
-
+</div>
 
 
  

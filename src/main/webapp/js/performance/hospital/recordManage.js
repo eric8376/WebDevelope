@@ -32,14 +32,16 @@ function doOnLoad() {
 	
 	
 	grid = new dhtmlXGridObject('gridbox');
-	
+	//grid.attachToObject(document.body);
+	//grid.enableAutoHeight(true);
+	//grid.enableAutoWidth(true);
     grid.setSkin("dhx_skyblue");
     grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
-    grid.setHeader("项目ID,项目,所在科室,相关人员,检查时间,检查事项/结果,点评,考核分");
-    grid.setInitWidths("0,100,100,100,150,350,100,100");
-    grid.setColAlign("center,center,center,center,center,center,center,center");
-    grid.setColTypes("ro,co,co,ro,ro,ro,ro,ro");
-    grid.setColSorting("str,str,str,str,str,str,str,str");
+    grid.setHeader("项目ID,项目,所在科室,相关人员,检查时间,检查事项/结果,点评,考核分,备注");
+    grid.setInitWidths("0,100,100,100,150,350,100,100,100");
+    grid.setColAlign("center,center,center,center,center,center,center,center,center");
+    grid.setColTypes("ro,co,co,ro,ro,ro,ro,ro,ro");
+    grid.setColSorting("str,str,str,str,str,str,str,str,str");
    
     var combo1 = grid.getCombo(1);
 	var serviceCall = new ServiceCall();
@@ -73,7 +75,7 @@ function doOnLoad() {
 function loadData(conditionSql){
 	var pageSql;
 	if(page==null){
-		pageSql=" limit 0,25 ";
+		pageSql=" limit 0,15 ";
 	}else{
 		pageSql=page.getPageSql();
 	}
@@ -82,7 +84,7 @@ function loadData(conditionSql){
 	resultSet=res;
 	//alert(Object.toJSON(rt));
 	if(page==null){
-	    page=new Page(25,res.totalCount);
+	    page=new Page(15,res.totalCount);
 	}
 	
 	var data=toGridData(res.list,'record_id');
@@ -130,7 +132,7 @@ function initPageToolBar(){
 }
 function initToolBar(){
 	toolbar = new dhtmlXToolbarObject("toolbarObj"); 
-	toolbar.addButton('addRecord',1,"添加新记录",null,null);
+	//toolbar.addButton('addRecord',1,"添加新记录",null,null);
 	toolbar.addButton('updateRecord',1,"修改记录",null,null);
 	toolbar.addButton('caculate',1,"考核计算",null,null);
 	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");

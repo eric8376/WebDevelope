@@ -30,7 +30,7 @@ function doAnalysis(){
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
-	data=db.queryForList("select "+keyIndex+" as keyindex,sum(kaohe) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
+	data=db.queryForList("select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
 	if(chartType=="pie"){
 	createPieChart();
 	}else if(chartType=="bar"){
@@ -71,9 +71,7 @@ function createBarHChart(){
 			template:"#keyindex#"
 		});   	
 	 chart.define("xAxis",{
-        start:1,
-        end:40,
-        step:3,
+     
        // template:"{obj}",
         title:"扣分"
 	 	});     
@@ -98,9 +96,7 @@ function createBarChart(){
 			template:"#keyindex#"
 		});   	
 	 chart.define("yAxis",{
-         start:1,
-         end:40,
-         step:3,
+        
         // template:"{obj}",
          title:"扣分"
 	 	});     
