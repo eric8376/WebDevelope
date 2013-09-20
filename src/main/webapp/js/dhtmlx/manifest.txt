@@ -1,86 +1,74 @@
-color_of_bg: #b6cdec
-color_of_light: #ffffff
-color_of_border: #b6cdec
-color_of_window: #b6cdec
-color_of_bg2: #ebebeb
-color_of_content: #ffffff
-color_bg_web: #ffdede
-color_header_web: #9c3737
-color_border_web: #9c3737
-color_content_web: #ffffff
-color_menu_bg_web: #ffdede
-color_of_menu_sel: #ffc341
-color_of_border_of_sel: #ffc341
-color_sel_web: #f09f9f
-color_sel_border_web: #b67878
-color_of_text: #000000
-color_of_text_head: #000000
-color_of_text_grid: #000000
-color_of_text_cal: #c66200
-color_header_text_web: #ffdede
-color_content_text_web: #020000
-color_grid_tree_text_web: #020000
-color_menu_text_web: #020000
-color_form_head: #256187
-color_select_text_web: #000000
-color_of_sel: #ffe1a0
-top_gr_point: #f0f5fb
-bottom_gr_point: #d8e4f5
-bottom_gr_sel: #fffcf6
-color4: #e7eff9
-bottom_gr_sel_l21: #fffdf8
-bottom_gr_point_l21: #e0eaf7
-color_of_bg_l21: #c5d8f0
-color_of_menu_sel1: #ffdd95
-color_of_menu_sel2: #ffe3a6
-color_of_menu_sel3: #ffeabd
-bottom_gr_point_w: #d8e4f5
-color_of_window_inactive: #d3e1f4
-color_of_sep_border: #ecf2fa
-color_of_content_l50: #dbe6f6
-color_of_text_l60: #999999
-color_of_border_l34: #cfdef2
-color_cont_bg: #b6cdec
-color_form_text_l60: #b3b3b3
-color_form_border: #ccdcf2
-color_form_dis_text: #b3b3b3
-color_of_border_l30: #ccdcf2
-color_of_border_l50: #dbe6f6
-color_of_border_l70: #e9f0f9
-color_of_border_l83: #f3f7fc
-color_cal_light1: #e6eef9
-color_cal_light2: #dfe9f7
-color_cal_light3: #b7ceec
-color_cal_light5: #fff0d0
-black: #000000
-color_cal_light6: #f4dba4
-color_cal_light7: #fff9ec
-color_cal_light8: #e6b03b
-color_arr: #b7cbe7
-color_arr_hover: #808ea2
-color_arr_border: #7f90a5
-color_arr_border_bottom: #b7cce9
-color_arr_border_bottom2: #b7ccea
-bottom_gr_point_l80_2: #3c78cd
-intensity_tabbar: 100
-intensity_toolbar: 100
-text_fontfamily: tahoma
-text_size: 11
-text_head_fontfamily: tahoma
-text_head_size: 11
-text_head_bold: on
-text_grid_fontfamily: tahoma
-text_grid_size: 11
-text_cal_hol_fontfamily: tahoma
-text_cal_hol_size: 11
-text_header_web_fontfamily: Trebuchet MS
-text_header_web_size: 14
-text_content_web_fontfamily: tahoma
-text_content_web_size: 11
-text_grid_tree_web_fontfamily: tahoma
-text_grid_tree_web_size: 12
-text_menu_web_fontfamily: tahoma
-text_menu_web_size: 13
-text_form_head_fontfamily: tahoma
-text_form_head_size: 11
-text_form_head_bold: on
+Skin: dhx_skyblue
+
+======== JS CODE =========
+./dhtmlxcommon.js
+../dhtmlxMessage/codebase/dhtmlxmessage.js
+../dhtmlxAccordion/codebase/dhtmlxaccordion.js
+./dhtmlxcontainer.js
+../dhtmlxCalendar/codebase/dhtmlxcalendar.js
+../dhtmlxColorPicker/codebase/dhtmlxcolorpicker.js
+../dhtmlxCombo/codebase/dhtmlxcombo.js
+../dhtmlxCombo/codebase/ext/dhtmlxcombo_extra.js
+../dhtmlxCombo/codebase/ext/dhtmlxcombo_whp.js
+../dhtmlxCombo/codebase/ext/dhtmlxcombo_group.js
+../dhtmlxDataProcessor/codebase/dhtmlxdataprocessor.js
+../dhtmlxEditor/codebase/dhtmlxeditor.js
+../dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js
+../dhtmlxForm/codebase/dhtmlxform.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_calendar.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_upload.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_colorpicker.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_container.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_combo.js
+../dhtmlxForm/codebase/ext/dhtmlxform_item_editor.js
+../dhtmlxGrid/codebase/dhtmlxgrid.js
+../dhtmlxGrid/codebase/dhtmlxgridcell.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_filter.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_drag.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_start.js
+../dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js
+../dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_dhxcalendar.js
+../dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_cntr.js
+../dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link.js
+../dhtmlxLayout/codebase/dhtmlxlayout.js
+../dhtmlxMenu/codebase/dhtmlxmenu.js
+../dhtmlxMenu/codebase/ext/dhtmlxmenu_ext.js
+../dhtmlxPopup/codebase/dhtmlxpopup.js
+../dhtmlxSlider/codebase/dhtmlxslider.js
+../dhtmlxTabbar/codebase/dhtmlxtabbar.js
+../dhtmlxTabbar/codebase/dhtmlxtabbar_start.js
+../dhtmlxToolbar/codebase/dhtmlxtoolbar.js
+../dhtmlxTree/codebase/dhtmlxtree.js
+../dhtmlxTree/codebase/ext/dhtmlxtree_dragin.js
+../dhtmlxTree/codebase/ext/dhtmlxtree_ed.js
+../dhtmlxTree/codebase/ext/dhtmlxtree_json.js
+../dhtmlxTree/codebase/ext/dhtmlxtree_start.js
+../dhtmlxWindows/codebase/dhtmlxwindows.js
+corestore.js
+
+======== CSS CODE ========
+../dhtmlxCalendar/codebase/dhtmlxcalendar.css
+../dhtmlxChart/codebase/dhtmlxchart.css
+../dhtmlxColorPicker/codebase/dhtmlxcolorpicker.css
+../dhtmlxCombo/codebase/dhtmlxcombo.css
+../dhtmlxDataView/codebase/dhtmlxdataview.css
+../dhtmlxGrid/codebase/dhtmlxgrid.css
+../dhtmlxLayout/codebase/dhtmlxlayout.css
+../dhtmlxSlider/codebase/dhtmlxslider.css
+../dhtmlxTabbar/codebase/dhtmlxtabbar.css
+../dhtmlxTree/codebase/dhtmlxtree.css
+../dhtmlxWindows/codebase/dhtmlxwindows.css
+../dhtmlxMessage/codebase/skins/dhtmlxmessage_dhx_skyblue.css
+../dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_skyblue.css
+../dhtmlxCalendar/codebase/skins/dhtmlxcalendar_dhx_skyblue.css
+../dhtmlxEditor/codebase/skins/dhtmlxeditor_dhx_skyblue.css
+../dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css
+../dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css
+../dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_skyblue.css
+../dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_skyblue.css
+../dhtmlxPopup/codebase/skins/dhtmlxpopup_dhx_skyblue.css
+../dhtmlxToolbar/codebase/skins/dhtmlxtoolbar_dhx_skyblue.css
+../dhtmlxWindows/codebase/skins/dhtmlxwindows_dhx_skyblue.css

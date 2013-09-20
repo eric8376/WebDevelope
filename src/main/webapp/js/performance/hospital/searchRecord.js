@@ -29,7 +29,8 @@ function doOnLoad() {
 		{type:"combo", name:"owner", label:"人名:",options:rt3.list,filtering:true},
 		{type:"combo", name:"ks", label:"科室",options:list2},
 		{type:"combo", name:"xm", label:"项目:",options:list3},
-		{type:"button", name:"search", value:"开始搜索"}] 
+		
+		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}] 
 	   }
                 ]
 	myForm = new dhtmlXForm("form_container", formData);
