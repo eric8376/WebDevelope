@@ -83,7 +83,7 @@ $(document).ready(function(){
 	serviceCall.init("queryDataSvc");
 	var rt = serviceCall.execute(obj);
 	$.each(rt.list, function (index, value) {
-	    $('#hospSelect').append($('<option>', { 
+	    $('#hospital').append($('<option>', { 
 	        value: rt.list[index].key,
 	        text : rt.list[index].value 
 	    }));
@@ -119,16 +119,16 @@ $(document).ready(function(){
         </div>
         <div style="background: url(../images/performance/bureau/hospitalimg/bgb.jpg)  repeat-x; height: 166px;">
             <div style="height: 80px; line-height: 80px; float: right;padding-right:30px;">
-                <form action="login.spr" method="post" id="form1">
+                <form action="login.spr" method="post" id="loginForm">
                 <div>
                 	<div id="hosp">
-                  		 质控中心:<select  name="hospSelect" id="hospSelect"></select>
+                  		 质控中心:<select  name="hospital" id="hospital"></select>
                		</div>      
                     <div id="user">
-           				用户:<input type="text" name="userInput" id="userInput"/>
+           				用户:<input type="text" name="username" id="userInput"/>
            			</div>
                     <div id="pass">
-                        	密码:<input type="password" name="passwordInput" id="passwordInput"/>
+                        	密码:<input type="password" name="password" id="passwordInput"/>
                      </div>       
                     <div id="button">
                     </div>

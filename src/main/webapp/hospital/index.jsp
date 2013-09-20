@@ -5,10 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/inc/json/json.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/hospital/login.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/hospital/login.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
 <style type="text/css">
 body
@@ -60,40 +58,7 @@ body
 var contextPath='<%=request.getContextPath()%>/hospital';
 
  
-$(document).ready(function(){	
-	function mylogin(){
-		var users=$('#userInput').val();
-		var pss=$('#passwordInput').val();
-		var hospital=$('#hospSelect').val();
-		var oldname=$("input[name='username']");
-		var oldpss=$("input[name='password']");
-		var oldhosp=$("input[name='hospital']");
-		oldname.val(users);
-		oldpss.val(pss);
-		oldhosp.val(hospital);
-		
-	    login();//login.js里面的方法		
-	}
-	
 
-    $('#button').bind("click",function(){        	
-    	mylogin();   	  
-    	});
-    
-    $('#userInput').bind('keyup', function(event){
-    	   if (event.keyCode=="13"){
-    		   mylogin();   	
-    		   }
-    });
-    
-    $('#passwordInput').bind('keyup', function(event){
- 	   if (event.keyCode=="13"){
-		   mylogin();   	
-		   }
-     });
-    
-    
-});
 
 </script>
 </head>
@@ -106,16 +71,16 @@ $(document).ready(function(){
         </div>
         <div style="background: url(../images/performance/hospital/hospitalimg/bgb.jpg)  repeat-x; height: 166px;">
             <div style="height: 80px; line-height: 80px; float: right;padding-right:30px;">
-                <form action="login.spr" method="post" id="form1">
+                <form action="logon.spr" method="post" id="loginForm">
                 <div>
                 	<div id="hosp">
-                  		 医院:<input  name="text" id="hospSelect"/>
+                  		 医院:<input  type="text"  name="hospital" />
                		</div>      
                     <div id="user">
-           				用户:<input type="text" name="userInput" id="userInput"/>
+           				用户:<input type="text" name="username" id="userInput"/>
            			</div>
                     <div id="pass">
-                        	密码:<input type="password" name="passwordInput" id="passwordInput"/>
+                        	密码:<input type="password" name="password" id="passwordInput"/>
                      </div>       
                     <div id="button">
                     </div>
