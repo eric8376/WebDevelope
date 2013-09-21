@@ -84,7 +84,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 				{
 					QueryDataService queryDataService=(QueryDataService)svc;
 					Map<String, String> sqlMap=(Map<String, String>)obj[0];
-					rtObj=queryDataService.query(sqlMap.get("sql"));
+					rtObj=queryDataService.query(sqlMap);
 				}
 				responseText = JSONExecuteHelp.parseJSONText(rtObj);
 			}
@@ -163,7 +163,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 					QueryDataService queryDataService=(QueryDataService)svc;
 					Map<String, String> sqlMap=(Map<String, String>)obj[0];
 					Map<String,Object> result=new HashMap<String, Object>();
-					result.put("value", queryDataService.query(sqlMap.get("sql")));
+					result.put("value", queryDataService.query(sqlMap));
 					rtObj=result;
 				}
 				responseText = JSONExecuteHelp.parseJSONText(rtObj);

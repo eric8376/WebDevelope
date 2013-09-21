@@ -531,27 +531,15 @@ db.queryForList=function(sql){
 	var rt= serviceCall.execute(obj);
 	return rt.list;
 };
-function Page(pageSize,totalCount){
+db.queryForPageList=function(sql){
+	var serviceCall = new ServiceCall();
 	var obj=new Object();
-	obj.currentPage=0;
-	obj.pageSize=pageSize;
-	obj.page=0;
-	obj.totalCount=totalCount;
-	obj.recount=function(){
-		this.page=Math.floor(this.totalCount/this.pageSize);
-		this.totalCount%this.pageSize>0?this.page+1:this.page+0;
+	obj.sql=sql;
+	serviceCall.init("queryDataSvc");
+	var rt= serviceCall.execute(obj);
+	return rt;
+};
 
-	}
-	obj.getPageSql=function(){
-		return "limit "+this.currentPage*this.pageSize+","+this.pageSize;
-	}
-	obj.setCurrentPage=function(currentPage){
-		this.currentPage=currentPage;
-	}
-	obj.recount();
-	return obj;
-	
-}
 var getParam = function(name){
         var search = document.location.search;
         var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
@@ -625,4 +613,148 @@ function getContextPath(){
 }
 function isEmpty(str){
 	return str==""||str==undefined||str==null;
+}
+/*grid*/
+/**
+ * define.sql 列表的sql语句
+ * define.columns[]{title,width,type,dataSql,data}
+ * define.pageSize
+ * 
+ * @param id
+ * @param define
+ */
+function createGridObject(id,define){
+	var grid = new dhtmlXGridObject(id);
+	//初始化工具栏和分页栏
+	$("#"+id).before("<div id='toolbarObj'></div>");
+	$("#"+id).after("<div id='pageToolbarObj'></div>");
+	grid.pageToolBar=new dhtmlXToolbarObject("pageToolbarObj");
+	grid.toolBar=new dhtmlXToolbarObject("toolbarObj");
+	grid.pageToolBar=new dhtmlXToolbarObject("pageToolbarObj");
+	//列表的默认查询语句和列表主键
+	grid.sql=define.sql;
+	grid.key=define.key;
+	grid.loadcallback=define.callback;
+	//默认的查询方法
+	grid.doQuery=function(sql){
+		if(sql!=""){
+		grid.sql=sql;
+		}
+		if(grid.page==null){
+			grid.page=new Page(15);
+		}
+		var data
+		if(grid.loadcallback){
+			data=grid.loadcallback(grid);
+		}else{
+		data=db.queryForPageList(page.sql+page.getPageSql());
+		}
+		grid.clearAll();
+		grid.parse(toGridData(data.list,grid.key),"json");
+		grid.page.setTotalCount(data.totalCount);
+		pagetoolbar.setItemText("pageinfo","第"+(grid.page.currentPage+1)+"页,共"+(grid.page.page+1)+"页,"+grid.page.totalCount+"条记录");
+	}
+	initGrid(grid,define);
+	initPageToolBar(grid);
+	return grid;
+}
+function initPageToolBar(grid){
+	pagetoolbar =grid.pageToolBar; 
+	pagetoolbar.grid=grid;
+	pagetoolbar.addButton('firstPage',0,"第一页",null,null);
+	pagetoolbar.addButton('previousPage',1,"上一页",null,null);
+	pagetoolbar.addButton('nextPage',3,"下一页",null,null);
+	pagetoolbar.addButton('lastPage',4,"最后页",null,null);
+	pagetoolbar.addText("pageinfo", 5, "");
+	//pagetoolbar.addButton("backtosearch", 6, "重新搜索",null,null);
+	pagetoolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
+	pagetoolbar.setAlign('right');
+	pagetoolbar.attachEvent("onClick", function(id) {
+		var page=pagetoolbar.grid.page;
+        if(id=="firstPage"){
+        	page.setCurrentPage(0);
+        	this.grid.doQuery();
+        }else if(id=="previousPage"){
+        	if(page.currentPage<=0){
+        		return;
+        	}
+        	page.setCurrentPage(page.currentPage-1);
+        	this.grid.doQuery();
+        
+        }else if(id=="nextPage"){
+        	if(page.currentPage>=page.page){
+        		return;
+        	}
+        	page.setCurrentPage(page.currentPage+1);
+        	this.grid.doQuery();
+        }else if(id=="lastPage"){
+        	page.setCurrentPage(page.page);
+        	this.grid.doQuery();
+        }
+//        else if(id="backtosearch"){
+//        	parent.loadPage('manage.spr?action=searchRecord');
+//        }
+    });
+}
+function initGrid(grid,define){
+	var headerlist=new Array();
+	var initWidthlist=new Array();
+	var colTypelist=new Array();
+	for(var i=0;i<define.columns.length;i++){
+		headerlist.push(define.columns[i].title);
+		initWidthlist.push(define.columns[i].width);
+		colTypelist.push(define.columns[i].type);
+		if("co"==define.columns[i].type){
+			if(define.columns[i].data){
+				addGridComboOptions(grid.getCombo(i),define.columns[i].data);
+			}
+			else if(define.columns[i].dataSql){
+				var list=db.queryForList(define.columns[i].dataSql);
+				addGridComboOptions(grid.getCombo(i),list);
+			}else if(define.columns[i].dict){
+				var sql="select dict_id as 'key',dict_text as 'value' from "+define.columns[i].dict;
+				var list=db.queryForList(sql);
+				addGridComboOptions(grid.getCombo(i),list);
+			}
+			
+			
+		}
+	}
+	grid.setHeader(headerlist.join(","));
+	grid.setInitWidths(initWidthlist.join(","));
+	grid.setColTypes(colTypelist.join(","));
+	//grid.setSkin("dhx_skyblue");
+	//grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+	grid.init();
+	return grid;
+}
+function addGridComboOptions(combo,datas){
+	for(var i=0;i<datas.length;i++){
+		combo.put(datas[i].key,datas[i].value);
+	}
+}
+function Page(pageSize){
+	var obj=new Object();
+	obj.currentPage=0;
+	obj.pageSize=pageSize;
+	obj.page=0;
+	//obj.totalCount=totalCount;
+	obj.recount=function(){
+		this.page=Math.floor(this.totalCount/this.pageSize);
+		this.totalCount%this.pageSize>0?this.page+1:this.page+0;
+
+	}
+	obj.getPageSql=function(){
+		return " limit "+this.currentPage*this.pageSize+","+this.pageSize;
+	}
+	obj.setTotalCount=function(totalCount){
+		this.totalCount=totalCount;
+		this.recount();
+	}
+	obj.setCurrentPage=function(currentPage){
+		this.currentPage=currentPage;
+	}
+	
+	return obj;
+	
 }

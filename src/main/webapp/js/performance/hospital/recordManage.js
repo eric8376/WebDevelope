@@ -1,8 +1,7 @@
 dhtmlxEvent(window,"load", doOnLoad);
 var grid,pagetoolbar,toolbar,page,conditionSql,resultSet;
 function doOnLoad() {
-	initToolBar();
-	initPageToolBar();
+	
 	var kssj=getParam('kssj');
 	var jssj=getParam('jssj');
 	var owner=getParam('owner');
@@ -30,112 +29,45 @@ function doOnLoad() {
 		conditionSql+=" and str_to_date(check_time,'%25Y-%25m-%25d') < str_to_date('"+jssj+"','%25Y-%25m-%25d') ";
 	}
 	
-	
-	grid = new dhtmlXGridObject('gridbox');
-	//grid.attachToObject(document.body);
-	//grid.enableAutoHeight(true);
-	//grid.enableAutoWidth(true);
-    grid.setSkin("dhx_skyblue");
-    grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
-    grid.setHeader("项目ID,项目,所在科室,相关人员,检查时间,检查事项/结果,点评,考核分,备注");
-    grid.setInitWidths("0,100,100,100,150,350,100,100,100");
-    grid.setColAlign("center,center,center,center,center,center,center,center,center");
-    grid.setColTypes("ro,co,co,ro,ro,ro,ro,ro,ro");
-    grid.setColSorting("str,str,str,str,str,str,str,str,str");
-   
-    var combo1 = grid.getCombo(1);
-	var serviceCall = new ServiceCall();
-	var obj = new Object();
-	obj.sql = "select dict_id as 'key',dict_text as 'value' from t_per_xm";
-	serviceCall.init("queryDataSvc");
-	var rt = serviceCall.execute(obj);
-	for ( var i = 0; i < rt.list.length; i++) {
-		combo1.put(rt.list[i].key, rt.list[i].value);
+	var grid_define={
+			columns:
+				[{title:"项目ID",width:0,type:"ro"},
+				 {title:"项目",width:100,type:"co",dict:"hospital.t_per_xm"},
+				 {title:"所在科室",width:100,type:"co",dict:"hospital.t_per_ks"},
+				 {title:"相关人员",width:100,type:"ro"},
+				 {title:"检查时间",width:150,type:"ro"},
+				 {title:"检查事项/结果",width:350,type:"ro"},
+				 {title:"点评",width:100,type:"ro"},
+				 {title:"考核分",width:100,type:"ro"},
+				 {title:"备注",width:100,type:"ro"}
+				],
+			key:"record_id",
+			callback:loadData
+				 
 	}
-	var combo2 = grid.getCombo(2);
-	var serviceCall = new ServiceCall();
-	var obj = new Object();
-	obj.sql = "select dict_id as 'key',dict_text as 'value' from t_per_ks";
-	serviceCall.init("queryDataSvc");
-	var rt = serviceCall.execute(obj);
-	for ( var i = 0; i < rt.list.length; i++) {
-		combo2.put(rt.list[i].key, rt.list[i].value);
-	}
-			
-	grid.init();
-	loadData(conditionSql);
-	
-    
+	grid=createGridObject('gridbox',grid_define);
+	initToolBar(grid);
+	grid.doQuery();    
     grid.attachEvent("onRowSelect", function(id,ind){
     	
     	//alert(grid.cells(id,0).getValue());
     })
  
 }
-function loadData(conditionSql){
-	var pageSql;
-	if(page==null){
-		pageSql=" limit 0,15 ";
-	}else{
-		pageSql=page.getPageSql();
-	}
-	var loader = dhtmlxAjax.postSync("authorize.spr?action=query","&conditionSql="+conditionSql+"&pageSql="+pageSql);
+function loadData(grid){
+
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=query","&conditionSql="+conditionSql+"&pageSql="+grid.page.getPageSql());
 	var res=eval("("+loader.xmlDoc.responseText+")");
-	resultSet=res;
-	//alert(Object.toJSON(rt));
-	if(page==null){
-	    page=new Page(15,res.totalCount);
-	}
-	
-	var data=toGridData(res.list,'record_id');
-	//alert(data);
-	grid.clearAll();
-	grid.parse(data,"json");
-	pagetoolbar.setItemText("pageinfo","第"+(page.currentPage+1)+"页,共"+(page.page+1)+"页,"+page.totalCount+"条记录");
-	
+	return res;
 }
-function initPageToolBar(){
-	pagetoolbar = new dhtmlXToolbarObject("pageToolbarObj"); 
-	pagetoolbar.addButton('firstPage',0,"第一页",null,null);
-	pagetoolbar.addButton('previousPage',1,"上一页",null,null);
-	//toolbar.addButtonSelect('limit', 2, '200', ['100,300,500,1000'], null, null);
-	pagetoolbar.addButton('nextPage',3,"下一页",null,null);
-	pagetoolbar.addButton('lastPage',4,"最后页",null,null);
-	pagetoolbar.addText("pageinfo", 5, "");
-	pagetoolbar.addButton("backtosearch", 6, "重新搜索",null,null);
-	pagetoolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
-	pagetoolbar.setAlign('right');
-	pagetoolbar.attachEvent("onClick", function(id) {
-        if(id=="firstPage"){
-        	page.setCurrentPage(0);
-        	loadData(conditionSql);
-        }else if(id=="previousPage"){
-        	if(page.currentPage<=0){
-        		return;
-        	}
-        	page.setCurrentPage(page.currentPage-1);
-        	loadData(conditionSql);
-        
-        }else if(id=="nextPage"){
-        	if(page.currentPage>=page.page){
-        		return;
-        	}
-        	page.setCurrentPage(page.currentPage+1);
-        	loadData(conditionSql);
-        }else if(id=="lastPage"){
-        	page.setCurrentPage(page.page);
-        	loadData(conditionSql);
-        }else if(id="backtosearch"){
-        	parent.loadPage('manage.spr?action=searchRecord');
-        }
-    });
-}
-function initToolBar(){
-	toolbar = new dhtmlXToolbarObject("toolbarObj"); 
+function initToolBar(grid){
+	toolbar = grid.toolBar; 
 	//toolbar.addButton('addRecord',1,"添加新记录",null,null);
-	toolbar.addButton('updateRecord',1,"修改记录",null,null);
-	toolbar.addButton('caculate',1,"考核计算",null,null);
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.addButton('updateRecord',1,"修改记录","iconWrite2.gif",null);
+	toolbar.addButton('caculate',1,"考核计算","iconWrite2.gif",null);
+	toolbar.addButton('backtosearch',1,"返回前页","iconWrite2.gif",null);
+	
 	
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="addRecord"){
@@ -156,6 +88,8 @@ function initToolBar(){
         	parent.loadPage('manage.spr?action=addRecord&operation=update&recordId='+recordId);
         }else if(id=="caculate"){
         	alert(resultSet.summaryNum);
+        }else if(id="backtosearch"){
+        	parent.loadPage('manage.spr?action=searchRecord');
         }
     });
 }

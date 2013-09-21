@@ -8,6 +8,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/hospital/login.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <style type="text/css">
 body
         {
@@ -56,6 +57,7 @@ body
 <script>
 //add by zxt,套用赋值原来的登陆界面
 var contextPath='<%=request.getContextPath()%>/hospital';
+
 
  
 

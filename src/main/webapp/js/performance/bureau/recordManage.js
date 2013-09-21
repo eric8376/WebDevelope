@@ -34,40 +34,21 @@ function doOnLoad() {
 	{
 		conditionSql+=" and str_to_date(check_time,'%25Y-%25m-%25d') < str_to_date('"+jssj+"','%25Y-%25m-%25d') ";
 	}
-	
-	
-	grid = new dhtmlXGridObject('gridbox');
-	
-    grid.setSkin("dhx_skyblue");
-    grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
-    grid.setHeader("项目ID,项目,关键环节,一级指标,医疗机构,检查时间,检查事项/结果,扣分,备注");
-    grid.setInitWidths("0,100,100,100,100,150,350,100,100");
-    grid.setColAlign("center,center,center,center,center,center,center,center,center");
-    grid.setColTypes("ro,co,co,co,ro,ro,ro,ro,ro");
-    grid.setColSorting("str,str,str,str,str,str,str,str,str");
-   
-    var combo1 = grid.getCombo(1);
-	var sql = "select dict_id as 'key',dict_text as 'value' from bureau.t_per_xm";
-	var list=db.queryForList(sql);
-	for ( var i = 0; i < list.length; i++) {
-		combo1.put(list[i].key, list[i].value);
+	var grid_define={
+			columns:
+				[{title:"项目ID",width:0,type:"ro"},
+				 {title:"项目",width:100,type:"co",dict:"bureau.t_per_xm"},
+				 {title:"关键环节",width:100,type:"co",dict:"bureau.t_per_hj"},
+				 {title:"一级指标",width:100,type:"co",dict:"bureau.t_per_zb"},
+				 {title:"医疗机构",width:100,type:"ro"},
+				 {title:"检查时间",width:150,type:"ro"},
+				 {title:"检查事项/结果",width:350,type:"ro"},
+				 {title:"扣分",width:100,type:"ro"},
+				 {title:"备注",width:100,type:"ro"}
+				]
+				 
 	}
-	
-	var combo2 = grid.getCombo(2);
-	 sql = "select dict_id as 'key',dict_text as 'value' from bureau.t_per_hj";
-	var list=db.queryForList(sql);
-	for ( var i = 0; i < list.length; i++) {
-		combo2.put(list[i].key, list[i].value);
-	}
-	
-	var combo3 = grid.getCombo(3);
-	sql = "select dict_id as 'key',dict_text as 'value' from bureau.t_per_zb";
-	var list=db.queryForList(sql);
-	for ( var i = 0; i < list.length; i++) {
-		combo3.put(list[i].key, list[i].value);
-	}
-			
-	grid.init();
+	grid=createGridObject('gridbox',grid_define);
 	loadData(conditionSql);
 	
     

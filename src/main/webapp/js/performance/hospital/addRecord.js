@@ -23,9 +23,13 @@ dhtmlxEvent(window,"load", doOnLoad);
                 {type:"hidden", name:"recordId"},                                                                        
                 {type:"combo", name:"ks", label:"当事科室:",options:rt2.list,readonly:1},
 				{type:"combo", name: 'xm', label:'项目名称:',readonly:1,options:toComboData(parent.getXMList(),"dict_id","dict_text")},
-				{type:"input", name:"owner", label:"当事人:"},
-				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d"},
-				{type:"input", name:"hospid", label:"住院号:"},
+				{type:"input", name:"owner", label:"当事人:",required: true},
+				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d",  tooltip:"请输入检查时间",required: true,note: {
+				     text: "请在这里输入时间，时间是必填项."
+		             
+			 }
+},
+				{type:"input", name:"hospid", label:"住院号:",required: true},
 				{type:"input", name:"results", label:"检查事项/结果:",rows:5,inputWidth :400},
 				{type:"input", name:"dianping", label:"点评:",rows: 5,inputWidth :400},
 				{type:"input", name:"beizhu", label:"备注:",rows: 5,inputWidth :400},
@@ -34,6 +38,8 @@ dhtmlxEvent(window,"load", doOnLoad);
 			   }
                         ]
 			myForm = new dhtmlXForm("form_container", formData);
+		    myForm.setFontSize("15px");
+
 		        if(operation=="update"){
 		        	 var recordId=getParam('recordId');
 		        	 var serviceCall = new ServiceCall();
