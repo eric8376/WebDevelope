@@ -32,8 +32,8 @@ function doOnLoad() {
 	var grid_define={
 			columns:
 				[{title:"项目ID",width:0,type:"ro"},
-				 {title:"项目",width:100,type:"co",dict:"hospital.t_per_xm"},
-				 {title:"所在科室",width:100,type:"co",dict:"hospital.t_per_ks"},
+				 {title:"项目",width:100,type:"co",dict:["hospital.t_per_xm"]},
+				 {title:"所在科室",width:100,type:"co",dict:["hospital.t_per_ks"]},
 				 {title:"相关人员",width:100,type:"ro"},
 				 {title:"检查时间",width:150,type:"ro"},
 				 {title:"检查事项/结果",width:350,type:"ro"},

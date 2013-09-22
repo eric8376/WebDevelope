@@ -535,6 +535,7 @@ db.queryForPageList=function(sql){
 	var serviceCall = new ServiceCall();
 	var obj=new Object();
 	obj.sql=sql;
+	obj.paging="true";
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
 	return rt;
@@ -625,6 +626,8 @@ function isEmpty(str){
  */
 function createGridObject(id,define){
 	var grid = new dhtmlXGridObject(id);
+	grid.setSkin("dhx_skyblue");
+	grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
 	//初始化工具栏和分页栏
 	$("#"+id).before("<div id='toolbarObj'></div>");
 	$("#"+id).after("<div id='pageToolbarObj'></div>");
@@ -637,7 +640,7 @@ function createGridObject(id,define){
 	grid.loadcallback=define.callback;
 	//默认的查询方法
 	grid.doQuery=function(sql){
-		if(sql!=""){
+		if(sql){
 		grid.sql=sql;
 		}
 		if(grid.page==null){
@@ -647,7 +650,7 @@ function createGridObject(id,define){
 		if(grid.loadcallback){
 			data=grid.loadcallback(grid);
 		}else{
-		data=db.queryForPageList(page.sql+page.getPageSql());
+		data=db.queryForPageList(grid.sql+grid.page.getPageSql());
 		}
 		grid.clearAll();
 		grid.parse(toGridData(data.list,grid.key),"json");
@@ -656,6 +659,7 @@ function createGridObject(id,define){
 	}
 	initGrid(grid,define);
 	initPageToolBar(grid);
+	grid.doQuery();
 	return grid;
 }
 function initPageToolBar(grid){
@@ -666,7 +670,6 @@ function initPageToolBar(grid){
 	pagetoolbar.addButton('nextPage',3,"下一页",null,null);
 	pagetoolbar.addButton('lastPage',4,"最后页",null,null);
 	pagetoolbar.addText("pageinfo", 5, "");
-	//pagetoolbar.addButton("backtosearch", 6, "重新搜索",null,null);
 	pagetoolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
 	pagetoolbar.setAlign('right');
 	pagetoolbar.attachEvent("onClick", function(id) {
@@ -691,19 +694,25 @@ function initPageToolBar(grid){
         	page.setCurrentPage(page.page);
         	this.grid.doQuery();
         }
-//        else if(id="backtosearch"){
-//        	parent.loadPage('manage.spr?action=searchRecord');
-//        }
+
     });
 }
 function initGrid(grid,define){
 	var headerlist=new Array();
+	var headeralignlist=new Array();
 	var initWidthlist=new Array();
 	var colTypelist=new Array();
+	var colAlignlist=new Array();
+	var colVAlignlist=new Array();
+	var colSorting=new Array();
 	for(var i=0;i<define.columns.length;i++){
 		headerlist.push(define.columns[i].title);
+		headeralignlist.push("text-align:center");
 		initWidthlist.push(define.columns[i].width);
 		colTypelist.push(define.columns[i].type);
+		colAlignlist.push("center");
+		colVAlignlist.push("middle");
+		colSorting.push("str");
 		if("co"==define.columns[i].type){
 			if(define.columns[i].data){
 				addGridComboOptions(grid.getCombo(i),define.columns[i].data);
@@ -712,19 +721,28 @@ function initGrid(grid,define){
 				var list=db.queryForList(define.columns[i].dataSql);
 				addGridComboOptions(grid.getCombo(i),list);
 			}else if(define.columns[i].dict){
-				var sql="select dict_id as 'key',dict_text as 'value' from "+define.columns[i].dict;
+				for(var j=0;j<define.columns[i].dict.length;j++){
+				var sql="select dict_id as 'key',dict_text as 'value' from "+define.columns[i].dict[j];
 				var list=db.queryForList(sql);
 				addGridComboOptions(grid.getCombo(i),list);
+				}
 			}
 			
 			
 		}
 	}
-	grid.setHeader(headerlist.join(","));
+	grid.setColAlign(colAlignlist.join(","));
+	grid.setColVAlign(colVAlignlist.join(","));
+	grid.setHeader(headerlist.join(","),null,headeralignlist);
 	grid.setInitWidths(initWidthlist.join(","));
 	grid.setColTypes(colTypelist.join(","));
-	//grid.setSkin("dhx_skyblue");
-	//grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+	grid.setColSorting(colSorting.join(","));
+	grid.enableDragAndDrop(true);
+	grid.enableDragOrder(true);
+	grid.enableLightMouseNavigation(true);
+	grid.setEditable(false);
+	grid.enableAutoWidth(true,920,920);
+
 	grid.init();
 	return grid;
 }

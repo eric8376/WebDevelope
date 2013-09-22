@@ -6,14 +6,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/inc/json/json.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/prototype.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/userManage.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
+<style type="text/css">
+ html, body {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0px;
+                      overflow: hidden;
+              }
+
+</style>
 </head>
 <body>
-<div id="toolbarObj"></div>
-<div id="gridbox" style="position: relative;   width:100%; height: 600px; aborder: #B5CDE4 1px solid;"></div>
+<div id="gridbox" style="position: relative;   width:100%; height: 540px;"></div>
 </body>
 </html>
