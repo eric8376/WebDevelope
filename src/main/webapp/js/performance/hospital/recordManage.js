@@ -66,6 +66,7 @@ function initToolBar(grid){
 	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
 	toolbar.addButton('updateRecord',1,"修改记录","iconWrite2.gif",null);
 	toolbar.addButton('caculate',1,"考核计算","iconWrite2.gif",null);
+	toolbar.addButton('import',1,"导入数据","iconWrite2.gif",null);
 	toolbar.addButton('backtosearch',1,"返回前页","iconWrite2.gif",null);
 	
 	
@@ -88,8 +89,10 @@ function initToolBar(grid){
         	parent.loadPage('manage.spr?action=addRecord&operation=update&recordId='+recordId);
         }else if(id=="caculate"){
         	alert(resultSet.summaryNum);
-        }else if(id="backtosearch"){
+        }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
+        }else if(id=="import"){
+        	createFileImport("");
         }
     });
 }

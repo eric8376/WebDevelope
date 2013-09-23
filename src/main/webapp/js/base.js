@@ -776,3 +776,23 @@ function Page(pageSize){
 	return obj;
 	
 }
+function createFileImport(url){
+	var dhxWins= new dhtmlXWindows();
+	var win =dhxWins.createWindow("importExcelForRecord",400,200,200,200);
+	dhxWins.window("importExcelForRecord").setText("导入记录文件Excel");
+	var formData = [
+	            	{type: "upload", name: "excel", label: "excel文件"},
+	            	{type: "button", name: "uploadButton", value: "上传"}
+	            	
+	            ];
+	var importExcelForRecordForm=dhxWins.window("importExcelForRecord").attachForm(formData);
+	importExcelForRecordForm.attachEvent("onButtonClick", function(name) {
+		 if(name=="uploadButton"){
+			 var myUploader = importExcelForRecordForm.getUploader("excel");
+			 myUploader.upload();
+		 }
+	 });
+	
+	
+	
+}

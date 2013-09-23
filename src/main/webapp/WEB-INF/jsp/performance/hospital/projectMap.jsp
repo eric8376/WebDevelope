@@ -5,18 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/inc/json/json.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/prototype.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
+<jsp:include page="../include/include.jsp" />
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/projectMap.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
-<input type="button" value='保存'onclick="saveMap();"/>
-<input type="button" value='返回' onclick="parent.loadPage('manage.spr?action=projectManage');"/>
+
 <body>
 
-<div id="gridbox" style="position: relative;   width:100%; height: 600px; aborder: #B5CDE4 1px solid;"></div>
+<div id="gridbox" style="position: relative;   width:100%; height: 540px; aborder: #B5CDE4 1px solid;"></div>
 
 </body>
 </html>

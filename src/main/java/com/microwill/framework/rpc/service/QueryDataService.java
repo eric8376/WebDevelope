@@ -28,10 +28,10 @@ public class QueryDataService {
 		String paging = sqlMap.get("paging");
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isNotEmpty(paging) && "true".equals(paging)) {
-			int starindex = sql.indexOf("from");
+		
 			int endindex = sql.indexOf("limit");
-			String countSql = "select count(1) "
-					+ sql.substring(starindex, endindex);
+			String countSql = "select count(1) from ("
+					+ sql.substring(0, endindex)+" ) alltable";
 			map.put("totalCount", jdbcTemplate.queryForInt(countSql));
 		}
 		map.put("list", jdbcTemplate.queryForList(sql));

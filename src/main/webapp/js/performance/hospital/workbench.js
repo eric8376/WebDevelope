@@ -25,7 +25,7 @@ function doOnLoad() {
 	dhxTree=dhxLayout.cells("a").attachObject("treeboxbox_tree");
 	dhxLayout.cells("a").setText("我的菜单");
 	dhxLayout.cells("a").setWidth(150);
-	
+	//dhxTree.setImagePath("imgs/");
 	
     dhxLayout.cells("b").hideHeader();
     /*菜单栏*/
