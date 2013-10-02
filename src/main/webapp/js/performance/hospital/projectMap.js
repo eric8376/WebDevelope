@@ -13,7 +13,6 @@ function saveMap(){
 		}
 		
 	}
-//	alert(addChecklist+"|"+deleteChecklist);
 	param+="&addChecklist="+addChecklist+"&deleteChecklist="+deleteChecklist+"&projectId="+projectId;
 	dhtmlxAjax.get("manageOperation.spr?action=mapProject"+param,function (respon){
 		var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
@@ -30,7 +29,7 @@ function doOnLoad() {
 	var grid_define={
 			columns:
 				[{title:"编号",width:0,type:"ro"},
-				 {title:"科室",width:100,type:"ro"},
+				 {title:"科室",width:200,type:"ro"},
 				 {title:"选择",width:100,type:"ch"},
 				 {title:"初始选择",width:0,type:"ro"}
 				

@@ -28,7 +28,7 @@ function doOnLoad() {
 	{
 		conditionSql+=" and str_to_date(check_time,'%25Y-%25m-%25d') < str_to_date('"+jssj+"','%25Y-%25m-%25d') ";
 	}
-	
+	conditionSql+= " order by check_time desc";
 	var grid_define={
 			columns:
 				[{title:"项目ID",width:0,type:"ro"},
@@ -92,7 +92,7 @@ function initToolBar(grid){
         }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
         }else if(id=="import"){
-        	createFileImport("");
+        	createFileImport2("import.spr");
         }
     });
 }

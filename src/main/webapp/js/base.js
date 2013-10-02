@@ -778,21 +778,45 @@ function Page(pageSize){
 }
 function createFileImport(url){
 	var dhxWins= new dhtmlXWindows();
-	var win =dhxWins.createWindow("importExcelForRecord",400,200,200,200);
+	var win =dhxWins.createWindow("importExcelForRecord",400,400,400,400);
 	dhxWins.window("importExcelForRecord").setText("导入记录文件Excel");
-	var formData = [
-	            	{type: "upload", name: "excel", label: "excel文件"},
-	            	{type: "button", name: "uploadButton", value: "上传"}
-	            	
-	            ];
+	   formData = [{
+	        type: "fieldset",
+	        label: "Uploader",
+	        list: [{
+	            type: "upload",
+	            name: "excel",
+	            inputWidth: 330,
+	            url: url,
+	            mode :'html4'
+	        }]
+	        }, {
+	        type: "button",
+	        name: "send",
+	        value: "Send"
+	    }
+	];
+
 	var importExcelForRecordForm=dhxWins.window("importExcelForRecord").attachForm(formData);
 	importExcelForRecordForm.attachEvent("onButtonClick", function(name) {
-		 if(name=="uploadButton"){
-			 var myUploader = importExcelForRecordForm.getUploader("excel");
-			 myUploader.upload();
+		 if(name=="send"){
+//			 var myUploader = importExcelForRecordForm.getUploader("excel");
+//			 myUploader.upload();
+			 importExcelForRecordForm.send(url, function(loader, response) {
+	                alert("<pre>" + response + "</pre>");
+	            });
+
 		 }
 	 });
+
 	
 	
 	
 }
+function createFileImport2(url){
+	var dhxWins= new dhtmlXWindows();
+	var win =dhxWins.createWindow("importExcelForRecord",400,400,400,400);
+	dhxWins.window("importExcelForRecord").center();
+	dhxWins.window("importExcelForRecord").setText("导入记录文件Excel");
+	dhxWins.window("importExcelForRecord").attachURL("import.spr?action=showUploadFrom", false);
+}	
