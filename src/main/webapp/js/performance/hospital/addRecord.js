@@ -49,16 +49,14 @@ dhtmlxEvent(window,"load", doOnLoad);
 						var result= serviceCall.execute(obj);
 						//alert(Object.toJSON(result));
 						myForm.setItemValue("recordId",recordId);
-						myForm.getInput("owner").setValue(result.list[0].user_name);
-						
-						
+						myForm.setItemValue("owner", result.list[0].user_name);
 						myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",result.list[0].check_time);
-						myForm.getInput("checktime").setValue(result.list[0].check_time);
-						myForm.getInput("hospid").setValue(result.list[0].zyh);
-						myForm.getInput("results").setValue(result.list[0].result);
-						myForm.getInput("dianping").setValue(result.list[0].dianping);
-						myForm.getInput("beizhu").setValue(result.list[0].beizhu);
-						myForm.getInput("kaohe").setValue(result.list[0].kaohe);
+						myForm.setItemValue("checktime", result.list[0].check_time);
+						myForm.setItemValue("hospid", result.list[0].zyh);
+						myForm.setItemValue("results", result.list[0].result);
+						myForm.setItemValue("dianping", result.list[0].dianping);
+						myForm.setItemValue("beizhu", result.list[0].beizhu);
+						myForm.setItemValue("kaohe", result.list[0].kaohe);
 						myForm.getCombo("xm").setComboValue(result.list[0].xm_id);
 						myForm.getCombo("ks").setComboValue(result.list[0].ks_id);
 						user=result.list[0];

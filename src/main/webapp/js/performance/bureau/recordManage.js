@@ -1,8 +1,6 @@
 dhtmlxEvent(window,"load", doOnLoad);
 var grid,pagetoolbar,toolbar,page,conditionSql,resultSet;
 function doOnLoad() {
-	initToolBar();
-	initPageToolBar();
 	var kssj=getParam('kssj');
 	var jssj=getParam('jssj');
 	var owner=getParam('owner');
@@ -37,88 +35,32 @@ function doOnLoad() {
 	var grid_define={
 			columns:
 				[{title:"项目ID",width:0,type:"ro"},
-				 {title:"项目",width:100,type:"co",dict:"bureau.t_per_xm"},
-				 {title:"关键环节",width:100,type:"co",dict:"bureau.t_per_hj"},
-				 {title:"一级指标",width:100,type:"co",dict:"bureau.t_per_zb"},
+				 {title:"项目",width:100,type:"co",dict:["bureau.t_per_xm"]},
+				 {title:"关键环节",width:100,type:"co",dict:["bureau.t_per_hj"]},
+				 {title:"一级指标",width:100,type:"co",dict:["bureau.t_per_zb"]},
 				 {title:"医疗机构",width:100,type:"ro"},
 				 {title:"检查时间",width:150,type:"ro"},
 				 {title:"检查事项/结果",width:350,type:"ro"},
 				 {title:"扣分",width:100,type:"ro"},
 				 {title:"备注",width:100,type:"ro"}
-				]
+				],
+				key:"record_id",
+				callback:loadData
 				 
 	}
 	grid=createGridObject('gridbox',grid_define);
-	loadData(conditionSql);
-	
-    
-    grid.attachEvent("onRowSelect", function(id,ind){
-    	
-    	//alert(grid.cells(id,0).getValue());
-    })
+	initToolBar(grid);
+	grid.doQuery();    
  
 }
-function loadData(conditionSql){
-	var pageSql;
-	if(page==null){
-		pageSql=" limit 0,25 ";
-	}else{
-		pageSql=page.getPageSql();
-	}
-	var loader = dhtmlxAjax.postSync("authorize.spr?action=query","&conditionSql="+conditionSql+"&pageSql="+pageSql);
+function loadData(grid){
+
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=query","&conditionSql="+conditionSql+"&pageSql="+grid.page.getPageSql());
 	var res=eval("("+loader.xmlDoc.responseText+")");
-	resultSet=res;
-	//alert(Object.toJSON(rt));
-	if(page==null){
-	    page=new Page(25,res.totalCount);
-	}
-	
-	var data=toGridData(res.list,'record_id');
-	//alert(data);
-	grid.clearAll();
-	grid.parse(data,"json");
-	pagetoolbar.setItemText("pageinfo","第"+(page.currentPage+1)+"页,共"+(page.page+1)+"页,"+page.totalCount+"条记录");
-	
+	return res;
 }
-function initPageToolBar(){
-	pagetoolbar = new dhtmlXToolbarObject("pageToolbarObj"); 
-	pagetoolbar.addButton('firstPage',0,"第一页",null,null);
-	pagetoolbar.addButton('previousPage',1,"上一页",null,null);
-	//toolbar.addButtonSelect('limit', 2, '200', ['100,300,500,1000'], null, null);
-	pagetoolbar.addButton('nextPage',3,"下一页",null,null);
-	pagetoolbar.addButton('lastPage',4,"最后页",null,null);
-	pagetoolbar.addText("pageinfo", 5, "");
-	pagetoolbar.addButton("backtosearch", 6, "重新搜索",null,null);
-	pagetoolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
-	pagetoolbar.setAlign('right');
-	pagetoolbar.attachEvent("onClick", function(id) {
-        if(id=="firstPage"){
-        	page.setCurrentPage(0);
-        	loadData(conditionSql);
-        }else if(id=="previousPage"){
-        	if(page.currentPage<=0){
-        		return;
-        	}
-        	page.setCurrentPage(page.currentPage-1);
-        	loadData(conditionSql);
-        
-        }else if(id=="nextPage"){
-        	if(page.currentPage>=page.page){
-        		return;
-        	}
-        	page.setCurrentPage(page.currentPage+1);
-        	loadData(conditionSql);
-        }else if(id=="lastPage"){
-        	page.setCurrentPage(page.page);
-        	loadData(conditionSql);
-        }else if(id="backtosearch"){
-        	parent.loadPage('manage.spr?action=searchRecord');
-        }
-    });
-}
-function initToolBar(){
-	toolbar = new dhtmlXToolbarObject("toolbarObj"); 
-	//toolbar.addButton('addRecord',1,"添加新记录",null,null);
+function initToolBar(grid){
+	toolbar = grid.toolBar; 
 	toolbar.addButton('updateRecord',1,"修改记录",null,null);
 	toolbar.addButton('deleteRecord',1,"删除记录",null,null);
 	toolbar.addButton('caculate',1,"考核计算",null,null);

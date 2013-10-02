@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>文件上传</title>
 <jsp:include page="../include/include.jsp" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <script language="javascript" src="<%=request.getContextPath()%>/js/commons/uploadForm.js"></script>
 </head>
 <body>

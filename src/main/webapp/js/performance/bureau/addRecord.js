@@ -87,13 +87,12 @@ dhtmlxEvent(window,"load", doOnLoad);
 				    var list=db.queryForList(sql);
 					myForm.setItemValue("recordId",recordId);
 					myForm.getCombo("owner").setComboValue(list[0].user_name);
-					
 					myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",list[0].check_time);
-					myForm.getInput("checktime").setValue(list[0].check_time);
-					myForm.getInput("hospid").setValue(list[0].zyh);
-					myForm.getInput("results").setValue(list[0].result);
-					myForm.getInput("dianping").setValue(list[0].dianping);
-					myForm.getInput("kaohe").setValue(list[0].kaohe);
+					myForm.setItemValue("checktime", list[0].check_time);
+					myForm.setItemValue("hospid", list[0].zyh);
+					myForm.setItemValue("results", list[0].result);
+					myForm.setItemValue("dianping", list[0].dianping);
+					myForm.setItemValue("kaohe", list[0].kaohe);
 					myForm.getCombo("xm").setComboValue(list[0].xm_id);
 					myForm.getCombo("hj").setComboValue(list[0].hj_id);
 					myForm.getCombo("zb").setComboValue(list[0].zb_id);

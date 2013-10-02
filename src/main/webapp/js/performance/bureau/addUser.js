@@ -65,12 +65,10 @@ dhtmlxEvent(window,"load", doOnLoad);
 		        	
 					    var sql="select * from bureau.t_per_user where user_id='"+userId+"'";
 					    var list=db.queryForList(sql);
-						//alert(Object.toJSON(result));
+						
 						myForm.setItemValue("userId",userId);
-						myForm.getInput("userName").setValue(list[0].user_name);
-						myForm.getInput("realName").setValue(list[0].real_name);
-						//myForm.getCombo("bm").setComboValue(list[0].bm);
-						//myForm.getCombo("ks").setComboValue(list[0].ks);
+						myForm.setItemValue("userName",list[0].user_name);
+						myForm.setItemValue("realName", list[0].real_name);
 						myForm.getCombo("rank").setComboValue(list[0].jb);
 						user=list[0];
 						

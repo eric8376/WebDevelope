@@ -48,10 +48,6 @@ function doOnLoad() {
 	grid=createGridObject('gridbox',grid_define);
 	initToolBar(grid);
 	grid.doQuery();    
-    grid.attachEvent("onRowSelect", function(id,ind){
-    	
-    	//alert(grid.cells(id,0).getValue());
-    })
  
 }
 function loadData(grid){
