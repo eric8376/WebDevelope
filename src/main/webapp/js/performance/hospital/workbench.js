@@ -5,11 +5,12 @@ function doOnLoad() {
 	dhxLayout.progressOn();
 	//dhxLayout.attachHeader('headerDiv');
 	/*工具栏*/
-	toolbar = dhxLayout.attachToolbar(); 
-	//toolbar.setRTL(true); 
-	toolbar.addButton('changepassword',1,"控制面板",null,null);
-	toolbar.addButton('logout',1,"退出系统",null,null);
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
+	toolbar = dhxLayout.attachToolbar();
+	toolbar.setAlign('right');
+	toolbar.setIconSize(32);
+	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
+	toolbar.addButton('changepassword',1,"控制面板","setting.ico",null);
+	toolbar.addButton('logout',1,"退出系统","exit.ico",null);
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="changepassword"){
         	loadPage('manage.spr?action=changePassword');
@@ -22,7 +23,11 @@ function doOnLoad() {
 	statusbar = dhxLayout.attachStatusBar();
 	/*状态栏*/
 	/*菜单栏*/
-	dhxTree=dhxLayout.cells("a").attachObject("treeboxbox_tree");
+	dhxTree= dhxLayout.cells("a").attachObject("treeboxbox_tree");
+//	dhxTree.setImagePath(parent.contextPath+"/images/performance/icon/");
+//	dhxTree.setIconPath("tree.ico","tree.ico","tree.ico");
+
+
 	dhxLayout.cells("a").setText("我的菜单");
 	dhxLayout.cells("a").setWidth(150);
 	//dhxTree.setImagePath("imgs/");

@@ -43,7 +43,8 @@ a:active {color: #0000FF}
 
 <div class="dhtmlxTree" 
         id="treeboxbox_tree"
-        setImagePath="<%=request.getContextPath()%>/js/dhtmlx/imgs/"
+        setIconsPath="<%=request.getContextPath()%>/images/performance/icon/"
+        setImagePath="<%=request.getContextPath()%>/images/performance/icon/"
         style="width:150px; ">
 
 <ul>

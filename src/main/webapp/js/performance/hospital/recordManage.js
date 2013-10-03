@@ -59,11 +59,13 @@ function loadData(grid){
 function initToolBar(grid){
 	toolbar = grid.toolBar; 
 	//toolbar.addButton('addRecord',1,"添加新记录",null,null);
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
-	toolbar.addButton('updateRecord',1,"修改记录","iconWrite2.gif",null);
-	toolbar.addButton('caculate',1,"考核计算","iconWrite2.gif",null);
-	toolbar.addButton('import',1,"导入数据","iconWrite2.gif",null);
-	toolbar.addButton('backtosearch',1,"返回前页","iconWrite2.gif",null);
+	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
+	
+	toolbar.addButton('backtosearch',1,"搜索","find.ico",null);
+	toolbar.addButton('updateRecord',2,"修改","edit.ico",null);
+	toolbar.addButton('caculate',3,"考核计算","calculator.ico",null);
+	toolbar.addButton('import',4,"导入数据","importExcel.ico",null);
+	toolbar.setIconSize(24);
 	
 	
 	toolbar.attachEvent("onClick", function(id) {

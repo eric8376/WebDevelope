@@ -655,7 +655,7 @@ function createGridObject(id,define){
 		grid.clearAll();
 		grid.parse(toGridData(data.list,grid.key),"json");
 		grid.page.setTotalCount(data.totalCount);
-		pagetoolbar.setItemText("pageinfo","第"+(grid.page.currentPage+1)+"页,共"+(grid.page.page+1)+"页,"+grid.page.totalCount+"条记录");
+		pagetoolbar.setItemText("pageinfo","第"+(grid.page.currentPage+1)+"页,共"+(grid.page.page+1)+"页,合计"+grid.page.totalCount+"条记录");
 	}
 	initGrid(grid,define);
 	initPageToolBar(grid);
@@ -665,12 +665,15 @@ function createGridObject(id,define){
 function initPageToolBar(grid){
 	pagetoolbar =grid.pageToolBar; 
 	pagetoolbar.grid=grid;
-	pagetoolbar.addButton('firstPage',0,"第一页",null,null);
-	pagetoolbar.addButton('previousPage',1,"上一页",null,null);
-	pagetoolbar.addButton('nextPage',3,"下一页",null,null);
-	pagetoolbar.addButton('lastPage',4,"最后页",null,null);
-	pagetoolbar.addText("pageinfo", 5, "");
-	pagetoolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/");
+	pagetoolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
+	pagetoolbar.addButton('firstPage',0,"第一页","first(1).ico",null);
+	pagetoolbar.addButton('previousPage',1,"上一页","previous(1).ico",null);
+	
+	pagetoolbar.addButton('nextPage',3,"下一页","next(1).ico",null);
+	pagetoolbar.addButton('lastPage',4,"最后页","last(1).ico",null);
+	pagetoolbar.addSeparator("pageinfo", 5, "");
+	pagetoolbar.addText("pageinfo", 6, "");
+
 	pagetoolbar.setAlign('right');
 	pagetoolbar.attachEvent("onClick", function(id) {
 		var page=pagetoolbar.grid.page;
