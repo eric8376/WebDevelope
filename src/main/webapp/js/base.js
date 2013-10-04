@@ -652,6 +652,7 @@ function createGridObject(id,define){
 		}else{
 		data=db.queryForPageList(grid.sql+grid.page.getPageSql());
 		}
+		grid.data=data;
 		grid.clearAll();
 		grid.parse(toGridData(data.list,grid.key),"json");
 		grid.page.setTotalCount(data.totalCount);
@@ -742,7 +743,6 @@ function initGrid(grid,define){
 	grid.setColSorting(colSorting.join(","));
 	grid.enableDragAndDrop(true);
 	grid.enableDragOrder(true);
-	grid.enableLightMouseNavigation(true);
 	grid.setEditable(false);
 	grid.enableAutoWidth(true,920,920);
 

@@ -20,12 +20,15 @@ function doDelete(id){
 }
 function addRoom(){
 	var dictText=prompt('请输入部门名称');
+	roomType=getParam("roomType");
 	if(dictText!=null){
 		dhtmlxAjax.post("manageOperation.spr?action=addDictItem","groupId=1&groupCode="+roomType+"&dictText="+encodeURI(dictText),function(respon){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')
 			{
 				parent.loadPage('manage.spr?action=roomManage&roomType='+roomType);
+			}else if(res.result=='false'&&res.errorType=='exist'){
+				alert('该名称已经存在');
 			}
 		});
 	}

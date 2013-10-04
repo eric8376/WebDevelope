@@ -86,7 +86,7 @@ function initToolBar(grid){
         	var recordId = grid.cellByIndex(index, 0).getValue();
         	parent.loadPage('manage.spr?action=addRecord&operation=update&recordId='+recordId);
         }else if(id=="caculate"){
-        	alert(resultSet.summaryNum);
+        	alert("统计结果："+grid.data.summaryNum+"分");
         }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
         }else if(id=="import"){

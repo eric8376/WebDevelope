@@ -197,6 +197,11 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String groupId = request.getParameter("groupId");
 		String groupCode = request.getParameter("groupCode");
 		String dictId = getUUID();
+		String checkExistSql="select count(1) as count from hospital.t_dict_table where hosp_id='"+getHospIdFromSession(request)+"' and group_code='"+groupCode+"' and dict_text='"+dictText+"'";
+		if(jdbcTemplate.queryForInt(checkExistSql)>0){
+			outputJSON(response, "{result:'false',errorType:'exist'}");
+			return null;
+		}
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(ADD_DICT_SQL,

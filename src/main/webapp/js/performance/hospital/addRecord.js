@@ -29,7 +29,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 		             
 			 }
 },
-				{type:"input", name:"hospid", label:"住院号:",required: true},
+				{type:"input", name:"hospid", label:"住院号:"},
 				{type:"input", name:"results", label:"检查事项/结果:",rows:5,inputWidth :400},
 				{type:"input", name:"dianping", label:"点评:",rows: 5,inputWidth :400},
 				{type:"input", name:"beizhu", label:"备注:",rows: 5,inputWidth :400},

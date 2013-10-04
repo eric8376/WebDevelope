@@ -13,8 +13,12 @@
 <%if(loginedUserInfo!=null){ 
 %>
 
-<div style="text-align:left;" >当前登陆的医院是：<%=loginedUserInfo.get("hosp_name")%></br>
-欢迎 :<%=loginedUserInfo.get("KS_TEXT")%> 的<%=loginedUserInfo.get("REAL_NAME") %>,您拥有：<%=loginedUserInfo.get("JB_TEXT") %>权限</div>
+<div style="text-align:left;background-color: rgb(255,230,246);padding: 20px;" >
+欢迎登陆
+您当前使用的是【<%=loginedUserInfo.get("hosp_name")%>】医院的全面质量与绩效考核系统 :</br>
+您是【<%=loginedUserInfo.get("KS_TEXT")%>】 科室的【<%=loginedUserInfo.get("REAL_NAME") %>】
+<br>您拥有：【<%=loginedUserInfo.get("JB_TEXT") %>】权限.
+</div>
 <% }%>
 </body>
 </html>

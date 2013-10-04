@@ -31,6 +31,8 @@ function addProject(){
 			if(res.result=='success')
 			{
 				parent.loadPage('manage.spr?action=projectManage');
+			}else if(res.result=='false'&&res.errorType=='exist'){
+				alert('该名称已经存在');
 			}
 		});
 	}

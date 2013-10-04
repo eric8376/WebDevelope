@@ -69,12 +69,17 @@ public class ImportController extends BaseMultiActionController {
 				objList.add(objs);
 				}
 			}
+			handler(objList,request);
+			request.setAttribute("result", "success");
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
+			request.setAttribute("result", "failure");
 		} catch (IOException e) {
 			e.printStackTrace();
+			request.setAttribute("result", "failure");
 		} catch(Exception e){
 			e.printStackTrace();
+			request.setAttribute("result", "failure");
 		}finally {
 			if (inp != null) {
 				try {
@@ -86,7 +91,6 @@ public class ImportController extends BaseMultiActionController {
 				logger.info("没有数据流");
 			}
 		}
-		handler(objList,request);
 		return "/performance/include/uploadForm";
 	}
 
