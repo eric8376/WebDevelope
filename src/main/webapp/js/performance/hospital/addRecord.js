@@ -23,13 +23,15 @@ dhtmlxEvent(window,"load", doOnLoad);
                 {type:"hidden", name:"recordId"},                                                                        
                 {type:"combo", name:"ks", label:"当事科室:",options:rt2.list,readonly:1},
 				{type:"combo", name: 'xm', label:'项目名称:',readonly:1,options:toComboData(parent.getXMList(),"dict_id","dict_text")},
+				{type:"combo", name: 'hj', label:'关键环节:',readonly:1,options:null},
+				{type:"combo", name: 'zb', label:'一级指标:',readonly:1,options:null},
 				{type:"input", name:"owner", label:"当事人:",required: true},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d",  tooltip:"请输入检查时间",required: true,note: {
 				     text: "请在这里输入时间，时间是必填项."
 		             
 			 }
 },
-				{type:"input", name:"hospid", label:"住院号:"},
+				
 				{type:"input", name:"results", label:"检查事项/结果:",rows:5,inputWidth :400},
 				{type:"input", name:"dianping", label:"点评:",rows: 5,inputWidth :400},
 				{type:"input", name:"beizhu", label:"备注:",rows: 5,inputWidth :400},
@@ -52,13 +54,14 @@ dhtmlxEvent(window,"load", doOnLoad);
 						myForm.setItemValue("owner", result.list[0].user_name);
 						myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",result.list[0].check_time);
 						myForm.setItemValue("checktime", result.list[0].check_time);
-						myForm.setItemValue("hospid", result.list[0].zyh);
 						myForm.setItemValue("results", result.list[0].result);
 						myForm.setItemValue("dianping", result.list[0].dianping);
 						myForm.setItemValue("beizhu", result.list[0].beizhu);
 						myForm.setItemValue("kaohe", result.list[0].kaohe);
 						myForm.getCombo("xm").setComboValue(result.list[0].xm_id);
 						myForm.getCombo("ks").setComboValue(result.list[0].ks_id);
+						myForm.getCombo("hj").setComboValue(result.list[0].hj_id);
+						myForm.getCombo("zb").setComboValue(result.list[0].zb_id);
 						user=result.list[0];
 						
 		        }    
@@ -85,5 +88,27 @@ dhtmlxEvent(window,"load", doOnLoad);
 	       
 	     
 		});
+	      
+	        loadSonByParent("xm","hj");
+	        loadSonByParent("hj","zb");
+	        
+	        //联动
+	        myForm.attachEvent("onSelectionChange", onChangeHandle );
+		    myForm.attachEvent("onChange", onChangeHandle );
 	        }
+		function onChangeHandle(name){
+			if(name=="xm"){
+        		loadSonByParent("xm","hj");
+        	}else if(name=='hj'){
+        		loadSonByParent("hj","zb");
+        		
+        	}
+		}
+		function loadSonByParent(parentObj,sonObj){
+			var sonCombo=myForm.getCombo(sonObj);
+			var parentComboValue=myForm.getCombo(parentObj).getSelectedValue();
+			sonCombo.clearAll();
+			sonCombo.setComboValue("");
+			sonCombo.addOption(parent.getDictListByParent(parentComboValue,sonObj));
+		}
  	

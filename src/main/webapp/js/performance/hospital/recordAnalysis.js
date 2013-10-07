@@ -11,26 +11,32 @@ function doOnLoad() {
 }
 function doAnalysis(){
 	var condition="";
-	//var user_name=myForm.getItemValue("user_name");
+	var user_name=myForm.getItemValue("user_name");
 	var xm=myForm.getItemValue("xm");
 	var ks=myForm.getItemValue("ks");
-	//var zb=myForm.getItemValue("zb");
+	var zb=myForm.getItemValue("zb");
+	var hj=myForm.getItemValue("hj");
 	keyIndex=myForm.getItemValue("keyIndex");
 	chartType=myForm.getItemValue("chartType");
 	
-//	if(!isEmpty(user_name)&&user_name!="ALL"){
-//		condition+=" and user_name='"+user_name+"' ";
-//	}
-//	if(!isEmpty(zb)&&zb!="ALL"){
-//		condition+=" and zb_id='"+zb+"' ";
-//	}
+	if(!isEmpty(user_name)&&user_name!="ALL"){
+		condition+=" and user_name='"+user_name+"' ";
+	}
+	if(!isEmpty(hj)&&zb!="ALL"){
+		condition+=" and hj_id='"+hj+"' ";
+	}
+	if(!isEmpty(zb)&&zb!="ALL"){
+		condition+=" and zb_id='"+zb+"' ";
+	}
 	if(!isEmpty(ks)&&ks!="ALL"){
 		condition+=" and ks_id='"+ks+"' ";
 	}
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
-	data=db.queryForList("select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from hospital.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&condition="+condition+"&keyIndex="+keyIndex);
+	var res=eval("("+loader.xmlDoc.responseText+")");
+	data=res.list;
 	if(chartType=="pie"){
 	createPieChart();
 	}else if(chartType=="bar"){
@@ -125,7 +131,9 @@ function loadSearchForm(){
 	//owner
  	
     var sql="select user_name as value ,user_name as text from hospital.t_per_vrecord where user_name is  not null group by user_name ";
-   var list2= toComboData(parent.getKSList(),'dict_id','dict_text');
+    var list1= db.queryForList(sql)
+    list1.unshift({value:'ALL',text:"全部"});
+    var list2= toComboData(parent.getKSList(),'dict_id','dict_text');
    list2.unshift({value:'ALL',text:"全部"});
 	var list3=toComboData(parent.getXMList(),'dict_id','dict_text');
 	list3.unshift({value:'ALL',text:"全部"});
@@ -140,14 +148,18 @@ function loadSearchForm(){
 	},          
     { type: "fieldset", name: "data1", label: "分析条件", inputWidth: "auto", list:[
     {type: "label", label: "数据范围",position:"label-left"},                                                                                
-
+    {type:"combo", name:"user_name", label:"相关人员:",options:list1,filtering:true},
 	{type:"combo", name:"xm", label:"项目",options:list3},
 	{type:"combo", name:"ks", label:"科室",options:list2},
+	{type:"combo", name:"hj", label:"关键环节",options:null},
+	{type:"combo", name:"zb", label:"一级指标",options:null},
 	 {type:"button", name:"search", value:"生成图形"},
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析指标",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
     {type: "radio", name: "keyIndex", value: "ks", label: "科室"},
+    {type: "radio", name: "keyIndex", value: "hj", label: "关键环节"},
+    {type: "radio", name: "keyIndex", value: "zb", label: "一级指标"},
     {type: "newcolumn", offset:50},
   {type: "label", label: "图表类型",position:"label-left"},
   {type: "radio", name: "chartType", value: "bar", label: "垂直柱状图",checked: "1"},
@@ -168,9 +180,9 @@ myForm.attachEvent("onButtonClick", function(name) {
 });
 myForm.attachEvent("onChange", function(name) {
 	if(name=="xm"){
-		//loadSonByParent("xm","hj");
+		loadSonByParent("xm","hj");
 	}else if(name=='hj'){
-		//loadSonByParent("hj","zb");
+		loadSonByParent("hj","zb");
 		
 	}
 });
@@ -179,10 +191,10 @@ document.onkeydown=function(e){
 	doAnalysis();
 	}
 };
-//myForm.getCombo("user_name").setComboValue("");
+myForm.getCombo("user_name").setComboValue("");
 myForm.getCombo("xm").setComboValue("");
-//loadSonByParent("xm","hj");
-//loadSonByParent("hj","zb");
+loadSonByParent("xm","hj");
+loadSonByParent("hj","zb");
 }
 function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);

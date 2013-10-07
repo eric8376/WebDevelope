@@ -29,7 +29,8 @@ function doOnLoad() {
 		{type:"combo", name:"owner", label:"人名:",options:rt3.list,filtering:true},
 		{type:"combo", name:"ks", label:"科室",options:list2},
 		{type:"combo", name:"xm", label:"项目:",options:list3},
-		
+		{type:"combo", name:"hj", label:"关键环节",options:null},
+		{type:"combo", name:"zb", label:"一级指标",options:null},
 		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}] 
 	   }
                 ]
@@ -45,9 +46,25 @@ function doOnLoad() {
     	}
     };
     
-    
+    myForm.getCombo("owner").setComboValue("");
+    myForm.getCombo("xm").setComboValue("");
+    loadSonByParent("xm","hj");
+    loadSonByParent("hj","zb");
+   
    
         
+}
+function loadSonByParent(parentObj,sonObj){
+	var sonCombo=myForm.getCombo(sonObj);
+	var parentComboValue=myForm.getCombo(parentObj).getSelectedValue();
+	sonCombo.clearAll();
+	sonCombo.setComboValue("");
+	var list=parent.getDictListByParent(parentComboValue,sonObj);
+	if(list==null||list==""){
+		list=new Array();
+	}
+	list.unshift({value:'ALL',text:"全部"});
+	sonCombo.addOption(list);
 }
 function doSearch(){
 	
@@ -56,7 +73,9 @@ function doSearch(){
 		var owner=myForm.getItemValue("owner");
 		var xm=myForm.getItemValue("xm");
 		var ks=myForm.getItemValue("ks");
-		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm);
+		var hj=myForm.getItemValue("hj");
+		var zb=myForm.getItemValue("zb");
+		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm+'&hj='+hj+'&zb='+zb);
 
 }
 

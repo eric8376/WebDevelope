@@ -17,16 +17,26 @@ function doDelete(id){
 		});
 	}
 }
-function doManage(id){
+function doManage(id,mapType){
 	if(id!=null){
-		parent.loadPage('manage.spr?action=projectMap&projectId='+id);
+		if(mapType==null){
+			mapType=getParam('mapType');
+		}
+		parent.loadPage('manage.spr?action=projectMap&projectId='+id+'&mapType='+mapType);
 		
 	}
 }
 function addProject(){
-	var dictText=prompt('请输入项目名称');
+	var dictText=prompt('请输入名称');
 	if(dictText!=null){
-		dhtmlxAjax.post("manageOperation.spr?action=addDictItem","groupId=2&groupCode=xm&dictText="+dictText,function(respon){
+		var mapType=getParam('mapType');
+		var dictType="";
+		if(mapType=='xm'){
+			dictType="groupId=2&groupCode=xm";
+		}else if(mapType=='hj'){
+			dictType="groupId=4&groupCode=hj";
+		}
+		dhtmlxAjax.post("manageOperation.spr?action=addDictItem",dictType+"&dictText="+dictText,function(respon){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')
 			{
@@ -39,19 +49,43 @@ function addProject(){
 }
 var grid;
 function doOnLoad() {
-	    var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
-	    var sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') ,GROUP_CONCAT(t2.ks_text) as group_ks" +
-	    		" from (select * from t_per_xm where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,xm_id from t_per_xm_ks k1,hospital.t_per_bm k2 where k1.ks_id=k2.dict_id ) t2 " +
-	    		" on t1.dict_id=t2.xm_id "+
-	    		" group by t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self'),CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self')";
+	var mapType=getParam('mapType');
+	  var viewName;
+	  var columns;
+	  var sql;
+	  var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
+	    if(mapType=='hj'){
+	    	viewName="hospital.t_per_hj";
+	    	columns=[{title:"编号",width:0,type:"ro"},
+			 {title:"关键环节",width:100,type:"ro"},
+			 {title:"删除",width:100,type:"link"},
+			 {title:"管理",width:100,type:"link"},
+			 {title:"对应一级指标",width:350,type:"ro"}
+			];
+	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
+	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
+	    		" on t1.dict_id=t2.parent_id "+
+	    		" group by t1.dict_id,t1.dict_text,d,m2";
+	    	}
+	    else if(mapType=='xm'){
+	    	viewName="hospital.t_per_xm";
+	    	columns=[{title:"编号",width:0,type:"ro"},
+	    			 {title:"项目",width:100,type:"ro"},
+	    			 {title:"删除",width:100,type:"link"},
+	    			 {title:"管理部门",width:100,type:"link"},
+	    			 {title:"管理环节",width:100,type:"link"},
+	    			 {title:"对应环节和部门",width:350,type:"ro"}
+	    			];
+	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\",\"','bm','\");^_self') as m1,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
+	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
+	    		" on t1.dict_id=t2.parent_id "+
+	    		" group by t1.dict_id,t1.dict_text,d,m1,m2";
+	    	
+	    }
+	    
+	   
 	var grid_define={
-			columns:
-				[{title:"编号",width:0,type:"ro"},
-				 {title:"项目",width:100,type:"ro"},
-				 {title:"删除",width:100,type:"link"},
-				 {title:"部门关联",width:100,type:"link"},
-				 {title:"对应部门",width:350,type:"ro"}
-				],
+			columns:columns,
 			key:"dict_id",
 			sql:sql
 				 
@@ -62,7 +96,7 @@ function doOnLoad() {
 function initToolBar(grid){
 	toolbar=grid.toolBar;
 	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
-	toolbar.addButton('addProject',1,"添加新项目","iconWrite2.gif",null);
+	toolbar.addButton('addProject',1,"新增","iconWrite2.gif",null);
 	
 	
 	toolbar.attachEvent("onClick", function(id) {

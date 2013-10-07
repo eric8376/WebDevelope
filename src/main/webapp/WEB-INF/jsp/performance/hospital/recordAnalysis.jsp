@@ -19,7 +19,7 @@ transform: rotate(45deg);
 </style>
 </head>
 <body>
-<div id="form_container" style="width:850px;height:180px;align:center;" align="center"></div>
+<div id="form_container" style="width:850px;height:280px;align:center;" align="center"></div>
 <div id="chart_container" style="border:1px solid #A4BED4;">
 </div>
 </body>

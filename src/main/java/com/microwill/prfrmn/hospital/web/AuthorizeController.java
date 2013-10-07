@@ -40,5 +40,18 @@ public class AuthorizeController extends BaseMultiActionController {
 		outputJSON(response, strategy.query(conditionSql, pageSql));
 		return null;
 	}
+	@RequestMapping(params = "action=queryAnalysis")
+	public ModelAndView queryAnalysis(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String condition = request.getParameter("condition");
+		String keyIndex = request.getParameter("keyIndex");
+		Map loginedUserContext = (Map) request.getSession().getAttribute(
+				"loginedUser");
+		AuthorizeQueryStrategy strategy = new AuthorizeQueryStrategy(
+				loginedUserContext, jdbcTemplate);
+
+		outputJSON(response, strategy.queryAnalysis(condition, keyIndex));
+		return null;
+	}
 
 }

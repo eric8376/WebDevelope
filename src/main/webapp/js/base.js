@@ -743,7 +743,7 @@ function initGrid(grid,define){
 	grid.setColSorting(colSorting.join(","));
 	grid.enableDragAndDrop(true);
 	grid.enableDragOrder(true);
-	grid.setEditable(false);
+	//grid.setEditable(false);
 	grid.enableAutoWidth(true,920,920);
 
 	grid.init();
@@ -823,3 +823,9 @@ function createFileImport2(url){
 	dhxWins.window("importExcelForRecord").setText("导入记录文件Excel");
 	dhxWins.window("importExcelForRecord").attachURL("import.spr?action=showUploadFrom", false);
 }	
+/**
+ * 
+ */
+function createFormObject(id,define){
+	
+}

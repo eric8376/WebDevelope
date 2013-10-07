@@ -17,7 +17,7 @@ import com.microwill.framework.rpc.help.JSONExecuteHelp;
 public  class AuthorizeQueryStrategy {
 	private String conditionSql;
 	private String pageSql;
-	private String querySql = "select record_id,xm_id,ks_id,t1.user_name,check_time,result,dianping,kaohe,beizhu from t_per_record t1 where 1=1 ";
+	private String querySql = "select record_id,xm_id,hj_id,zb_id,ks_id,t1.user_name,check_time,result,dianping,kaohe,beizhu from t_per_record t1 where 1=1 ";
 	private String summarySql="select sum(kaohe) from t_per_record t1 where 1=1 ";
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;
@@ -74,6 +74,17 @@ public  class AuthorizeQueryStrategy {
 		System.out.println(sql + getPageSql());
 		String jsonTxt = "{'list':" + JSONExecuteHelp.parseJSONText(list)
 				+ ",totalCount:" + totalCount + ",summaryNum:"+summaryNum+"}";
+		return jsonTxt;
+	}
+	public String queryAnalysis(String condition,String keyIndex) throws Exception {
+		String sql ="select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number "
+				+ "from hospital.t_per_vrecord where 1=1 "
+				+ ""+condition+""+getScopeSql()+"group by "+keyIndex+ " ";
+		List list = jdbcTemplate.queryForList(
+				sql);
+		System.out.println(sql);
+		String jsonTxt = "{'list':" + JSONExecuteHelp.parseJSONText(list)+
+				"}";
 		return jsonTxt;
 	}
 	private String getHospSql() {

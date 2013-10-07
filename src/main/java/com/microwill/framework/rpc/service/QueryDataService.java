@@ -3,7 +3,9 @@
  */
 package com.microwill.framework.rpc.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,10 +34,13 @@ public class QueryDataService {
 			int endindex = sql.indexOf("limit");
 			String countSql = "select count(1) from ("
 					+ sql.substring(0, endindex)+" ) alltable";
-			map.put("totalCount", jdbcTemplate.queryForInt(countSql));
+			int totalCount=jdbcTemplate.queryForInt(countSql);
+			map.put("totalCount",totalCount );
 		}
-		map.put("list", jdbcTemplate.queryForList(sql));
-
+		;
+		List<Map<String,Object>> list=jdbcTemplate.queryForList(sql);
+		list=(list==null)?new ArrayList<Map<String,Object>>():list;
+		map.put("list",list);
 		return map;
 	}
 

@@ -13,27 +13,43 @@ function saveMap(){
 		}
 		
 	}
-	param+="&addChecklist="+addChecklist+"&deleteChecklist="+deleteChecklist+"&projectId="+projectId;
+	param+="&addChecklist="+addChecklist+"&deleteChecklist="+deleteChecklist+"&parentId="+projectId;
 	dhtmlxAjax.get("manageOperation.spr?action=mapProject"+param,function (respon){
 		var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 		if(res.result=='success')
 		{
-			parent.loadPage('manage.spr?action=projectManage');
+			returnTo();
 		}
 		
 	});
 }
 function doOnLoad() {
 	var projectId=getParam('projectId');
-    var sql="select dict_id,dict_text,if(t2.ks_id is null,0,1),if(t2.ks_id is null,0,1) as init_value from (select * from t_per_bm where 1=1 and  hosp_id='"+parent.loginedUserInfo.hospId+"') t1 left join t_per_xm_ks  t2 on t1.dict_id=t2.ks_id and xm_id='"+projectId+"'";
+	var mapType=getParam('mapType');
+	  var viewName="";
+	  var columns;
+	    if(mapType=='xm'){
+	    	columns=[{title:"编号",width:0,type:"ro"},
+					 {title:"关键环节",width:200,type:"ro"},
+					 {title:"选择",width:100,type:"ch"},
+					 {title:"初始选择",width:0,type:"ro"}];
+	    	 viewName="hospital.t_per_hj";
+	    }else if(mapType=='hj'){
+	    	columns=[{title:"编号",width:0,type:"ro"},
+					 {title:"一级指标",width:200,type:"ro"},
+					 {title:"选择",width:100,type:"ch"},
+					 {title:"初始选择",width:0,type:"ro"}];
+	    	 viewName="hospital.t_per_zb";
+	    }else if(mapType=='bm'){
+	    	columns=[{title:"编号",width:0,type:"ro"},
+					 {title:"管理部门",width:200,type:"ro"},
+					 {title:"选择",width:100,type:"ch"},
+					 {title:"初始选择",width:0,type:"ro"}];
+	    	 viewName="hospital.t_per_bm";
+	    }
+	  var sql="select dict_id,dict_text,if(t2.son_id is null,0,1),if(t2.son_id is null,0,1) as init_value from (select * from "+viewName+" where hosp_id='"+parent.loginedUserInfo.hospId+"')  t1 left join  hospital.t_per_dict_map  t2 on t1.dict_id=t2.son_id and parent_id='"+projectId+"'";
 	var grid_define={
-			columns:
-				[{title:"编号",width:0,type:"ro"},
-				 {title:"科室",width:200,type:"ro"},
-				 {title:"选择",width:100,type:"ch"},
-				 {title:"初始选择",width:0,type:"ro"}
-				
-				],
+			columns:columns,
 			key:"dict_id",
 			sql:sql
 				 
@@ -60,7 +76,12 @@ function initToolBar(grid){
         if(id=="saveMap"){
         	saveMap();
         }else if(id=="return"){
-        	parent.loadPage('manage.spr?action=projectManage');
+        	returnTo();
         }
     });
+}
+function returnTo(){
+	var mapType=getParam('mapType')
+	if(mapType=='bm')mapType='xm';
+	parent.loadPage('manage.spr?action=projectManage&mapType='+mapType);
 }

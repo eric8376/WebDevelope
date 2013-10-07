@@ -31,17 +31,17 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String ADD_USER_SQL = "insert into t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
 	private static String UPDATE_USER_SQL="update t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
 	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
-	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id) values(?,?,?,?,?,?,?,?,?,?)";
-	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=? where record_id=?";
+	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=? where record_id=?";
 	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) values(?,?,?,?,?)";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
-	private static String DELETE_XM_KS_MAP_SQL = "delete from t_per_xm_ks where ks_id=? and xm_id=?";
-	private static String ADD_XM_KS_MAP_SQL = "insert into t_per_xm_ks(xm_id,ks_id,ksxm_id) values(?,?,?)" ;
+	private static String DELETE_DICT_MAP_SQL = "delete from hospital.t_per_dict_map where parent_id=? and son_id=?";
+	private static String ADD_DICT_MAP_SQL = "insert into hospital.t_per_dict_map(parent_id,son_id,map_id) values(?,?,?)" ;
 	private static String DELETE_USER_ROLE_MAP_SQL = "delete from T_PER_USER_ROLE where role_id=?";
 	private static String ADD_USER_ROLE_MAP_SQL = "insert into T_PER_USER_ROLE(user_id,role_id) values(?,?)";
 	private static String DELETE_ROLE_XM_MAP_SQL = "delete from T_PER_ROLE_XM where ksxm_id=? ";
 	private static String ADD_ROLE_XM_MAP_SQL = "insert into T_PER_ROLE_XM(role_id,ksxm_id) values(?,?)";
-	private static String QUERY_RECORD_OF_PROJRCT = "select count(1) from t_per_record t1,t_per_xm_ks t2 where t1.ksxm_id= t2.ksxm_id and t2.xm_id =? and t2.ks_id=?";
+	private static String QUERY_RECORD_OF_PROJRCT = "select count(1) from t_per_record t1,t_per_dict_map t2 where t1.ksxm_id= t2.ksxm_id and t2.xm_id =? and t2.ks_id=?";
 	
 
 	@RequestMapping(params = "action=updateUser")
@@ -138,13 +138,15 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String dianping = request.getParameter("dianping");
 		String kaohe = request.getParameter("kaohe");
 		String beizhu = request.getParameter("beizhu");
+		String zb_id = request.getParameter("zb");
+		String hj_id = request.getParameter("hj");
 		String record_id = getUUID();
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(
 					ADD_RECORD_SQL,
 					new Object[] { record_id,ks_id,xm_id, owner, checktime, results,
-							dianping, kaohe,beizhu,getHospIdFromSession(request) });
+							dianping, kaohe,beizhu,getHospIdFromSession(request),zb_id ,hj_id});
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -171,12 +173,14 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String kaohe = request.getParameter("kaohe");
 		String beizhu = request.getParameter("beizhu");
 		String record_id = request.getParameter("recordId");
+		String zb_id = request.getParameter("zb");
+		String hj_id = request.getParameter("hj");
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(
 					UPDATE_RECORD_SQL,
 					new Object[] { ks_id,xm_id, owner, checktime, results,
-							dianping, kaohe,beizhu,record_id });
+							dianping, kaohe,beizhu,record_id,zb_id,hj_id });
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -245,28 +249,26 @@ public class ManageOperactionController extends BaseMultiActionController {
 			HttpServletResponse response) throws Exception {
 		String addChecklist = request.getParameter("addChecklist");
 		String deleteChecklist = request.getParameter("deleteChecklist");
-		String projectId = request.getParameter("projectId");
+		String parentId = request.getParameter("parentId");
+		String mapType = request.getParameter("mapType");
 		try {
 			// add ksxm
-			String[] addroomIdList = addChecklist.split(",");
-			for (String roomId : addroomIdList) {
-				if (!StringUtils.isEmpty(roomId)) {
-					String ksxm_id = getUUID();
-					jdbcTemplate.update(ADD_XM_KS_MAP_SQL,
-							new Object[] { projectId, roomId, ksxm_id });
+			String[] addsonIdList = addChecklist.split(",");
+			for (String sonId : addsonIdList) {
+				if (!StringUtils.isEmpty(sonId)) {
+					String map_id = getUUID();
+					jdbcTemplate.update(ADD_DICT_MAP_SQL,
+							new Object[] { parentId, sonId, map_id });
 				}
 
 			}
 			// delete ksxm
-			String[] deleteroomIdList = deleteChecklist.split(",");
-			for (String roomId : deleteroomIdList) {
-				jdbcTemplate.queryForInt(
-						QUERY_RECORD_OF_PROJRCT,
-						new Object[] { roomId, projectId });
-				if (!StringUtils.isEmpty(roomId)) {
+			String[] deletesonIdList = deleteChecklist.split(",");
+			for (String sonId : deletesonIdList) {
+				if (!StringUtils.isEmpty(sonId)) {
 
-					jdbcTemplate.update(DELETE_XM_KS_MAP_SQL,
-							new Object[] { roomId, projectId });
+					jdbcTemplate.update(DELETE_DICT_MAP_SQL,
+							new Object[] { parentId, sonId });
 				}
 
 			}

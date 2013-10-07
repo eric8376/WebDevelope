@@ -7,10 +7,14 @@ function doOnLoad() {
 	var owner=getParam('owner');
 	var ks=getParam('ks');
 	var xm=getParam('xm');
+	var zb=getParam('zb');
+	var hj=getParam('hj');
     conditionSql="";
 	if(owner==null){owner='';}
 	if(ks==null){ks='';}
 	if(xm==null){xm='';}
+	if(hj==null){hj='';}
+	if(zb==null){zb='';}
 	if(owner!=null&&owner!=''){
 		conditionSql+=" and user_name='"+owner+"' ";
 	}
@@ -19,6 +23,12 @@ function doOnLoad() {
 	}
 	if(xm!=null&&xm!=''&&xm!='ALL'){
 		conditionSql+=" and xm_id='"+xm+"' ";
+	}
+	if(hj!=null&&hj!=''&&hj!='ALL'){
+		conditionSql+=" and hj_id='"+hj+"' ";
+	}
+	if(zb!=null&&zb!=''&&zb!='ALL'){
+		conditionSql+=" and zb_id='"+zb+"' ";
 	}
 	if(kssj!=null&&kssj!='')
 	{
@@ -33,6 +43,8 @@ function doOnLoad() {
 			columns:
 				[{title:"项目ID",width:0,type:"ro"},
 				 {title:"项目",width:100,type:"co",dict:["hospital.t_per_xm"]},
+				 {title:"关键环节",width:100,type:"co",dict:["hospital.t_per_hj"]},
+				 {title:"一级指标",width:100,type:"co",dict:["hospital.t_per_zb"]},
 				 {title:"所在科室",width:100,type:"co",dict:["hospital.t_per_ks"]},
 				 {title:"相关人员",width:100,type:"ro"},
 				 {title:"检查时间",width:150,type:"ro"},
@@ -90,6 +102,11 @@ function initToolBar(grid){
         }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
         }else if(id=="import"){
+        	var hasRight=(parent.loginedUserInfo.bm=="bm"&&parent.loginedUserInfo.jb==2)||parent.loginedUserInfo.jb==0;
+        	if(!hasRight){
+        		alert("权限不足");
+        		return;
+        	}
         	createFileImport2("import.spr");
         }
     });
