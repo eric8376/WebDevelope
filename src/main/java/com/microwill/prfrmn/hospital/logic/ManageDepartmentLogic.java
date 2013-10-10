@@ -15,8 +15,8 @@ import com.microwill.framework.rpc.help.JSONExecuteHelp;
 public class ManageDepartmentLogic extends UserTypeLogic {
 	private static final String KSSql="select dict_id,dict_text from hospital.t_dict_table where group_code='ks' and hosp_id=? ";
 	private static final String XMSql="select distinct k.dict_id,k.dict_text from t_per_dict_map xk,t_per_xm  k " +
-			"where xk.son_id=k.dict_id and " +
-			"xk.parent_id=? and k.hosp_id=? group by k.dict_id,k.dict_text";
+			"where xk.parent_id=k.dict_id and " +
+			"xk.son_id=? and k.hosp_id=? group by k.dict_id,k.dict_text";
 	/* (non-Javadoc)
 	 * @see com.microwill.performance.logic.UserTypeLogic#getKSList()
 	 */
