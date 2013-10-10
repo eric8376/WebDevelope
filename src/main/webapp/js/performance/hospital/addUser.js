@@ -103,6 +103,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 		        	}
 		            });
 		        loadKSByType(true);
+		        doPriviage();
 		}
 		 function loadKSByType(isInit){
 				var dhxCombo=myForm.getCombo('ks');
@@ -116,8 +117,25 @@ dhtmlxEvent(window,"load", doOnLoad);
 			    obj.sql="select DICT_ID as value,DICT_TEXT as text from hospital.t_dict_table  where group_code='"+ks_type+"'"+filterCondition;
 				var rt= serviceCall.execute(obj);
 				dhxCombo.addOption(rt.list);
-				if(isInit){
+				if(isInit&&getParam('operation')=="update"){
 				myForm.getCombo("ks").setComboValue(user.ks);
 				}
     		
 	      }  	
+		 function doPriviage(){
+			 operation=getParam('operation');
+			 if(parent.loginedUserInfo.jb==2&&operation=='update')
+			{
+				 myForm.disableItem('userName');
+				 myForm.disableItem('ks');
+				 myForm.disableItem('bm');
+				 myForm.disableItem('rank');
+			}else if(parent.loginedUserInfo.jb==2&&operation=='add'){
+				myForm.getCombo("bm").setComboValue(parent.loginedUserInfo.bm);
+				myForm.getCombo("ks").setComboValue(parent.loginedUserInfo.ks);
+				myForm.getCombo("rank").setComboValue(1);
+				 myForm.disableItem('ks');
+				 myForm.disableItem('bm');
+				 myForm.disableItem('rank');
+			}
+		 }
