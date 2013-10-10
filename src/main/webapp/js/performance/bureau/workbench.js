@@ -106,4 +106,6 @@ function getDictListByParent(parent_id,type){
 
 	return db.queryForList(sql);
 }
-
+function getHospFilterSql(){
+ return "and hosp_id='"+parent.loginedUserInfo.hospId+"'";
+}

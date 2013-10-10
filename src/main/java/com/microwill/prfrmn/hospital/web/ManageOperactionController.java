@@ -180,7 +180,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 			result = jdbcTemplate.update(
 					UPDATE_RECORD_SQL,
 					new Object[] { ks_id,xm_id, owner, checktime, results,
-							dianping, kaohe,beizhu,record_id,zb_id,hj_id });
+							dianping, kaohe,beizhu,zb_id,hj_id,record_id });
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

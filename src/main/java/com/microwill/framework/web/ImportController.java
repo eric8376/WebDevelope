@@ -52,7 +52,7 @@ public class ImportController extends BaseMultiActionController {
 
 			Workbook wb = WorkbookFactory.create(inp);
 			Sheet sheet = wb.getSheetAt(0);
-			String cellStr = null;
+			
 			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
@@ -62,10 +62,14 @@ public class ImportController extends BaseMultiActionController {
 				Object[] objs=new Object[row.getLastCellNum()];
 				for (int j = 0; j < row.getLastCellNum(); j++) {
 					Cell cell = row.getCell(j);
-					cellStr = ConvertCellStr(cell, cellStr);
-					objs[j]=cellStr;
+					objs[j]=ConvertCellStr(cell);;
 				}
 				if(!ArrayUtils.isEmpty(objs)){
+					for(int k=0;k<objs.length;k++){
+						if(objs[k]==null){
+							objs[k]="";
+						}
+					}
 				objList.add(objs);
 				}
 			}
@@ -96,11 +100,15 @@ public class ImportController extends BaseMultiActionController {
 
 	private void handler(List objList,HttpServletRequest request) {
 		String hosp_id=HospitalHelper.getHospIdFromSession(request);
-		String sql="insert into t_per_record(record_id,xm_id,ks_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,'"+hosp_id+"')";
+		String sql="insert into t_per_record(record_id,xm_id,hj_id,zb_id,ks_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,?,?,'"+hosp_id+"')";
 		jdbcTemplate.batchUpdate(sql, objList);
-		sql="update t_per_record t2, t_dict_table t1 set t2.ks_id=t1.dict_id where t1.dict_text=t2.ks_id and t2.hosp_id='MB' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ks';";
+		sql="update t_per_record t2, t_dict_table t1 set t2.ks_id=t1.dict_id where t1.dict_text=t2.ks_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ks';";
 		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.xm_id=t1.dict_id where t1.dict_text=t2.xm_id and t2.hosp_id='MB' and t1.hosp_id='"+hosp_id+"' and t1.group_code='xm';";
+		sql="update t_per_record t2, t_dict_table t1 set t2.xm_id=t1.dict_id where t1.dict_text=t2.xm_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='xm';";
+		jdbcTemplate.update(sql);
+		sql="update t_per_record t2, t_dict_table t1 set t2.hj_id=t1.dict_id where t1.dict_text=t2.hj_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='hj';";
+		jdbcTemplate.update(sql);
+		sql="update t_per_record t2, t_dict_table t1 set t2.zb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='zb';";
 		jdbcTemplate.update(sql);
 		
 	}
@@ -116,7 +124,8 @@ public class ImportController extends BaseMultiActionController {
 	/*
 	 * 把单元格内的类型转换至String类型
 	 */
-	private String ConvertCellStr(Cell cell, String cellStr) {
+	private String ConvertCellStr(Cell cell) {
+		String cellStr="";
 		if(cell==null){
 			return null;
 		}

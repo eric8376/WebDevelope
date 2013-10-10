@@ -12,7 +12,7 @@ function doDelete(id){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')
 			{
-				parent.loadPage('manage.spr?action=projectManage');
+				returnTo();
 			}
 		});
 	}
@@ -40,7 +40,7 @@ function addProject(){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')
 			{
-				parent.loadPage('manage.spr?action=projectManage');
+				returnTo();
 			}else if(res.result=='false'&&res.errorType=='exist'){
 				alert('该名称已经存在');
 			}
@@ -104,4 +104,8 @@ function initToolBar(grid){
         	addProject();
         }
     });
+}
+function returnTo(){
+	var mapType=getParam('mapType')
+	parent.loadPage('manage.spr?action=projectManage&mapType='+mapType);
 }

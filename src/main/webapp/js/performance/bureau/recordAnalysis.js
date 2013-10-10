@@ -30,7 +30,12 @@ function doAnalysis(){
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
+	condition+=parent.getHospFilterSql();
 	data=db.queryForList("select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
+	if(data.length==0){
+		alert("数据为空");
+		return;
+	}
 	if(chartType=="pie"){
 	createPieChart();
 	}else if(chartType=="bar"){

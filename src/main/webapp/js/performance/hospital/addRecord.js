@@ -81,6 +81,8 @@ dhtmlxEvent(window,"load", doOnLoad);
 							if(res.result=='success')
 							{
 								parent.loadPage('manage.spr?action=recordManage');
+							}else{
+								alert("新增或修改失败.");
 							}
 					
 				});

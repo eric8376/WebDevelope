@@ -17,9 +17,9 @@ public class OperationLeaderLogic extends UserTypeLogic{
 
 	@Override
 	public String getXMList() throws Exception {
-		String sql="select t.dict_id,t.dict_text from hospital.t_dict_table t,t_per_xm_ks xk where t.dict_id=xk.xm_id and xk.ks_id=? and t.hosp_id=?";
+		String sql="select t.dict_id,t.dict_text from hospital.t_dict_table t where hosp_id=? and t.dict_id in (select xm_id from t_per_record t1 where t1.ks_id=?  group by t1.xm_id)";
 		String ks_id=(String)getLoginedUserContext().get("ks");
-		List list=getJdbcTemplate().queryForList(sql,new Object[]{ks_id,getLoginedUserContext().get("hosp_id")});
+		List list=getJdbcTemplate().queryForList(sql,new Object[]{getLoginedUserContext().get("hosp_id"),ks_id});
 		String jsonTxt=JSONExecuteHelp.parseJSONText(list);
 		return jsonTxt;
 	}
