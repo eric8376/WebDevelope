@@ -1,3 +1,6 @@
+/**
+ * 对项目、环节等父字典对象进行管理和关联
+ */
 dhtmlxEvent(window,"load", doOnLoad);
 function doDelete(id){
 	if(id!=null){
@@ -53,7 +56,10 @@ function doOnLoad() {
 	  var viewName;
 	  var columns;
 	  var sql;
-	  var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
+	  var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"' ";
+	  if(parent.loginedUserInfo.jb!=0){
+		  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"' ";
+	  }
 	    if(mapType=='hj'){
 	    	viewName="hospital.t_per_hj";
 	    	columns=[{title:"编号",width:0,type:"ro"},
@@ -72,7 +78,7 @@ function doOnLoad() {
 	    	columns=[{title:"编号",width:0,type:"ro"},
 	    			 {title:"项目",width:100,type:"ro"},
 	    			 {title:"删除",width:100,type:"link"},
-	    			 {title:"管理部门",width:100,type:"link"},
+	    			 {title:"管理部门",width:0,type:"link"},
 	    			 {title:"管理环节",width:100,type:"link"},
 	    			 {title:"对应环节和部门",width:350,type:"ro"}
 	    			];

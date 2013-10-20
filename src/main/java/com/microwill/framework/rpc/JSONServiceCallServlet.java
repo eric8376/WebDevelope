@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.json.JSONObject;
 
 import com.microwill.framework.rpc.help.JSONExecuteHelp;
 import com.microwill.framework.rpc.service.QueryDataService;
+import com.microwill.framework.vo.Result;
+import com.microwill.framework.web.util.ResponseUtil;
 
 public class JSONServiceCallServlet extends HttpServletSupport
 {
@@ -33,15 +36,16 @@ public class JSONServiceCallServlet extends HttpServletSupport
 	{
 		request.setCharacterEncoding("UTF-8");
 		String json = readJSONStringFromRequestBody(request);
-		String responseText = "";
-		response.setContentType("text/plain; charset=UTF-8");
-		response.setBufferSize(8192);
-		PrintWriter out = response.getWriter();
+		execute(response, json);
+	}
+	private void execute(HttpServletResponse response, String json) {
+		Result result=new Result();
 		try
 		{
 			if (!StringUtils.isEmpty(json))
 			{
 				System.out.println(json);
+				//解析参数
 				JSONObject jsonObject = new JSONObject(json);
 				String serviceName = jsonObject.optString(JSONExecuteHelp.SERVICE_NAME);
 				String methName = jsonObject.optString(JSONExecuteHelp.METHOD_NAME);
@@ -49,61 +53,68 @@ public class JSONServiceCallServlet extends HttpServletSupport
 
 				List list = JSONExecuteHelp.analyzeJSONArray(para);
 				Object[] obj = (Object[]) list.toArray(new Object[0]);
-				System.out.println("ExecuteAction JSON Remote Call.");
-				System.out.println("Service:" + serviceName);
-				System.out.print("Invoke:" + methName + "(");
-				for (int i = 0; i < obj.length; i++)
-				{
-					if (i == 0)
-					{
-						System.out.print(obj[i]);
-					} else
-					{
-						System.out.print("," + obj[i]);
-					}
-				}
-				System.out.println(")");
+				debugParam(serviceName, methName, obj);
 
 				Object rtObj = null;
+				//获取spring组件
 				Object svc = getWebApplicationContext().getBean(serviceName);
 				if (!StringUtils.isEmpty(methName))
 				{
-					Method meth = null;
-					Method[] meths = svc.getClass().getMethods();
-					for (int i = 0; i < meths.length; i++)
-					{
-						if (meths[i].getName().equalsIgnoreCase(methName)
-								&& meths[i].getParameterTypes().length == obj.length)
-						{
-							meth = meths[i];
-							break;
-						}
-					}
-					rtObj = meth.invoke(svc, obj);
-				} else
+					rtObj = callMethod(methName, obj, svc);
+				} else//默认使用数据查询组件
 				{
 					QueryDataService queryDataService=(QueryDataService)svc;
 					Map<String, String> sqlMap=(Map<String, String>)obj[0];
 					rtObj=queryDataService.query(sqlMap);
 				}
-				responseText = JSONExecuteHelp.parseJSONText(rtObj);
+				
+				result.setSuccess(true);
+				result.setContent(rtObj);
+				ResponseUtil.responseOutWithJson(response, result);
+				//responseText = JSONExecuteHelp.parseJSONText(result);
 			}
-			out.print(responseText);
+			
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			try
-			{
-				responseText = JSONExecuteHelp.parseJSONText(e);
-				out.print(responseText);
-			} catch (Exception e1)
-			{
-				e1.printStackTrace();
-			}
-		} finally
-		{
-			out.close();
+			result.setSuccess(false);
+			result.setMsg(e.getMessage());
+			ResponseUtil.responseOutWithJson(response, result);
+			//responseText = JSONExecuteHelp.parseJSONText(e);
 		}
+	}
+	private Object callMethod(String methName, Object[] obj, Object svc)
+			throws IllegalAccessException, InvocationTargetException {
+		Object rtObj;
+		Method meth = null;
+		Method[] meths = svc.getClass().getMethods();
+		for (int i = 0; i < meths.length; i++)
+		{
+			if (meths[i].getName().equalsIgnoreCase(methName)
+					&& meths[i].getParameterTypes().length == obj.length)
+			{
+				meth = meths[i];
+				break;
+			}
+		}
+		rtObj = meth.invoke(svc, obj);
+		return rtObj;
+	}
+	private void debugParam(String serviceName, String methName, Object[] obj) {
+		System.out.println("ExecuteAction JSON Remote Call.");
+		System.out.println("Service:" + serviceName);
+		System.out.print("Invoke:" + methName + "(");
+		for (int i = 0; i < obj.length; i++)
+		{
+			if (i == 0)
+			{
+				System.out.print(obj[i]);
+			} else
+			{
+				System.out.print("," + obj[i]);
+			}
+		}
+		System.out.println(")");
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -112,78 +123,8 @@ public class JSONServiceCallServlet extends HttpServletSupport
 		request.setCharacterEncoding("UTF-8");
 		System.out.println("---doGet----");
 		String json = request.getParameter("getParam");
-
-		String responseText = "";
-		response.setContentType("text/plain; charset=UTF-8");
-		response.setBufferSize(8192);
-		PrintWriter out = response.getWriter();
-		try
-		{
-			if (!StringUtils.isEmpty(json))
-			{
-				JSONObject jsonObject = new JSONObject(json);
-				String serviceName = jsonObject.optString(JSONExecuteHelp.SERVICE_NAME);
-				String methName = jsonObject.optString(JSONExecuteHelp.METHOD_NAME);
-				JSONArray para = jsonObject.optJSONArray(JSONExecuteHelp.PARAMETER);
-
-				List list = JSONExecuteHelp.analyzeJSONArray(para);
-				Object[] obj = (Object[]) list.toArray(new Object[0]);
-				System.out.println("ExecuteAction JSON Remote Call.");
-				System.out.println("Service:" + serviceName);
-				System.out.print("Invoke:" + methName + "(");
-				for (int i = 0; i < obj.length; i++)
-				{
-					if (i == 0)
-					{
-						System.out.print(obj[i]);
-					} else
-					{
-						System.out.print("," + obj[i]);
-					}
-				}
-				System.out.println(")");
-				Object rtObj = null;
-				Object svc = getWebApplicationContext().getBean(serviceName);
-				if (!StringUtils.isEmpty(methName))
-				{
-					Method meth = null;
-					Method[] meths = svc.getClass().getMethods();
-					for (int i = 0; i < meths.length; i++)
-					{
-						if (meths[i].getName().equalsIgnoreCase(methName)
-								&& meths[i].getParameterTypes().length == obj.length)
-						{
-							meth = meths[i];
-							break;
-						}
-					}
-					rtObj = meth.invoke(svc, obj);
-				} else
-				{
-					QueryDataService queryDataService=(QueryDataService)svc;
-					Map<String, String> sqlMap=(Map<String, String>)obj[0];
-					Map<String,Object> result=new HashMap<String, Object>();
-					result.put("value", queryDataService.query(sqlMap));
-					rtObj=result;
-				}
-				responseText = JSONExecuteHelp.parseJSONText(rtObj);
-			}
-			out.print(responseText);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-			try
-			{
-				responseText = JSONExecuteHelp.parseJSONText(e);
-				out.print(responseText);
-			} catch (Exception e1)
-			{
-				e1.printStackTrace();
-			}
-		} finally
-		{
-			out.close();
-		}	}
+		execute(response, json);
+	}
 
 	private String readJSONStringFromRequestBody(HttpServletRequest request)
 	{

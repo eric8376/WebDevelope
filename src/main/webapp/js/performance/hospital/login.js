@@ -6,12 +6,14 @@ $(document).ready(function(){
 		   loadingbar(true);
 	        $.post(contextPath+"/logon.spr", data, function(res){
 				//var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");
-				if(res.result=='success')
+	        	loadingbar(false);
+	        	if(res.success==true)
 				{
 					window.location.href=contextPath+"/workbench.spr";
-					loadingbar(false);
+					
 				}else{
-					alert("登陆失败,该医院不存在当前用户名或密码，请检查账户名和密码.");
+					alert(res.msg);
+					
 				}
 			});
 	}

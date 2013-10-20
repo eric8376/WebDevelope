@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.prfrmn.hospital.logic.UserTypeLogic;
 import com.microwill.prfrmn.hospital.logic.UserTypeLogicFactory;
 
@@ -33,22 +34,6 @@ public class WorkBenchController extends BaseMultiActionController {
 		
 		return new ModelAndView("/performance/hospital/workbench");
 	}
-	@RequestMapping(params = "action=getKSList")
-	public ModelAndView getKSList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser"); 
-		Map loginedUserContext=(Map)request.getSession().getAttribute("loginedUser"); 
-		UserTypeLogic userTypeLogic=UserTypeLogicFactory.createUserTypeLogic(loginedUserContext, jdbcTemplate);
-		outputJSON(response, userTypeLogic.getKSList());
-		return null;
-	}
-	@RequestMapping(params = "action=getXMList")
-	public ModelAndView getXMList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		Map loginedUserContext=(Map)request.getSession().getAttribute("loginedUser"); 
-		UserTypeLogic userTypeLogic=UserTypeLogicFactory.createUserTypeLogic(loginedUserContext, jdbcTemplate);
-		outputJSON(response, userTypeLogic.getXMList());
-		return null;
-	}
+	
 
 }

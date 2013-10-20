@@ -1,6 +1,7 @@
 package com.microwill.prfrmn.hospital.logic;
 
 import java.util.List;
+import java.util.Map;
 
 import com.microwill.framework.rpc.help.JSONExecuteHelp;
 
@@ -29,5 +30,12 @@ public class OperationLeaderLogic extends UserTypeLogic{
 		String ks_id=(String)getLoginedUserContext().get("ks");
 		return "and ks_id='"+ks_id+"' ";
 	}
-
+	@Override
+	protected void init(Map<String, Boolean> priviageMap) {
+		super.init(priviageMap);
+		priviageMap.put("/record/search/", true);
+		priviageMap.put("/record/query/", true);
+		priviageMap.put("/record/analysis/", true);
+		priviageMap.put("/user/query/", true);
+	}
 }

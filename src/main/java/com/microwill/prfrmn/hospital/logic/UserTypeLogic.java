@@ -3,23 +3,24 @@
  */
 package com.microwill.prfrmn.hospital.logic;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.microwill.prfrmn.hospital.bo.RoomType;
-import com.microwill.prfrmn.hospital.bo.UserType;
+import com.microwill.framework.vo.TreeItem;
+import com.microwill.prfrmn.hospital.bo.RoleType;
 
 /**
  * @author Administrator
  *
  */
 public  abstract class UserTypeLogic {
-	private UserType userType;
-	private RoomType roomType;
+	
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;
-	
+	private RoleType roleType;
+	private Map<String,Boolean> priviageMap=new HashMap<String, Boolean>();
 	public Map getLoginedUserContext() {
 		return loginedUserContext;
 	}
@@ -30,6 +31,45 @@ public  abstract class UserTypeLogic {
 
 
 	
+	public Map<String, Boolean> getPriviageMap() {
+		init(priviageMap);
+		return priviageMap;
+	}
+
+	protected void init(Map<String, Boolean> priviageMap) {
+		//menu
+		priviageMap.put("/record/add/", false);
+		priviageMap.put("/record/search/", false);
+		priviageMap.put("/record/query/", false);
+		priviageMap.put("/record/analysis/", false);
+		priviageMap.put("/user/query/", false);
+		priviageMap.put("/ks/query/", false);
+		priviageMap.put("/bm/query/", false);
+		priviageMap.put("/project/query/", false);
+		priviageMap.put("/hj/query/", false);
+		priviageMap.put("/zb/query/", false);
+		//button
+		//link
+		
+	}
+
+	public TreeItem getMenuTree() {
+		TreeItem root=TreeItem.getRootItem();
+		
+		return root;
+	}
+	protected void setPriviageMap(Map<String, Boolean> priviageMap) {
+		this.priviageMap = priviageMap;
+	}
+
+	public RoleType getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(RoleType roleType) {
+		this.roleType = roleType;
+	}
+
 	public JdbcTemplate getJdbcTemplate() {
 		return jdbcTemplate;
 	}
@@ -38,21 +78,7 @@ public  abstract class UserTypeLogic {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
-
-	public RoomType getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(RoomType roomType) {
-		this.roomType = roomType;
-	}
+	
 
 	public  abstract String getKSList() throws Exception;
 	public  abstract String getXMList() throws Exception;

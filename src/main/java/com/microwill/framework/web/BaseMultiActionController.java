@@ -8,7 +8,7 @@ package com.microwill.framework.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +17,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
+import com.microwill.framework.web.util.LoginHelper;
+import com.microwill.framework.web.util.ResponseUtil;
 
 /**
  * @author <a href="mailto:javawen@gmail.com">文建国 </a>
@@ -59,7 +62,6 @@ public class BaseMultiActionController extends MultiActionController {
 		writer.close();
 	}
 
-
 	/**
 	 * 输出XML文档
 	 * 
@@ -81,10 +83,16 @@ public class BaseMultiActionController extends MultiActionController {
 	public void outputJSON(HttpServletResponse response, String json)
 			throws Exception {
 
-		response.setContentType("application/json;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.write(json);
-		out.flush();
-		out.close();
+		ResponseUtil.outputJSON(response, json);
+	}
+
+	public void responseOutWithJson(HttpServletResponse response,
+			Object responseObject) {
+
+		ResponseUtil.responseOutWithJson(response, responseObject);
+	}
+
+	protected Map getToken(HttpServletRequest request) {
+		return (Map) request.getSession().getAttribute(LoginHelper.TOKEN);
 	}
 }

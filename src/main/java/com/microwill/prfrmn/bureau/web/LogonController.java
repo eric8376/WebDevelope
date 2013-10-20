@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.annotation.NotLogin;
+import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.prfrmn.bureau.bo.UserType;
 
 /**
@@ -29,6 +31,7 @@ public class LogonController extends BaseMultiActionController {
 	private JdbcTemplate jdbcTemplate;
 
 	@RequestMapping
+	@NotLogin
 	public ModelAndView handleDefault(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String username = request.getParameter("username");
@@ -46,8 +49,7 @@ public class LogonController extends BaseMultiActionController {
 			UserType userType = UserType.fromCode(userTypeCode);
 			loginedUserInfo.put("hosp_name", hosp_name);
 			loginedUserInfo.put("jb_text", userType.getDesc());
-			request.getSession().setAttribute("isLogin", "true");
-			request.getSession().setAttribute("loginedUser", loginedUserInfo);
+			LoginHelper.initSession(request,loginedUserInfo);
 			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
 		} else {
 			outputJSON(response, "{result:'false'}");
@@ -59,8 +61,7 @@ public class LogonController extends BaseMultiActionController {
 	@RequestMapping(params = "action=signout")
 	public ModelAndView signout(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		request.getSession().setAttribute("isLogin", "false");
-		// response.sendRedirect("/performance/");
+		LoginHelper.doLogout(request);
 		return null;
 
 	}

@@ -1,5 +1,29 @@
 dhtmlxEvent(window,"load", doOnLoad);
-var dhxLayout,toolbar,statusbar,dhxTree;
+var dhxLayout,toolbar,statusbar,dhxTree,priviageMap;
+var treeDefine={id:0,
+        item:[
+            {id:1,text:"数据管理",open:1,im0 :'folderClosed.gif',
+          	  item:[
+	                      {id:"/record/add/", text:"记录录入",href:"manage.spr?action=addRecord&operation=add"},
+	                      {id:"/record/search/", text:"记录搜索",href:"manage.spr?action=searchRecord"},
+	                      {id:"/record/query/", text:"记录管理",href:"manage.spr?action=recordManage"},
+	                      {id:"/record/analysis/", text:"记录分析",href:"manage.spr?action=recordAnalysis"}
+	                      
+	                  ]},
+            {id:2, text:"权限管理",open:1,im0 :'folderClosed.gif',
+                item:[
+                    {id:"/user/query/", text:"用户管理",href:"manage.spr?action=userManage"},
+                    {id:"/ks/query/", text:"科室管理",href:"manage.spr?action=roomManage&roomType=ks"},
+                    {id:"/bm/query/", text:"部门管理",href:"manage.spr?action=roomManage&roomType=bm"}
+                ]},
+            {id:3,text:"指标管理",open:1,im0 :'folderClosed.gif',
+          	  item:[
+				       {id:"/project/query/", text:"项目管理",href:"manage.spr?action=projectManage&mapType=xm"},
+                     {id:"/hj/query/", text:"关键环节管理",href:"manage.spr?action=projectManage&mapType=hj"},
+                     {id:"/zb/query/", text:"一级指标管理",href:"manage.spr?action=roomManage&roomType=zb"}
+					                  ]},
+]
+};
 function doOnLoad() {
 	dhxLayout = new dhtmlXLayoutObject(document.body, "3W");
 	dhxLayout.progressOn();
@@ -20,60 +44,16 @@ function doOnLoad() {
     });
 	/*工具栏*/
 	/*状态栏*/
-	statusbar = dhxLayout.attachStatusBar();
+	//statusbar = dhxLayout.attachStatusBar();
 	/*状态栏*/
 	/*菜单栏*/
 	dhxTree=dhxLayout.cells("a").attachTree();
-//	var obj=document.getElementById("treeboxbox_tree");
-//	var cont=dhx_li2trees(obj.childNodes[0],new Array(),0);
-//	dhxTree.loadXMLString("<tree id='0'>"+cont+"</tree>");
-//	dhxTree.openAllItems('0')
-	//dhxTree = dhtmlXTreeFromHTML("treeboxbox_tree");
-	//dhxLayout.cells("a").attachObject("treeboxbox_tree");
-	//dhxTree = dhtmlXTreeFromHTML("treeboxbox_tree");
-	//
-//	
-//	dhxTree.setIconPath("tree.ico","tree.ico","tree.ico");
 	dhxTree.setImagePath(parent.contextPath+"/images/performance/icon/");
-	var treeDefine={id:0,
-			          item:[
-			              {id:1,text:"数据管理",open:1,im0 :'folderClosed.gif',
-			            	  item:[
-				                      {id:"11", text:"记录录入",href:"manage.spr?action=addRecord&operation=add"},
-				                      {id:"12", text:"记录搜索"},
-				                      {id:"13", text:"记录管理"},
-				                      {id:"14", text:"记录分析"}
-				                      
-				                  ]},
-			              {id:2, text:"权限管理",open:1,im0 :'folderClosed.gif',
-			                  item:[
-			                      {id:"21", text:"用户管理"},
-			                      {id:"22", text:"科室管理"},
-			                      {id:"23", text:"部门管理"}
-			                  ]},
-			              {id:3,text:"指标管理",open:1,im0 :'folderClosed.gif',
-			            	  item:[
-							       {id:"31", text:"项目管理"},
-			                       {id:"32", text:"关键环节管理"},
-			                       {id:"33", text:"一级指标管理"}
-								                  ]},
-	          ]
-	      };
-	var operationMap=
-	                  {'11':"manage.spr?action=addRecord&operation=add",
-	                  '12':"manage.spr?action=searchRecord",
-	                  '13':"manage.spr?action=recordManage",
-	                  '14':"manage.spr?action=recordAnalysis",
-	                  '21':"manage.spr?action=userManage",
-	                  '22':"manage.spr?action=roomManage&roomType=ks",
-	                  '23':"manage.spr?action=roomManage&roomType=bm",
-	                  '31':"manage.spr?action=projectManage&mapType=xm",
-	                  '32':"manage.spr?action=projectManage&mapType=hj",
-	                  '33':"manage.spr?action=roomManage&roomType=zb"}
-	;
+	
+	
 	dhxTree.loadJSONObject(treeDefine);
 	dhxTree.attachEvent("onClick",function(id){
-		var url=operationMap[id];
+		var url=findURL(id,treeDefine);
 		if(url==null){
 			return true;
 		}
@@ -161,19 +141,43 @@ function loadPage(url)
 	
 	
 }
-function getKSList(){
-	var loader = dhtmlxAjax.postSync("workbench.spr?action=getKSList","");
+function getPriviageMap(){
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=getPriviageMap","");
 	var res=eval("("+loader.xmlDoc.responseText+")");
-	//alert(Object.toJSON(res));
+	return res;
+	
+}
+function getKSList(){
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=getKSList","");
+	var res=eval("("+loader.xmlDoc.responseText+")");
 	return res;
 	
 }
 function getXMList(){
-	var loader = dhtmlxAjax.postSync("workbench.spr?action=getXMList","");
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=getXMList","");
 	var res=eval("("+loader.xmlDoc.responseText+")");
-	//alert(Object.toJSON(res));
 	return res;
 }
+function findURL(id,treeDefine){
+	if(treeDefine.id==id&&treeDefine.href){//叶子
+		return treeDefine.href;
+	}else if(treeDefine.item){
+		for(var i=0;i<treeDefine.item.length;i++){
+			var url=findURL(id,treeDefine.item[i]);
+			if(url!=null){
+				return url;
+			}
+		}
+	}
+	return null;
+	
+}
+/**
+ * 根据关联父ID获取某一类型的子字典列表
+ * @param parent_id
+ * @param type
+ * @returns
+ */
 function getDictListByParent(parent_id,type){
 	
 	var sql="";
@@ -187,19 +191,19 @@ function getDictListByParent(parent_id,type){
 
 	return db.queryForList(sql);
 }
+/**
+ * 对菜单进行权限控制
+ * @param tree
+ */
 function doPriviage(tree){
-	if(loginedUserInfo.jb!=0&&loginedUserInfo!='bm'){
-		tree.deleteItem('11');//记录录入
+	
+	
+	priviageMap=getPriviageMap();
+	for(var id in priviageMap){
+		if(!priviageMap[id]){
+		tree.deleteItem(id);
+		}
 	}
-	if(loginedUserInfo.jb!=0&&loginedUserInfo.jb!=2){
-		tree.deleteItem('21');//用户管理
-	}
-	if(loginedUserInfo.jb!=0){
-		tree.deleteItem('22');
-		tree.deleteItem('23');
-		tree.deleteItem('31');
-		tree.deleteItem('32');
-		tree.deleteItem('33');
-	}
+	
 	
 }

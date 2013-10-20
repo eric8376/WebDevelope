@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-   Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser");
+   Map loginedUserInfo=(Map)request.getSession().getAttribute("token");
 %>
 </head>
 <body>
@@ -17,7 +17,7 @@
 欢迎登陆
 您当前使用的是【<%=loginedUserInfo.get("hosp_name")%>】医院的全面质量与绩效考核系统 :</br>
 您是【<%=loginedUserInfo.get("KS_TEXT")%>】 科室的【<%=loginedUserInfo.get("REAL_NAME") %>】
-<br>您拥有：【<%=loginedUserInfo.get("JB_TEXT") %>】权限.
+<br>您拥有：【<%=loginedUserInfo.get("ROLE_TEXT") %>】权限.
 </div>
 <% }%>
 </body>

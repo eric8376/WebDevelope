@@ -41,7 +41,7 @@ dhtmlxEvent(window,"load", doOnLoad);
                         ]
 			myForm = new dhtmlXForm("form_container", formData);
 		    myForm.setFontSize("15px");
-
+		    //赋值+联动
 		        if(operation=="update"){
 		        	 var recordId=getParam('recordId');
 		        	 var serviceCall = new ServiceCall();
@@ -49,7 +49,6 @@ dhtmlxEvent(window,"load", doOnLoad);
 					    obj.sql="select * from t_per_record where record_id='"+recordId+"'";
 						serviceCall.init("queryDataSvc");
 						var result= serviceCall.execute(obj);
-						//alert(Object.toJSON(result));
 						myForm.setItemValue("recordId",recordId);
 						myForm.setItemValue("owner", result.list[0].user_name);
 						myForm.getCalendar("checktime").setFormatedDate("%Y-%m-%d",result.list[0].check_time);
@@ -58,13 +57,18 @@ dhtmlxEvent(window,"load", doOnLoad);
 						myForm.setItemValue("dianping", result.list[0].dianping);
 						myForm.setItemValue("beizhu", result.list[0].beizhu);
 						myForm.setItemValue("kaohe", result.list[0].kaohe);
-						myForm.getCombo("xm").setComboValue(result.list[0].xm_id);
 						myForm.getCombo("ks").setComboValue(result.list[0].ks_id);
-						myForm.getCombo("hj").setComboValue(result.list[0].hj_id);
+						myForm.getCombo("xm").setComboValue(result.list[0].xm_id);
+						 loadSonByParent("xm","hj");
+						 myForm.getCombo("hj").setComboValue(result.list[0].hj_id);
+					     loadSonByParent("hj","zb");
 						myForm.getCombo("zb").setComboValue(result.list[0].zb_id);
 						user=result.list[0];
 						
-		        }    
+		        }else{
+		        	 loadSonByParent("xm","hj");
+		        	 loadSonByParent("hj","zb");
+		        }   
 	        myForm.attachEvent("onButtonClick", function(name) {
 				if(name =='save'&& operation=="update"){
 					this.send("manageOperation.spr?action=updateRecord","post",function(respon){
@@ -91,8 +95,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 	     
 		});
 	      
-	        loadSonByParent("xm","hj");
-	        loadSonByParent("hj","zb");
+	      
 	        
 	        //联动
 	        myForm.attachEvent("onSelectionChange", onChangeHandle );

@@ -11,7 +11,7 @@
 <script language="javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlxtree_start.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/workbench.js"></script>
 <%
-   Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser");
+   Map loginedUserInfo=(Map)request.getSession().getAttribute("token");
 %>
 <script type="text/javascript">
 var contextPath='<%=request.getContextPath()%>';
@@ -21,9 +21,11 @@ loginedUserInfo.ks='<%=loginedUserInfo.get("ks") %>';
 loginedUserInfo.jb='<%=loginedUserInfo.get("jb") %>';
 loginedUserInfo.bm='<%=loginedUserInfo.get("bm") %>';
 loginedUserInfo.hospId='<%=loginedUserInfo.get("hosp_id") %>';
+loginedUserInfo.roleName='<%=loginedUserInfo.get("role_name") %>';
 
 </script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
+
 <style type="text/css">
 .fn{
 background-color:#b6cdec;

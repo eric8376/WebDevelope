@@ -12,7 +12,7 @@
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/workbench.js"></script>
 <%
-   Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser");
+   Map loginedUserInfo=(Map)request.getSession().getAttribute("token");
 %>
 <script type="text/javascript">
 var contextPath='<%=request.getContextPath()%>';

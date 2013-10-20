@@ -72,8 +72,9 @@ public  class AuthorizeQueryStrategy {
 		List list = jdbcTemplate.queryForList(
 				sql + getPageSql());
 		System.out.println(sql + getPageSql());
+		String returnSummaryNum=(summaryNum==null)?"0":summaryNum.toString();
 		String jsonTxt = "{'list':" + JSONExecuteHelp.parseJSONText(list)
-				+ ",totalCount:" + totalCount + ",summaryNum:"+summaryNum.toString()+"}";
+				+ ",totalCount:" + totalCount + ",summaryNum:"+returnSummaryNum+"}";
 		return jsonTxt;
 	}
 	public String queryAnalysis(String condition,String keyIndex) throws Exception {

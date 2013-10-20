@@ -1,5 +1,5 @@
 dhtmlxEvent(window,"load", doOnLoad);
-var roomType;
+var roomType=getParam("roomType");
 function doDelete(id){
 	if(parent.loginedUserInfo.jb!='0'){
 		alert("非管理员不能删除");
@@ -20,7 +20,6 @@ function doDelete(id){
 }
 function addRoom(){
 	var dictText=prompt('请输入部门名称');
-	roomType=getParam("roomType");
 	if(dictText!=null){
 		dhtmlxAjax.post("manageOperation.spr?action=addDictItem","groupId=1&groupCode="+roomType+"&dictText="+encodeURI(dictText),function(respon){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
@@ -36,16 +35,20 @@ function addRoom(){
 var grid;
 
 function doOnLoad() {
-	roomType=getParam("roomType");
 	var viewName="";
+	var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
 	if(roomType=="ks"){
 		viewName="t_per_ks";
 	}else if(roomType=="bm"){
 		viewName="t_per_bm";
 	}else if(roomType=="zb"){
 		viewName="t_per_zb";
+		 if(parent.loginedUserInfo.jb!=0){
+			  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"'";
+		  } 
 	}
-	 var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"'";
+	 
+	 
 	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
 		
 	var grid_define={

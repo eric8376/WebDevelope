@@ -1,3 +1,4 @@
+window.alert=dhtmlx.alert;
 function isIE(){ //ie? 
     if (window.navigator.userAgent.toLowerCase().indexOf("msie")>=1) 
         return true; 
@@ -154,36 +155,15 @@ function ServiceCall(async,callBackFunction)
     	{
       		alert(rtStr);  
       	}
-      	if(rtStr!=null && rtStr!="")
-      	{
-	  		var rt = JSON.parse(rtStr);
-	  		//alert("rt.value="+rt.value);
-	  		if(rt&&window.isIE){
-	  			return rt;
-	  		}
-	  		else if(rt.value)
-	  		{
-	  			return rt.value;
-	  		}else if(rt.exception)
-	  		{
-	  			var eO = new Object();
-				eO.code="";
-				eO.level="";
-				eO.e=rt.exception;
-				this.showWarnWindow(eO.level+"\n"+eO.code+"\n"+eO.e);
-				throw eO;
-	  		}else 
-	  		{
-	  			return null;
-	  		}
-      	}else
-      	{
-      		//alert("rtStr is null" );
-      		return null;
-      	}	
+	  	var rt = JSON.parse(rtStr);
+	  	if(rt.success==true){
+	  		return rt.content;
+	  	}else{
+	  		alert("内部异常："+rt.msg);
+	  	}
+	  	
 	  }else{
-	  	//alert("error");
-		;	 
+	  	alert("通讯异常：xmlhttp.status ："+xmlhttp.status);	 
 	  } 
 	  } 
 	  this.showWarnWindow = function (exceptionStr)
@@ -743,8 +723,9 @@ function initGrid(grid,define){
 	grid.setColSorting(colSorting.join(","));
 	grid.enableDragAndDrop(true);
 	grid.enableDragOrder(true);
+	grid.dontSetSizes=true;
 	//grid.setEditable(false);
-	grid.enableAutoWidth(true,920,920);
+	//grid.enableAutoWidth(true,920,920);
 
 	grid.init();
 	return grid;

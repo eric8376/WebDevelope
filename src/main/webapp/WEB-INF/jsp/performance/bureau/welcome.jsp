@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-   Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser");
+   Map loginedUserInfo=(Map)request.getSession().getAttribute("token");
 %>
 </head>
 <body>

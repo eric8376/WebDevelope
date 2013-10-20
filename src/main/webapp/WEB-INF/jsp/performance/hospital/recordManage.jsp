@@ -7,7 +7,6 @@
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/recordManage.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
 
 <style type="text/css">
  html, body {
@@ -21,7 +20,7 @@
 </head>
 <body>
 
-<div id="gridbox" style="position: relative;   width:100%; height: 540px;"></div>
+<div id="gridbox" style="position: relative; height: 540px;"></div>
 
 
 </body>

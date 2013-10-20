@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.util.LoginHelper;
 
 /**
  * @author Administrator
@@ -33,7 +34,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
 	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=? where record_id=?";
-	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) values(?,?,?,?,?)";
+	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id) values(?,?,?,?,?,?,?)";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
 	private static String DELETE_DICT_MAP_SQL = "delete from hospital.t_per_dict_map where parent_id=? and son_id=?";
 	private static String ADD_DICT_MAP_SQL = "insert into hospital.t_per_dict_map(parent_id,son_id,map_id) values(?,?,?)" ;
@@ -201,15 +202,15 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String groupId = request.getParameter("groupId");
 		String groupCode = request.getParameter("groupCode");
 		String dictId = getUUID();
-		String checkExistSql="select count(1) as count from hospital.t_dict_table where hosp_id='"+getHospIdFromSession(request)+"' and group_code='"+groupCode+"' and dict_text='"+dictText+"'";
-		if(jdbcTemplate.queryForInt(checkExistSql)>0){
-			outputJSON(response, "{result:'false',errorType:'exist'}");
-			return null;
-		}
+//		String checkExistSql="select count(1) as count from hospital.t_dict_table where hosp_id='"+getHospIdFromSession(request)+"' and group_code='"+groupCode+"' and dict_text='"+dictText+"'";
+//		if(jdbcTemplate.queryForInt(checkExistSql)>0){
+//			outputJSON(response, "{result:'false',errorType:'exist'}");
+//			return null;
+//		}
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(ADD_DICT_SQL,
-					new Object[] { dictId, groupId, dictText, groupCode,getHospIdFromSession(request) });
+					new Object[] { dictId, groupId, dictText, groupCode,getHospIdFromSession(request),getUserIdFromSession(request),getDeptIdFromSession(request) });
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -364,11 +365,17 @@ public class ManageOperactionController extends BaseMultiActionController {
 	}
 
 	private String getHospIdFromSession(HttpServletRequest request){
-		Map loginedUserContext = (Map) request.getSession().getAttribute(
-				"loginedUser");
-		return(String)loginedUserContext.get("hosp_id");
+		
+		return(String)LoginHelper.getToken(request).get("hosp_id");
 	}
-
+	private String getUserIdFromSession(HttpServletRequest request){
+		
+		return(String)LoginHelper.getToken(request).get("dept_id");
+	}
+	private String getDeptIdFromSession(HttpServletRequest request){
+		
+		return(String)LoginHelper.getToken(request).get("ks");
+	}
 	private String getUUID() {
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString();

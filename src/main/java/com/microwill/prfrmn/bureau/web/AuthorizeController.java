@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.prfrmn.bureau.logic.AuthorizeQueryStrategy;
 
 /**
@@ -32,8 +33,7 @@ public class AuthorizeController extends BaseMultiActionController {
 			HttpServletResponse response) throws Exception {
 		String conditionSql = request.getParameter("conditionSql");
 		String pageSql = request.getParameter("pageSql");
-		Map loginedUserContext = (Map) request.getSession().getAttribute(
-				"loginedUser");
+		Map loginedUserContext = LoginHelper.getToken(request);
 		AuthorizeQueryStrategy strategy = new AuthorizeQueryStrategy(
 				loginedUserContext, jdbcTemplate);
 

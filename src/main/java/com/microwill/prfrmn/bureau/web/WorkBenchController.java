@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.prfrmn.bureau.logic.UserTypeLogic;
 import com.microwill.prfrmn.bureau.logic.UserTypeLogicFactory;
 
@@ -36,8 +37,7 @@ public class WorkBenchController extends BaseMultiActionController {
 	@RequestMapping(params = "action=getXMList")
 	public ModelAndView getXMList(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		Map loginedUserInfo=(Map)request.getSession().getAttribute("loginedUser"); 
-		Map loginedUserContext=(Map)request.getSession().getAttribute("loginedUser"); 
+		Map loginedUserContext=(Map)request.getSession().getAttribute(LoginHelper.TOKEN); 
 		UserTypeLogic userTypeLogic=UserTypeLogicFactory.createUserTypeLogic(loginedUserContext, jdbcTemplate);
 		outputJSON(response, userTypeLogic.getXMList());
 		return null;
@@ -45,7 +45,7 @@ public class WorkBenchController extends BaseMultiActionController {
 	@RequestMapping(params = "action=getHJList")
 	public ModelAndView getHJList(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		Map loginedUserContext=(Map)request.getSession().getAttribute("loginedUser"); 
+		Map loginedUserContext=(Map)request.getSession().getAttribute(LoginHelper.TOKEN); 
 		UserTypeLogic userTypeLogic=UserTypeLogicFactory.createUserTypeLogic(loginedUserContext, jdbcTemplate);
 		outputJSON(response, userTypeLogic.getHJList());
 		return null;
@@ -53,7 +53,7 @@ public class WorkBenchController extends BaseMultiActionController {
 	@RequestMapping(params = "action=getZBList")
 	public ModelAndView getZBList(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		Map loginedUserContext=(Map)request.getSession().getAttribute("loginedUser"); 
+		Map loginedUserContext=(Map)request.getSession().getAttribute(LoginHelper.TOKEN); 
 		UserTypeLogic userTypeLogic=UserTypeLogicFactory.createUserTypeLogic(loginedUserContext, jdbcTemplate);
 		outputJSON(response, userTypeLogic.getZBList());
 		return null;

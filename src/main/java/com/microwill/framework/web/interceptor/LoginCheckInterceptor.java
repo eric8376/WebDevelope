@@ -3,13 +3,19 @@
  */
 package com.microwill.framework.web.interceptor;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.microwill.framework.web.annotation.NotLogin;
+import com.microwill.framework.web.util.LoginHelper;
 
 /**
  * @author Administrator
@@ -38,7 +44,27 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
+	
+		if (handler instanceof HandlerMethod) {
+		    HandlerMethod method = (HandlerMethod) handler;
+		    if(method.getMethodAnnotation(NotLogin.class) != null){
+				return true;
+			    }
+		    }
+		Map loginedUser = (Map) request.getSession().getAttribute(LoginHelper.TOKEN);
+		if (null==loginedUser) {
+			outputJSRedirect(response, LoginHelper.getWholeInternalContext(request));
+			return false;
+
+		}
 		return true;
+	}
+
+	private void outputJSRedirect(HttpServletResponse response, String site)
+			throws Exception {
+		response.setContentType("text/html");
+		response.getWriter().print(
+				"<script>top.location.href='" + site + "';</script>");
 	}
 
 	// 在业务处理器处理请求执行完成后,生成视图之前执行的动作
@@ -46,12 +72,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		String isLogin = (String) request.getSession().getAttribute("isLogin");
-		if (StringUtils.isEmpty("isLogin") || !"true".equals(isLogin)) {
-			response.sendRedirect("index.jsp");
-			return;
-
-		}
+		preHandle(request,response,handler);
 
 	}
 

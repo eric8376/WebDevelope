@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.framework.web.util.LoginHelper;
 
 /**
  * @author Administrator
@@ -396,9 +397,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 
 	}
 	private String getHospIdFromSession(HttpServletRequest request){
-		Map loginedUserContext = (Map) request.getSession().getAttribute(
-				"loginedUser");
-		return(String)loginedUserContext.get("hosp_id");
+		return(String)LoginHelper.getToken(request).get("hosp_id");
 	}
 
 	private String getUUID() {

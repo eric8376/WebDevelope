@@ -135,6 +135,9 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="localhost_access_log" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+	   <Context path="/logs" docBase="F:\scf-log\" />
+	    <Context path="/tomcatlogs" docBase="F:\eric\workspace\proj\WebDevelope\instance\logs\" />
+	   
 
       </Host>
     </Engine>
