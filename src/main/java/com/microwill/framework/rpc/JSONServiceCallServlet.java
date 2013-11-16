@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +27,7 @@ import com.microwill.framework.web.util.ResponseUtil;
 
 public class JSONServiceCallServlet extends HttpServletSupport
 {
+	protected Log log = LogFactory.getLog(this.getClass());
 	private static final long serialVersionUID = -8717789606252275564L;
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
@@ -44,7 +45,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 		{
 			if (!StringUtils.isEmpty(json))
 			{
-				System.out.println(json);
+				log.debug(json);
 				//解析参数
 				JSONObject jsonObject = new JSONObject(json);
 				String serviceName = jsonObject.optString(JSONExecuteHelp.SERVICE_NAME);
@@ -101,8 +102,8 @@ public class JSONServiceCallServlet extends HttpServletSupport
 		return rtObj;
 	}
 	private void debugParam(String serviceName, String methName, Object[] obj) {
-		System.out.println("ExecuteAction JSON Remote Call.");
-		System.out.println("Service:" + serviceName);
+		log.debug("ExecuteAction JSON Remote Call.");
+		log.debug("Service:" + serviceName);
 		System.out.print("Invoke:" + methName + "(");
 		for (int i = 0; i < obj.length; i++)
 		{
@@ -114,14 +115,14 @@ public class JSONServiceCallServlet extends HttpServletSupport
 				System.out.print("," + obj[i]);
 			}
 		}
-		System.out.println(")");
+		log.debug(")");
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
 		request.setCharacterEncoding("UTF-8");
-		System.out.println("---doGet----");
+		log.debug("---doGet----");
 		String json = request.getParameter("getParam");
 		execute(response, json);
 	}
@@ -144,7 +145,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 			 
 		} catch (Exception e)
 		{
-			System.out.println(" Error reading JSON string:  " + e.toString());
+			log.debug(" Error reading JSON string:  " + e.toString());
 			e.printStackTrace();
 		}
 		return json.toString();

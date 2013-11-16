@@ -34,6 +34,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
 	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=? where record_id=?";
+	private static String DELETE_RECORD_SQL = "delete from t_per_record where record_id=?";
 	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id) values(?,?,?,?,?,?,?)";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
 	private static String DELETE_DICT_MAP_SQL = "delete from hospital.t_per_dict_map where parent_id=? and son_id=?";
@@ -193,6 +194,28 @@ public class ManageOperactionController extends BaseMultiActionController {
 			outputJSON(response, "{result:false}");
 		}
 		return null;
+
+	}
+	@RequestMapping(params = "action=deleteRecord")
+	public ModelAndView deleteRecord(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String recordId = request.getParameter("recordId");
+		int result = 0;
+		try {
+			result = jdbcTemplate.update(DELETE_RECORD_SQL,
+					new Object[] { recordId });
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (result > 0) {
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} else {
+			outputJSON(response, "{result:false}");
+		}
+		return null;
+
 
 	}
 	@RequestMapping(params = "action=addDictItem")
