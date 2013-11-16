@@ -35,7 +35,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 				    labelWidth: 240,
 				    inputWidth: 300
 				},
-                { type: "fieldset", name: "data", label: "新增用户", inputWidth: "auto", list:[
+               
 				{type:"input", name:"userName", label:"用户名:"},
 				{type:"password", name:"pass", label:"密码:"},
 				{type:"password", name:"repass", label:"密码确认:"},
@@ -50,8 +50,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 				                                				{value: "1", text: "普通科员"},
 				                                				{value: "2", text: "科室领导"}
 				                                		]},
-				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消"}] 
-			   }];
+				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
 				myForm = new dhtmlXForm("form_container", operation=="update"?updateFormData:addFormData);
 		        myForm.attachEvent("onButtonClick", function(name) {
 					if(name =='save'){
@@ -62,7 +61,7 @@ dhtmlxEvent(window,"load", doOnLoad);
  							var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 							if(res.result=='success')
 							{
-								parent.loadPage('manage.spr?action=userManage');
+								parent.loadPage('manage.spr?action=userManage','用户管理');
 							}
 						});
 						 }else if(operation=="update"){
@@ -70,12 +69,12 @@ dhtmlxEvent(window,"load", doOnLoad);
 		 							var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 									if(res.result=='success')
 									{
-										parent.loadPage('manage.spr?action=userManage');
+										parent.loadPage('manage.spr?action=userManage','用户管理');
 									}
 								});
 						 }
 						}else if(name =='cancel'){
-							parent.loadPage('manage.spr?action=userManage');
+							parent.loadPage('manage.spr?action=userManage','用户管理');
 						}});
 		        
 		        if(operation=="update"){

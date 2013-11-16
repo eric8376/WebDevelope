@@ -48,7 +48,7 @@ function doOnLoad() {
 				 {title:"所在科室",width:100,type:"co",dict:["hospital.t_per_ks"]},
 				 {title:"相关人员",width:100,type:"ro"},
 				 {title:"检查时间",width:150,type:"ro"},
-				 {title:"检查事项/结果",width:350,type:"ro"},
+				 {title:"检查事项/结果",width:350,type:"ro",align:"left"},
 				 {title:"点评",width:100,type:"ro"},
 				 {title:"考核分",width:100,type:"ro"},
 				 {title:"备注",width:100,type:"ro"}
@@ -74,9 +74,10 @@ function initToolBar(grid){
 	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
 	
 	toolbar.addButton('backtosearch',1,"搜索","find.ico",null);
-	toolbar.addButton('updateRecord',2,"修改","edit.ico",null);
-	toolbar.addButton('caculate',3,"考核计算","calculator.ico",null);
-	toolbar.addButton('import',4,"导入数据","importExcel.ico",null);
+	toolbar.addButton('deleteRecord',2,"删除","delete.ico",null);
+	toolbar.addButton('updateRecord',3,"修改","edit.ico",null);
+	toolbar.addButton('caculate',4,"考核计算","calculator.ico",null);
+	toolbar.addButton('import',5,"导入数据","importExcel.ico",null);
 	toolbar.setIconSize(24);
 	
 	
@@ -108,6 +109,29 @@ function initToolBar(grid){
         		return;
         	}
         	createFileImport2("import.spr");
+        }else if(id=="deleteRecord"){
+        	var index=grid.getSelectedRowId();
+        	index=grid.getRowIndex(index);
+        	var recordId = grid.cellByIndex(index, 0).getValue();
+        	if(index==-1){
+        		alert("请选择一条记录");
+        		return;
+        	}
+        	if(parent.loginedUserInfo.jb!='0'){
+    			alert("非管理员不能删除");
+    			return;
+    		}
+    		if(!confirm("确定要删除吗？")){
+    			return;
+    		}
+    		dhtmlxAjax.post("manageOperation.spr?action=deleteRecord","recordId="+recordId,function(respon){
+    			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
+    			if(res.result=='success')
+    			{
+    				parent.loadPage('manage.spr?action=recordManage');
+    			}
+    		});
         }
+        
     });
 }

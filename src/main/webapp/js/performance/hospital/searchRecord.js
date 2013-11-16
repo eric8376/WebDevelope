@@ -23,7 +23,7 @@ function doOnLoad() {
 		    labelWidth: 240,
 		    inputWidth: 300
 		},          
-        { type: "fieldset", name: "data", label: "搜索面板", inputWidth: "auto", list:[
+    
 		{type:"calendar", name: 'kssj', label:'开始时间:',readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"calendar", name:"jssj", label:"结束时间:",readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"combo", name:"owner", label:"人名:",options:rt3.list,filtering:true},
@@ -31,8 +31,8 @@ function doOnLoad() {
 		{type:"combo", name:"xm", label:"项目:",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
-		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}] 
-	   }
+		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}
+	   
                 ]
 	myForm = new dhtmlXForm("form_container", formData);
     myForm.attachEvent("onButtonClick", function(name) {

@@ -694,7 +694,12 @@ function initGrid(grid,define){
 		headeralignlist.push("text-align:center");
 		initWidthlist.push(define.columns[i].width);
 		colTypelist.push(define.columns[i].type);
-		colAlignlist.push("center");
+		if(define.columns[i].align){
+		colAlignlist.push(define.columns[i].align);
+		}else{
+			colAlignlist.push("center");
+		}
+
 		colVAlignlist.push("middle");
 		colSorting.push("str");
 		if("co"==define.columns[i].type){

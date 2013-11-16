@@ -501,18 +501,20 @@ div.gridbox{overflow:hidden; text-align:center}
 {background-color:white}
 div.gridbox .xhdr{background-color:#D4D0C8}
 div.gridbox table.obj{height:1px}
-div.gridbox table.hdr td {line-height:normal; font-family:arial; font-size:12px; background-Color:#D4D0C8; border: 1px solid; border-color : white Gray Gray white; text-align: center; margin:0px; padding:5px 0px 5px 0px ; font-weight:normal; -moz-user-select:none; 
+/*=列头  td+cell*/
+div.gridbox table.hdr td {height:10px;line-height:normal; font-family:arial; font-size:12px; background-Color:#D4D0C8; border: 1px solid; border-color : white Gray Gray white; text-align: center; margin:0px; padding:5px 0px 5px 0px ; font-weight:normal; -moz-user-select:none; 
  -moz-user-select:-moz-none; 
  overflow:hidden; empty-cells:show}
-div.gridbox table.hdr td div.hdrcell{overflow:hidden}
+div.gridbox table.hdr td div.hdrcell{height:10px;overflow:hidden;}
 div.gridbox table.obj td {border: 1px solid; border-color : white Gray Gray white; font-family:Arial; font-size:12px; -moz-user-select:none; -moz-user-select:-moz-none; 
  overflow:hidden; padding-top:0px; padding-bottom:0px; empty-cells:show}
-div.gridbox table.obj th, div.gridbox table.hdr th{padding:0px 0px 0px 0px ; margin:0px 0px 0px 0px}
-div.gridbox table.row20px tr td{height:20px; white-space: nowrap; padding:0px}
+div.gridbox table.obj th, div.gridbox table.hdr th{padding:0px 0px 0px 0px ; margin:0px 0px 0px 0px;}
+div.gridbox table.row20px tr td{height:30px; white-space: nowrap; padding:0px}
 div.gridbox .objbox {background-color:white; position:relative; -webkit-overflow-scrolling: touch}
 div.gridbox table.obj td span.space, div.gridbox table.obj td img.space{width:18px}
-div.gridbox table.obj tr.rowselected td.cellselected, div.gridbox table.obj td.cellselected {background-color:#d8d8d8; color:black}
-div.gridbox table.obj tr.rowselected td{background-color:#e1e0d7; color:black}
+div.gridbox table.obj tr.rowselected td.cellselected, div.gridbox table.obj td.cellselected {height:28px;background-color:#d8d8d8; color:black}
+/*=选择列 */
+div.gridbox table.obj tr.rowselected td{height:30px;background-color:#e1e0d7; color:black}
 div.gridbox table.obj td.editable{-moz-user-select:text}
 div.gridbox table.obj td.group_row{vertical-align:middle; font-family:Tahoma; font-size:10pt; font-weight:bold; height:30px; border:0px; border-bottom: 2px solid navy; 
 } 
@@ -1164,6 +1166,7 @@ html > body div.gridbox_dhx_skyblue table.hdr td div.hdrcell{width=100%}
 div.gridbox_dhx_skyblue table.hdr td {border-width: 1px 1px 1px 1px; border-color : #FDFDFD #A4BED4 #A4BED4 #FDFDFD; background-color:transparent; 
  font-family:Tahoma; font-size:11px; color:black; vertical-align:top; text-align:left}
 div.gridbox_dhx_skyblue {border:1px solid #A4BED4}
+/*列选择*/
 div.gridbox_dhx_skyblue table.obj tr td{padding-top:3px; padding-bottom:3px}
 * html .gridbox_dhx_skyblue .obj td{height:auto; padding-top=3px; padding-bottom=3px}
 div.gridbox_dhx_skyblue table.obj.row20px tr td{padding-top:0px; padding-bottom:0px}
@@ -1171,9 +1174,8 @@ div.gridbox_dhx_skyblue table.obj.row20px tr td.editable{padding:0px}
 div.gridbox_dhx_skyblue table.obj tr td.editable div.treegrid_cell{padding-left:4px; padding-top:1px}
 div.gridbox_dhx_skyblue table.obj tr.rowselected{background-color:#FFF1CC}
 div.gridbox_dhx_skyblue table.obj tr.rowselected td{background-color:#FFF1CC; background-repeat:repeat-x; background-position:0px 0px; 
- background-image:url(imgs/sky_blue_sel2.png)}
+ }
 div.gridbox_dhx_skyblue table.obj.row20px tr.rowselected td{background-repeat:repeat-x; background-position:0px 0px; 
- background-image:url(imgs/sky_blue_sel.png); 
 }
 div.gridbox_dhx_skyblue table.obj tr.rowselected td.cellselected {background-color:#FFF1CC}
 div.gridbox_dhx_skyblue .odd_dhx_skyblue{background-color:#E3EFFF}

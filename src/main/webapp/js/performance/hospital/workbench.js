@@ -1,5 +1,5 @@
 dhtmlxEvent(window,"load", doOnLoad);
-var dhxLayout,toolbar,statusbar,dhxTree,priviageMap;
+var dhxLayout,toolbar,statusbar,dhxTree,priviageMap,contentTab;
 var treeDefine={id:0,
         item:[
             {id:1,text:"数据管理",open:1,im0 :'folderClosed.gif',
@@ -37,7 +37,7 @@ function doOnLoad() {
 	toolbar.addButton('logout',1,"退出系统","exit.ico",null);
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="changepassword"){
-        	loadPage('manage.spr?action=changePassword');
+        	loadPage('manage.spr?action=changePassword','修改密码');
         }else if(id=="logout"){
         	window.location.href="logon.spr?action=signout";
         }
@@ -50,22 +50,27 @@ function doOnLoad() {
 	dhxTree=dhxLayout.cells("a").attachTree();
 	dhxTree.setImagePath(parent.contextPath+"/images/performance/icon/");
 	
-	
 	dhxTree.loadJSONObject(treeDefine);
 	dhxTree.attachEvent("onClick",function(id){
-		var url=findURL(id,treeDefine);
-		if(url==null){
+		var treeNode=findURL(id,treeDefine);
+		if(treeNode==null){
 			return true;
 		}
-        loadPage(url);
+        loadPage(treeNode.href,treeNode.text);
         return true;
    });
+	
 	doPriviage(dhxTree);
-	dhxLayout.cells("a").setText("我的菜单");
-	dhxLayout.cells("a").setWidth(150);
+	//dhxLayout.cells("a").setText("我的菜单");
+	dhxLayout.cells("a").hideHeader();
+	dhxLayout.cells("a").setWidth(220);
 	//dhxTree.setImagePath("imgs/");
 	
     dhxLayout.cells("b").hideHeader();
+    contentTab=dhxLayout.cells("b").attachTabbar()
+    contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+    contentTab.addTab("a1", "","70px");
+    contentTab.setTabActive("a1");
     /*菜单栏*/
     /*过滤栏*/
     
@@ -115,24 +120,29 @@ function doOnLoad() {
     grid.attachEvent("onRowSelect", function(id,ind){
     	
     	var ks=grid.cells(id,0).getValue();
-    	loadPage('manage.spr?action=recordManage&ks='+ks);
+    	var ksname=grid.cells(id,1).getValue();
+    	loadPage('manage.spr?action=recordManage&ks='+ks,ksname+'科室记录');
     	
     })
     grid1.attachEvent("onRowSelect", function(id,ind){
     	
     	var xm=grid1.cells(id,0).getValue();
-    	loadPage('manage.spr?action=recordManage&xm='+xm);
+    	var xmname=grid1.cells(id,1).getValue();
+    	loadPage('manage.spr?action=recordManage&xm='+xm,xmname+'项目记录');
     })
     /*过滤栏*/
-    loadPage('manage.spr?action=welcome');
+    loadPage('manage.spr?action=welcome','首页');
     dhxLayout.progressOff();
 }
-function loadPage(url)
+function loadPage(url,text)
 {
 	dhxLayout.cells("b").progressOn();
 	
-	dhxLayout.cells("b").attachURL(url);
-	var ifr=dhxLayout.cells("b").getFrame();
+	contentTab.cells("a1").attachURL(url);
+	if(text){
+	contentTab.setLabel("a1",text,200);
+	}
+	var ifr=contentTab.cells("a1").getFrame();
 	dhtmlxEvent(ifr, "load", function(){
 		parent.dhxLayout.cells("b").progressOff();
 	});
@@ -160,12 +170,12 @@ function getXMList(){
 }
 function findURL(id,treeDefine){
 	if(treeDefine.id==id&&treeDefine.href){//叶子
-		return treeDefine.href;
+		return treeDefine;
 	}else if(treeDefine.item){
 		for(var i=0;i<treeDefine.item.length;i++){
-			var url=findURL(id,treeDefine.item[i]);
-			if(url!=null){
-				return url;
+			var treeNode=findURL(id,treeDefine.item[i]);
+			if(treeNode!=null){
+				return treeNode;
 			}
 		}
 	}
