@@ -45,6 +45,9 @@ function doOnLoad() {
     	doSearch();
     	}
     };
+    //联动
+    myForm.attachEvent("onSelectionChange", onChangeHandle );
+    myForm.attachEvent("onChange", onChangeHandle );
     
     myForm.getCombo("owner").setComboValue("");
     myForm.getCombo("xm").setComboValue("");
@@ -53,6 +56,14 @@ function doOnLoad() {
    
    
         
+}
+function onChangeHandle(name){
+	if(name=="xm"){
+		loadSonByParent("xm","hj");
+	}else if(name=='hj'){
+		loadSonByParent("hj","zb");
+		
+	}
 }
 function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);
