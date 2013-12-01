@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CSS and JS minifier. -->
+<!DOCTYPE project>
+<project name="minifier" basedir=".">
+
+  <property name="gc" value="src\build\lib\compiler.jar" />
+  <property name="yc" value="src\build\lib\yuicompressor-2.4.8.jar" />
+
+  <!-- Compress single js with Google Closure compiler -->
+  <macrodef name="gc-js">
+    <attribute name="dir" />
+    <attribute name="src" />
+    <sequential>
+      <java jar="${gc}" fork="true">
+        <!--
+        - - compilation_level WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS
+        Specifies the compilation level to use. Default: SIMPLE_OPTIMIZATIONS
+        - - warning_level QUIET | DEFAULT | VERBOSE
+        Specifies the warning level to use.
+        -->
+        <arg line="--js=@{dir}/@{src}.js" />
+        <arg line="--js_output_file=@{dir}/@{src}-min-gc.js" />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- Compress single js with Yahoo compressor -->
+  <macrodef name="yc-js">
+    <attribute name="dir" />
+    <attribute name="src" />
+    <sequential>
+      <java jar="${yc}" fork="true">
+        <arg value="@{dir}/@{src}.js" />
+        <arg line="-o" />
+        <arg value="@{dir}/@{src}-min-yc.js" />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- Compress all js in directory with Yahoo compressor -->
+  <macrodef name="yc-js-all">
+    <attribute name="dir" />
+    <sequential>
+      <apply executable="java" parallel="false">
+        <fileset dir="@{dir}" includes="*.js" excludes="*-min*.js" />
+        <arg line="-jar" />
+        <arg path="${yc}" />
+        <srcfile />
+        <arg line="-o" />
+        <mapper type="glob" from="*.js" to="@{dir}/*-min-yc.js" />
+        <targetfile />
+      </apply>
+    </sequential>
+  </macrodef>
+
+  <!-- Compress all css in directory with Yahoo compressor -->
+  <macrodef name="yc-css-all">
+    <attribute name="dir" default="${build.css.dir}" />
+    <sequential>
+      <apply executable="java" parallel="false">
+        <fileset dir="@{dir}" includes="*.css" excludes="*-min*.css" />
+        <arg line="-jar" />
+        <arg path="${yc}" />
+        <arg line="-v --line-break 0" />
+        <srcfile />
+        <arg line="-o" />
+        <mapper type="glob" from="*.css" to="@{dir}/*-min.css" />
+        <targetfile />
+      </apply>
+    </sequential>
+  </macrodef>
+	
+</project>
