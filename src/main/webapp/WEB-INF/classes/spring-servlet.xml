@@ -56,4 +56,5 @@
 	<context:component-scan base-package="com.microwill.prfrmn.hospital" />
 	<context:component-scan base-package="com.microwill.prfrmn.bureau" />
 	<context:component-scan base-package="com.microwill.framework.web" />
+	<context:component-scan base-package="com.microwill.prfrmn.BGM" />
 </beans>

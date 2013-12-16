@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
-<script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/roleManage.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/performance/BGM/roleManage.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
 <body>

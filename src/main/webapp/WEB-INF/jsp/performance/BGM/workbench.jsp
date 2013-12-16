@@ -9,7 +9,7 @@
 <jsp:include page="../include/include.jsp" />
 
 <script language="javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlxtree_start.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/workbench.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/performance/BGM/workbench.js"></script>
 <%
    Map loginedUserInfo=(Map)request.getSession().getAttribute("token");
 %>

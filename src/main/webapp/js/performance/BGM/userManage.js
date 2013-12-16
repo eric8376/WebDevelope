@@ -2,10 +2,6 @@ dhtmlxEvent(window,"load", doOnLoad);
 var grid,toolbar;
 function doDelete(id){
 	if(id!=null){
-		if(parent.loginedUserInfo.jb!='0'){
-			alert("非管理员不能删除");
-			return;
-		}
 		if(!confirm("确定要删除吗？")){
 			return;
 		}
@@ -13,48 +9,57 @@ function doDelete(id){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
 			if(res.result=='success')
 			{
-				parent.loadPage('manage.spr?action=userManage');
+				parent.loadPage('p.spr?page=userManage');
 			}
 		});
 	}
 }
-function doAuthorise(id){
-	if(id!=null){
-		if(grid.cellById(id, 3).getValue()!='bm'){
-			alert("非职能部门不能授权");
-			return;
-		}
-		parent.loadPage('manage.spr?action=authorise&userId='+id);
-		
-	}
-}
+function doAdd(dhxWins){
+	dhtmlx.skin = "dhx_skyblue";
+	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
+	 
+	 var win = dhxWins.createWindow('addUser',150,150,600,400);
+	 dhxWins.window('addUser').setText("新增用户");
+	 var addDhxForm =dhxWins.window('addUser').attachForm(addFormData);
+	 
+	 addDhxForm.attachEvent("onButtonClick", function(name) {
+	    	if(name =='save'){
+	    		this.send("manageOperation.spr?action=addOrUpdateUser","post",function(respon){
+	    			parent.loadPage('p.spr?page=userManage');
+	    		});
+	    		dhxWins.window('addUser').close();
+	    	
+	    	}else if(name =='cancel'){
+	    		dhxWins.window('addUser').close();
+	    	}
+		});
+};
+function doUpdate(dhxWins,userId){
+	dhtmlx.skin = "dhx_skyblue";
+	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
+	 
+	 var win = dhxWins.createWindow('updateUser',150,150,600,400);
+	 dhxWins.window('updateUser').setText("修改用户");
+	 var updateDhxForm =dhxWins.window('updateUser').attachForm(updateFormData);
+	 var sql="select * from BGM.t_user where user_id='"+userId+"'";
+	 var list=db.queryForList(sql);
+	 copyObjectToForm(list[0],updateFormData,updateDhxForm);
+	 updateDhxForm.attachEvent("onButtonClick", function(name) {
+	    	if(name =='save'){
+	    		this.send("manageOperation.spr?action=addOrUpdateUser","post",function(respon){
+	    			//alert(respon);
+	    			parent.loadPage('p.spr?page=userManage');
+	    		});
+	    		dhxWins.window('updateUser').close();
+	    	}else if(name =='cancel'){
+	    		dhxWins.window('updateUser').close();
+	    	}
+		});
+};
 function doOnLoad() {
-	 var filterCondition="and hosp_id='"+parent.loginedUserInfo.hospId+"'";
-	    if(parent.loginedUserInfo.jb=='2'){
-	    	filterCondition+=" and ks='"+parent.loginedUserInfo.ks+"'";
-	    }
-	var sql="select user_id,user_name,real_name,BM,KS,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\");^_self')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\");^_self') as au from t_per_user where 1=1 "+filterCondition;
-	var grid_define={
-			columns:
-				[{title:"用户号",width:0,type:"ro"},
-				 {title:"用户名",width:100,type:"ro"},
-				 {title:"姓名",width:100,type:"ro"},
-				 {title:"部门类型",width:100,type:"co",data:[
-					                                       {key:"bm",value:"职能部门"},
-					                                       {key:"ks",value:"临床部门"}
-					                                      ]},
-				 {title:"所属科室",width:150,type:"co",dict:["hospital.t_per_ks","hospital.t_per_bm"]},
-				 {title:"级别",width:150,type:"co",data:[
-				                                       {key:"0",value:"管理员"},
-				                                       {key:"1",value:"普通职员"},
-				                                       {key:"2",value:"科室领导"}]},
-				 {title:"删除",width:100,type:"link"},
-				 {title:"权限管理",width:100,type:"link"}
-				],
-			key:"user_id",
-			sql:sql
-				 
-	}
+	
+	
+	
 	grid=createGridObject('gridbox',grid_define);
 	initToolBar(grid);
 
@@ -64,12 +69,15 @@ function initToolBar(grid){
 	toolbar=grid.toolBar;
 	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
 	toolbar.addButton('addUser',1,"新增用户","iconWrite2.gif",null);
-	toolbar.addButton('updateUser',1,"修改用户","iconWrite2.gif",null);
+	toolbar.addButton('updateUser',2,"修改用户","iconWrite2.gif",null);
+	toolbar.addButton('deleteUser',3,"删除用户","iconWrite2.gif",null);
 	
 	
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="addUser"){
-        	parent.loadPage('manage.spr?action=addUser&operation=add');
+        	 var dhxWins = new dhtmlXWindows();
+        	 doAdd(dhxWins);
+        	
         }else if(id=="updateUser"){
         	var index=grid.getSelectedRowId();
         	index=grid.getRowIndex(index)
@@ -77,8 +85,82 @@ function initToolBar(grid){
         		alert("请选择一条记录");
         		return;
         	}
-        	var userId = grid.cellByIndex(index, 0).getValue();
-        	parent.loadPage('manage.spr?action=addUser&operation=update&userId='+userId);
+        	var patientId = grid.cellByIndex(index, 0).getValue();
+        	var dhxWins = new dhtmlXWindows();
+        	doUpdate(dhxWins,patientId)
+        }else if(id=='deleteUser'){
+        	var index=grid.getSelectedRowId();
+        	index=grid.getRowIndex(index)
+        	if(index==-1){
+        		alert("请选择一条记录");
+        		return;
+        	}
+        	var patientId = grid.cellByIndex(index, 0).getValue();
+        	doDelete(patientId);
         }
     });
+}
+
+//源数据
+var roomOption=db.queryForList("select dict_id as value, dict_text as text from BGM.t_dict where dict_code='ks'");
+var addFormData = [
+	 				{
+	 				    type: "settings",
+	 				    position: "label-left",
+	 				    labelWidth: 240,
+	 				    inputWidth: 300
+	 				},
+	 				{type:"input", name:"userName", label:"用户名:"},
+	 				{type:"password", name:"password", label:"密码:"},
+	 				{type:"password", name:"repassword", label:"确认密码:"},
+	 				{type:"input", name:"email", label:"邮箱:"},
+	 				{type:"input", name:"phone", label:"手机:"},
+	 				{type:"combo", name: 'role', label:'角色:',options:[
+	 					                                   				{value: "1", text: "管理员"},
+	 					                                				{value: "2", text: "职员"}
+	 					                                		]},
+	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	 	                                		
+	 				{type:"input", name: 'houseId', label:'负责病房:'},
+	 				{type:"input", name: 'bedId', label:'负责病床:'},
+	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
+
+
+var updateFormData =  [
+	 				{
+	 				    type: "settings",
+	 				    position: "label-left",
+	 				    labelWidth: 240,
+	 				    inputWidth: 300
+	 				},
+	 				{type:"hidden", name:"userId"},
+	 				{type:"input", name:"userName", label:"用户名:"},
+	 				{type:"password", name:"password", label:"密码:"},
+	 				{type:"password", name:"repassword", label:"确认密码:"},
+	 				{type:"input", name:"email", label:"邮箱:"},
+	 				{type:"input", name:"phone", label:"手机:"},
+	 				{type:"combo", name: 'role', label:'角色:',options:[
+	 					                                   				{value: "1", text: "管理员"},
+	 					                                				{value: "2", text: "职员"}
+	 					                                		]},
+	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	                                		
+	 				{type:"input", name: 'houseId', label:'负责病房:'},
+	 				{type:"input", name: 'bedId', label:'负责病床:'},
+	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
+var grid_define={
+		columns:
+			[{title:"用户编号",width:0,type:"ro"},
+			 {title:"用户名",width:180,type:"ro"},
+			 {title:"邮箱",width:180,type:"ro"},
+			 {title:"手机",width:180,type:"ro"},
+			 {title:"角色",width:150,type:"co",data:[
+			                                       {key: "1", value: "管理员"},
+	 					                           {key: "2", value: "职员"}
+			                                      ]},
+			 {title:"科室",width:150,type:"co",dataSql:"select dict_id as 'key', dict_text as value from BGM.t_dict where dict_code='ks'"},                                     
+			 {title:"负责病房",width:150,type:"ro"}, 
+			 {title:"负责病床",width:180,type:"ro"}
+			],
+		key:"user_id",
+		sql:"select user_id,user_name,email,phone,role,bm_id,house_id,bed_id from BGM.t_user where 1=1 "
+			 
 }
