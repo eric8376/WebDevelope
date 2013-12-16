@@ -1,6 +1,6 @@
 package com.microwill.prfrmn.BGM.entity;
 
-// Generated 2013-12-1 10:27:15 by Hibernate Tools 4.0.0
+// Generated 2013-12-14 14:53:46 by Hibernate Tools 4.0.0
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +22,7 @@ public class TUser implements java.io.Serializable {
 	private Integer role;
 	private String houseId;
 	private String bedId;
+	private String bmId;
 
 	public TUser() {
 	}
@@ -31,7 +32,7 @@ public class TUser implements java.io.Serializable {
 	}
 
 	public TUser(String userId, String userName, String password, String email,
-			String phone, Integer role, String houseId, String bedId) {
+			String phone, Integer role, String houseId, String bedId,String bmId) {
 		this.userId = userId;
 		this.userName = userName;
 		this.password = password;
@@ -40,6 +41,7 @@ public class TUser implements java.io.Serializable {
 		this.role = role;
 		this.houseId = houseId;
 		this.bedId = bedId;
+		this.bmId = bmId;
 	}
 
 	@Id
@@ -113,6 +115,14 @@ public class TUser implements java.io.Serializable {
 
 	public void setBedId(String bedId) {
 		this.bedId = bedId;
+	}
+	@Column(name = "bm_id", length = 32)
+	public String getBmId() {
+		return this.bmId;
+	}
+
+	public void setBmId(String bmId) {
+		this.bmId = bmId;
 	}
 
 }

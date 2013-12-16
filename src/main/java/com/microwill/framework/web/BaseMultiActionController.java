@@ -22,7 +22,7 @@ import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.framework.web.util.ResponseUtil;
 
 /**
- * @author <a href="mailto:javawen@gmail.com">文建国 </a>
+ * @author <a href=""></a>
  * @version 1.0 06-Sep-2010
  */
 public class BaseMultiActionController extends MultiActionController {

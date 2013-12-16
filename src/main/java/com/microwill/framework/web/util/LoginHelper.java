@@ -19,8 +19,8 @@ public class LoginHelper {
 	}
 
 	public static void initSession(HttpServletRequest request, Map token) {
-		token.put("relativeInernalContext", getRelativeInternalContext(request));
-		token.put("wholeIneralContext", getWholeInternalContext(request));
+		token.put("relativeInernalContext", getRelativeInternalContext(request));//相对项目上下文如/BGM
+		token.put("wholeIneralContext", getWholeInternalContext(request));//绝对项目上下文如http://localhost:8080/hospital/BGM
 		request.getSession().setAttribute(LoginHelper.TOKEN, token);
 
 	}

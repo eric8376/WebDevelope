@@ -1,6 +1,6 @@
 package com.microwill.prfrmn.BGM.entity;
 
-// Generated 2013-12-1 10:27:15 by Hibernate Tools 4.0.0
+// Generated 2013-12-14 14:53:46 by Hibernate Tools 4.0.0
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
