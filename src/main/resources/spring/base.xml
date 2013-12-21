@@ -65,6 +65,7 @@
 			<list>
 				<value>com.microwill.prfrmn.bureau.entity</value>
 				<value>com.microwill.prfrmn.hospital.entity</value>
+				<value>com.microwill.prfrmn.BGM.entity</value>
 			</list>
 		</property>
 	</bean>
