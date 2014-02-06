@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
+		System.out.println("--------------doPost-----------------------");
 		request.setCharacterEncoding("UTF-8");
 		String json = readJSONStringFromRequestBody(request);
 		execute(response, json);
@@ -124,6 +126,7 @@ public class JSONServiceCallServlet extends HttpServletSupport
 		request.setCharacterEncoding("UTF-8");
 		log.debug("---doGet----");
 		String json = request.getParameter("getParam");
+		json = URLDecoder.decode(json, "UTF-8");
 		execute(response, json);
 	}
 
