@@ -8,7 +8,7 @@
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
 <script language="javascript"
-	src="<%=request.getContextPath()%>/js/jquery.js"></script>
+	src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 <script language="javascript"
 	src="<%=request.getContextPath()%>/js/base.js"></script>
 

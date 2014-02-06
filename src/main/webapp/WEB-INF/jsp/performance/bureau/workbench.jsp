@@ -23,6 +23,7 @@ loginedUserInfo.jb='<%=loginedUserInfo.get("jb") %>';
 loginedUserInfo.bm='<%=loginedUserInfo.get("bm") %>';
 loginedUserInfo.hospId='<%=loginedUserInfo.get("hosp_id") %>';
 loginedUserInfo.userId='<%=loginedUserInfo.get("user_id") %>';
+loginedUserInfo.userName='<%=loginedUserInfo.get("user_name") %>';
 function changeBg(obj){
 	$('li').removeClass('fn');
 	$(obj).parent().addClass('fn');
