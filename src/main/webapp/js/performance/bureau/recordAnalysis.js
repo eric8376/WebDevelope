@@ -19,7 +19,7 @@ function doAnalysis(){
 	chartType=myForm.getItemValue("chartType");
 	
 	if(!isEmpty(user_name)&&user_name!="ALL"){
-		condition+=" and user_name='"+user_name+"' ";
+		condition+=" and user_name='"+encodeURIComponent(encodeURIComponent(user_name))+"' ";
 	}
 	if(!isEmpty(zb)&&zb!="ALL"){
 		condition+=" and zb_id='"+zb+"' ";
@@ -31,7 +31,8 @@ function doAnalysis(){
 		condition+=" and xm_id='"+xm+"' ";
 	}
 	condition+=parent.getHospFilterSql();
-	data=db.queryForList("select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ");
+	sql="select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ";
+	data=db.queryForList(sql);
 	if(data.length==0){
 		alert("数据为空");
 		return;
@@ -125,7 +126,7 @@ function createPieChart(){
 function loadSearchForm(){
 	//owner
  	
-    var sql="select user_name as value ,user_name as text from bureau.t_per_record where user_name is  not null group by user_name ";
+    var sql="select user_name as value ,user_name as text from bureau.t_per_record where user_name is  not null and hosp_id='"+parent.loginedUserInfo.hospId+"' group by user_name ";
    var list2= db.queryForList(sql)
    list2.unshift({value:'ALL',text:"全部"});
 	var list3=toComboData(parent.getXMList(),'dict_id','dict_text');
@@ -164,6 +165,7 @@ function loadSearchForm(){
                                                          	
            ]
   }];
+  
 myForm = new dhtmlXForm("form_container", formData);
 myForm.attachEvent("onButtonClick", function(name) {
 	if(name =='search'){
@@ -177,6 +179,7 @@ myForm.attachEvent("onChange", function(name) {
 		loadSonByParent("hj","zb");
 		
 	}
+	
 });
 document.onkeydown=function(e){
 	if(e.keyCode=='13'){
@@ -187,6 +190,12 @@ myForm.getCombo("user_name").setComboValue("");
 myForm.getCombo("xm").setComboValue("");
 loadSonByParent("xm","hj");
 loadSonByParent("hj","zb");
+//如果是医疗机构默认只能看自己医院的数据，此功能必须在当前
+if(parent.loginedUserInfo.jb==3)
+{
+	myForm.getCombo("user_name").setComboValue(parent.loginedUserInfo.userName);
+	myForm.disableItem("user_name");
+}
 }
 function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);
@@ -199,4 +208,5 @@ function loadSonByParent(parentObj,sonObj){
 	}
 	list.unshift({value:'ALL',text:"全部"});
 	sonCombo.addOption(list);
+	
 }

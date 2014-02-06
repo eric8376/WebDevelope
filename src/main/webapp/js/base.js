@@ -12,6 +12,71 @@ function isIE(){ //ie?
 /*
  * serviceCall.js
  */
+function ServiceCall2(asyn,callBackFunction){
+	 var pathName =document.location.pathname;
+	    var root = pathName.split("/")[1];
+		this.war="/"+root+"/JSONServiceCall";
+		if(typeof(async)=="undefined"||async==null||async==false){
+			this.async=false;
+		}else if(async!=null && async==true){
+			this.async=true;
+		}else{
+			this.async=false;
+		}
+		this.serviceName = ""; 
+		this.methodName  = "";
+		
+		this.init = function(serviceName,methodName)
+		{
+			this.serviceName = serviceName;
+			if(methodName!=null && methodName!="")
+			{
+				this.methodName  = methodName;
+			}	
+		}
+		this.execute = function (){
+			 if(this.serviceName=="" || this.serviceName ==null)
+			  {
+			  	alert("缺少服务名!");
+			  	return;
+			  }
+			  var obj = new Object();
+			  obj.serviceName=this.serviceName;
+			  if(this.methodName!=null && this.methodName!="")
+			  {
+			  	obj.methodName=this.methodName;
+			  }
+			  if(arguments.length>0)
+			  {
+			  	obj.para=new Array();
+			  }
+			  for(var i=0;i<arguments.length;i++)
+			  {
+		    	obj.para.push(arguments[i]);
+			  }
+			  obj.para=JSON.stringify(obj.para);
+			var res=$.ajax({
+				 url:this.war,
+				 async:this.async,
+			     type:'post',
+			     data:"serviceName=dsfdsf",
+			     error:function(XMLHttpRequest, textStatus, errorThrown){
+			    	 alert("error");
+			     },
+			     success:function(data){
+			    	 alert("success");
+			    	 return data;
+			     }
+			     
+			}).responseText;
+			return res;
+		}
+		
+		
+		
+		
+		
+}
 window.isIE = isIE(); 
 //window.isIE = window.Event?false:true; 
 function ServiceCall(async,callBackFunction)
@@ -136,6 +201,7 @@ function ServiceCall(async,callBackFunction)
       if(window.isIE){
           xmlhttp.open("post",this.war,this.async);
       }else{
+    	  //xmlhttp.open("post",this.war,this.async);
       	 xmlhttp.open("get",this.war+"?getParam="+jsonStr,this.async);
      }
       
@@ -192,323 +258,10 @@ function ServiceCall(async,callBackFunction)
 
 	  
 }
-
-var JSON = {
-    org: 'http://www.JSON.org',
-    copyright: '(c)2005 JSON.org',
-    license: 'http://www.crockford.com/JSON/license.html',
-    stringify: function (arg) {
-        var c, i, l, s = '', v;
-
-        switch (typeof arg) {
-        case 'object':
-            if (arg) {
-                if (arg.constructor == Array) {
-                    for (i = 0; i < arg.length; ++i) {
-                        v = this.stringify(arg[i]);
-                        if (s) {
-                            s += ',';
-                        }
-                        s += v;
-                    }
-                    return '[' + s + ']';
-                } else if (typeof arg.toString != 'undefined') {
-                    for (i in arg) {
-                        v = arg[i];
-                        if (typeof v != 'undefined' && typeof v != 'function') {
-                            v = this.stringify(v);
-                            if (s) {
-                                s += ',';
-                            }
-                            s += this.stringify(i) + ':' + v;
-                        }
-                    }
-                    return '{' + s + '}';
-                }
-            }
-            return 'null';
-        case 'number':
-            return isFinite(arg) ? String(arg) : 'null';
-        case 'string':
-            l = arg.length;
-            s = '"';
-            for (i = 0; i < l; i += 1) {
-                c = arg.charAt(i);
-                if (c >= ' ') {
-                    if (c == '\\' || c == '"') {
-                        s += '\\';
-                    }
-                    s += c;
-                } else {
-                    switch (c) {
-                        case '\b':
-                            s += '\\b';
-                            break;
-                        case '\f':
-                            s += '\\f';
-                            break;
-                        case '\n':
-                            s += '\\n';
-                            break;
-                        case '\r':
-                            s += '\\r';
-                            break;
-                        case '\t':
-                            s += '\\t';
-                            break;
-                        default:
-                            c = c.charCodeAt();
-                            s += '\\u00' + Math.floor(c / 16).toString(16) +
-                                (c % 16).toString(16);
-                    }
-                }
-            }
-            return s + '"';
-        case 'boolean':
-            return String(arg);
-        default:
-            return 'null';
-        }
-    },
-    parse: function (text) {
-        var at = 0;
-        var ch = ' ';
-
-        function error(m) {
-            throw {
-                name: 'JSONError',
-                message: m,
-                at: at - 1,
-                text: text
-            };
-        }
-
-        function next() {
-            ch = text.charAt(at);
-            at += 1;
-            return ch;
-        }
-
-        function white() {
-            while (ch) {
-                if (ch <= ' ') {
-                    next();
-                } else if (ch == '/') {
-                    switch (next()) {
-                        case '/':
-                            while (next() && ch != '\n' && ch != '\r') {}
-                            break;
-                        case '*':
-                            next();
-                            for (;;) {
-                                if (ch) {
-                                    if (ch == '*') {
-                                        if (next() == '/') {
-                                            next();
-                                            break;
-                                        }
-                                    } else {
-                                        next();
-                                    }
-                                } else {
-                                    error("Unterminated comment");
-                                }
-                            }
-                            break;
-                        default:
-                            error("Syntax error");
-                    }
-                } else {
-                    break;
-                }
-            }
-        }
-
-        function string() {
-            var i, s = '', t, u;
-
-            if (ch == '"') {
-outer:          while (next()) {
-                    if (ch == '"') {
-                        next();
-                        return s;
-                    } else if (ch == '\\') {
-                        switch (next()) {
-                        case 'b':
-                            s += '\b';
-                            break;
-                        case 'f':
-                            s += '\f';
-                            break;
-                        case 'n':
-                            s += '\n';
-                            break;
-                        case 'r':
-                            s += '\r';
-                            break;
-                        case 't':
-                            s += '\t';
-                            break;
-                        case 'u':
-                            u = 0;
-                            for (i = 0; i < 4; i += 1) {
-                                t = parseInt(next(), 16);
-                                if (!isFinite(t)) {
-                                    break outer;
-                                }
-                                u = u * 16 + t;
-                            }
-                            s += String.fromCharCode(u);
-                            break;
-                        default:
-                            s += ch;
-                        }
-                    } else {
-                        s += ch;
-                    }
-                }
-            }
-            error("Bad string");
-        }
-
-        function array() {
-            var a = [];
-
-            if (ch == '[') {
-                next();
-                white();
-                if (ch == ']') {
-                    next();
-                    return a;
-                }
-                while (ch) {
-                    a.push(value());
-                    white();
-                    if (ch == ']') {
-                        next();
-                        return a;
-                    } else if (ch != ',') {
-                        break;
-                    }
-                    next();
-                    white();
-                }
-            }
-            error("Bad array");
-        }
-
-        function object() {
-            var k, o = {};
-
-            if (ch == '{') {
-                next();
-                white();
-                if (ch == '}') {
-                    next();
-                    return o;
-                }
-                while (ch) {
-                    k = string();
-                    white();
-                    if (ch != ':') {
-                        break;
-                    }
-                    next();
-                    o[k] = value();
-                    white();
-                    if (ch == '}') {
-                        next();
-                        return o;
-                    } else if (ch != ',') {
-                        break;
-                    }
-                    next();
-                    white();
-                }
-            }
-            error("Bad object");
-        }
-
-        function number() {
-            var n = '', v;
-            if (ch == '-') {
-                n = '-';
-                next();
-            }
-            while (ch >= '0' && ch <= '9') {
-                n += ch;
-                next();
-            }
-            if (ch == '.') {
-                n += '.';
-                while (next() && ch >= '0' && ch <= '9') {
-                    n += ch;
-                }
-            }
-            if (ch == 'e' || ch == 'E') {
-                n += 'e';
-                next();
-                if (ch == '-' || ch == '+') {
-                    n += ch;
-                    next();
-                }
-                while (ch >= '0' && ch <= '9') {
-                    n += ch;
-                    next();
-                }
-            }
-            v = +n;
-            if (!isFinite(v)) {
-                ////error("Bad number");
-            } else {
-                return v;
-            }
-        }
-
-        function word() {
-            switch (ch) {
-                case 't':
-                    if (next() == 'r' && next() == 'u' && next() == 'e') {
-                        next();
-                        return true;
-                    }
-                    break;
-                case 'f':
-                    if (next() == 'a' && next() == 'l' && next() == 's' &&
-                            next() == 'e') {
-                        next();
-                        return false;
-                    }
-                    break;
-                case 'n':
-                    if (next() == 'u' && next() == 'l' && next() == 'l') {
-                        next();
-                        return null;
-                    }
-                    break;
-            }
-            error("Syntax error");
-        }
-
-        function value() {
-            white();
-            switch (ch) {
-                case '{':
-                    return object();
-                case '[':
-                    return array();
-                case '"':
-                    return string();
-                case '-':
-                    return number();
-                default:
-                    return ch >= '0' && ch <= '9' ? number() : word();
-            }
-        }
-
-        return value();
-    }
-}; 
+/*
+ * json.js
+ */
+var JSON={org:"http://www.JSON.org",copyright:"(c)2005 JSON.org",license:"http://www.crockford.com/JSON/license.html",stringify:function(e){var t,n,r,i="",s;switch(typeof e){case"object":if(e){if(e.constructor==Array){for(n=0;n<e.length;++n){s=this.stringify(e[n]);if(i){i+=","}i+=s}return"["+i+"]"}else if(typeof e.toString!="undefined"){for(n in e){s=e[n];if(typeof s!="undefined"&&typeof s!="function"){s=this.stringify(s);if(i){i+=","}i+=this.stringify(n)+":"+s}}return"{"+i+"}"}}return"null";case"number":return isFinite(e)?String(e):"null";case"string":r=e.length;i='"';for(n=0;n<r;n+=1){t=e.charAt(n);if(t>=" "){if(t=="\\"||t=='"'){i+="\\"}i+=t}else{switch(t){case"\b":i+="\\b";break;case"\f":i+="\\f";break;case"\n":i+="\\n";break;case"\r":i+="\\r";break;case"	":i+="\\t";break;default:t=t.charCodeAt();i+="\\u00"+Math.floor(t/16).toString(16)+(t%16).toString(16)}}}return i+'"';case"boolean":return String(e);default:return"null"}},parse:function(e){function r(n){throw{name:"JSONError",message:n,at:t-1,text:e}}function i(){n=e.charAt(t);t+=1;return n}function s(){while(n){if(n<=" "){i()}else if(n=="/"){switch(i()){case"/":while(i()&&n!="\n"&&n!="\r"){}break;case"*":i();for(;;){if(n){if(n=="*"){if(i()=="/"){i();break}}else{i()}}else{r("Unterminated comment")}}break;default:r("Syntax error")}}else{break}}}function o(){var e,t="",s,o;if(n=='"'){e:while(i()){if(n=='"'){i();return t}else if(n=="\\"){switch(i()){case"b":t+="\b";break;case"f":t+="\f";break;case"n":t+="\n";break;case"r":t+="\r";break;case"t":t+="	";break;case"u":o=0;for(e=0;e<4;e+=1){s=parseInt(i(),16);if(!isFinite(s)){break e}o=o*16+s}t+=String.fromCharCode(o);break;default:t+=n}}else{t+=n}}}r("Bad string")}function u(){var e=[];if(n=="["){i();s();if(n=="]"){i();return e}while(n){e.push(c());s();if(n=="]"){i();return e}else if(n!=","){break}i();s()}}r("Bad array")}function a(){var e,t={};if(n=="{"){i();s();if(n=="}"){i();return t}while(n){e=o();s();if(n!=":"){break}i();t[e]=c();s();if(n=="}"){i();return t}else if(n!=","){break}i();s()}}r("Bad object")}function f(){var e="",t;if(n=="-"){e="-";i()}while(n>="0"&&n<="9"){e+=n;i()}if(n=="."){e+=".";while(i()&&n>="0"&&n<="9"){e+=n}}if(n=="e"||n=="E"){e+="e";i();if(n=="-"||n=="+"){e+=n;i()}while(n>="0"&&n<="9"){e+=n;i()}}t=+e;if(!isFinite(t)){}else{return t}}function l(){switch(n){case"t":if(i()=="r"&&i()=="u"&&i()=="e"){i();return true}break;case"f":if(i()=="a"&&i()=="l"&&i()=="s"&&i()=="e"){i();return false}break;case"n":if(i()=="u"&&i()=="l"&&i()=="l"){i();return null}break}r("Syntax error")}function c(){s();switch(n){case"{":return a();case"[":return u();case'"':return o();case"-":return f();default:return n>="0"&&n<="9"?f():l()}}var t=0;var n=" ";return c()}}
 /*
  * db.js
  */
@@ -516,6 +269,7 @@ var db=new Object();
 db.queryForList=function(sql){
 	var serviceCall = new ServiceCall();
 	var obj=new Object();
+	//obj.sql=encodeURIComponent(encodeURIComponent(sql));
 	obj.sql=sql;
 	serviceCall.init("queryDataSvc");
 	var rt= serviceCall.execute(obj);
@@ -524,6 +278,7 @@ db.queryForList=function(sql){
 db.queryForPageList=function(sql){
 	var serviceCall = new ServiceCall();
 	var obj=new Object();
+	//obj.sql=encodeURIComponent(encodeURIComponent(sql));
 	obj.sql=sql;
 	obj.paging="true";
 	serviceCall.init("queryDataSvc");
@@ -650,7 +405,9 @@ function createGridObject(id,define){
 		}
 		grid.data=data;
 		grid.clearAll();
+	
 		grid.parse(toGridData(data.list,grid.key),"json");
+	
 		grid.page.setTotalCount(data.totalCount);
 		pagetoolbar.setItemText("pageinfo","第"+(grid.page.currentPage+1)+"页,共"+(grid.page.page+1)+"页,合计"+grid.page.totalCount+"条记录");
 	}

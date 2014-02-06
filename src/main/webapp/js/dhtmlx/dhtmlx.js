@@ -12574,7 +12574,7 @@ eXcell_co.prototype.getText = function() {
     return this.cell.innerHTML
 };
 eXcell_co.prototype.setValue = function(a) {
-    if (typeof a == "object") {
+    if (typeof a == "object"&&a!=null) {
         var b = this.grid.xmlLoader.doXPath("./option", a);
         if (b.length)
             this.cell._combo = new dhtmlXGridComboObject;

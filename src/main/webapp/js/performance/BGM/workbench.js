@@ -12,13 +12,13 @@ var treeDefine={id:0,
             {id:2, text:"检测管理",open:1,im0 :'folderClosed.gif',
                 item:[
                     {id:"/user/query/", text:"数据查询",href:"p.spr?page=resultManage"},
-                    {id:"/ks/query/", text:"数据分析",href:"manage.spr?action=roomManage&roomType=ks"},
+                    //{id:"/ks/query/", text:"数据分析",href:"manage.spr?action=roomManage&roomType=ks"},
                     {id:"/bm/query/", text:"检测计划",href:"p.spr?page=planManage"}
                 ]},
             {id:3,text:"系统设置",open:1,im0 :'folderClosed.gif',
           	  item:[
 				       {id:"/project/query/", text:"字典管理",href:"p.spr?page=dictManage"},
-                     {id:"/hj/query/", text:"系统设置",href:"manage.spr?action=projectManage&mapType=hj"}
+                     //{id:"/hj/query/", text:"系统设置",href:"manage.spr?action=projectManage&mapType=hj"}
                    
 					                  ]},
 ]

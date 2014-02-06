@@ -11,8 +11,9 @@ function doOnLoad() {
 				 {title:"姓名",width:100,type:"ro"},
 				 {title:"级别",width:150,type:"co",data:[
 				                                       {key:"0",value:"管理员"},
-				                                       {key:"1",value:"普通职员"},
-				                                       {key:"2",value:"科室领导"}]},
+				                                       {key:"2",value:"质控中心职员"},
+				                                       {key:"1",value:"质控中心领导"},
+				                                       {key:"3",value:"医疗机构"}]},
 				 {title:"删除",width:100,type:"link"},
 				 {title:"权限管理",width:100,type:"link"}
 				],
