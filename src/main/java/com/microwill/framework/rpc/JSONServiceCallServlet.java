@@ -39,6 +39,8 @@ public class JSONServiceCallServlet extends HttpServletSupport
 		System.out.println("--------------doPost-----------------------");
 		request.setCharacterEncoding("UTF-8");
 		String json = readJSONStringFromRequestBody(request);
+		json = URLDecoder.decode(json, "UTF-8");
+		json = URLDecoder.decode(json, "UTF-8");
 		execute(response, json);
 	}
 	private void execute(HttpServletResponse response, String json) {

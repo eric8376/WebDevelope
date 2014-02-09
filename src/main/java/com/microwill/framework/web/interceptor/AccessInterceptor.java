@@ -14,18 +14,19 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.microwill.framework.web.annotation.NotLogin;
+import com.microwill.framework.annotation.NotLogin;
 import com.microwill.framework.web.util.LoginHelper;
 
 /**
+ * 访问拦截器
  * @author Administrator
  * 
  */
-public class LoginCheckInterceptor implements HandlerInterceptor {
+public class AccessInterceptor implements HandlerInterceptor {
 
-	private Logger log = Logger.getLogger(LoginCheckInterceptor.class);
+	private Logger log = Logger.getLogger(AccessInterceptor.class);
 
-	public LoginCheckInterceptor() {
+	public AccessInterceptor() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -53,7 +54,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 		    }
 		Map loginedUser = (Map) request.getSession().getAttribute(LoginHelper.TOKEN);
 		if (null==loginedUser) {
-			outputJSRedirect(response, LoginHelper.getWholeInternalContext(request));
+			outputJSRedirect(response, LoginHelper.getRootPathOfContext(request));
 			return false;
 
 		}

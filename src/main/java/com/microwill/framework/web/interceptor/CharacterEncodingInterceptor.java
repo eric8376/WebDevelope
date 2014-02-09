@@ -13,6 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * 字符编码拦截器
  * @author Administrator
  * 
  */

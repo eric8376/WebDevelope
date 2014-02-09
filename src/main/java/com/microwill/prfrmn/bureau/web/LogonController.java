@@ -15,8 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.microwill.framework.annotation.NotLogin;
 import com.microwill.framework.web.BaseMultiActionController;
-import com.microwill.framework.web.annotation.NotLogin;
 import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.prfrmn.bureau.bo.UserType;
 
