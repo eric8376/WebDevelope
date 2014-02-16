@@ -1,104 +1,11 @@
 body{
 	font-size:14px;
-	font-family:"宋体", Arial, Helvetica, sans-serif;
-	margin:5px 0px 5px 0px;
+	margin:0px 0px 0px 0px;
 	color:#666666;
 	width:100%;
-}
-table{
-	font-size:14px;
-	font-family:"宋体", Arial, Helvetica, sans-serif;
+	padding:0px 0px 0px 0px;
 }
 
-.input-text{
-	width:150px;
-	border:1px solid #DCDCDC;
+div#gridbox {
+	height:500;
 }
-.input-select{
-	position:relative;
-	left:-2px;
-	top:-2px;
-	font-size:12px;
-	line-height:15px;
-	height:24px;
-	border:1px solid #DCDCDC;
-}
-.input-button{
-	
-}
-.input-checkbox{
-	border:0px;
-	width:18px;
-	height:18px;
-}
-.select{
-	width:150px;
-	border:1px solid #DCDCDC;
-}
-.textarea{
-	width:95%;
-	border:1px solid #DCDCDC;
-}
-
-
-.clear{
-	clear:both;
-}
-
-a:link{
-	text-decoration:none;
-	cursor:pointer;
-	color:#004499;
-}
-a:hover{
-	text-decoration:underline;
-	cursor:pointer;
-}
-a:active{
-	text-decoration:underline;
-	cursor:pointer;
-}
-a:visited{
-	text-decoration:none;
-	cursor:pointer;
-	color:#004499;
-}
-
-.copyRight{
-	color:#004499;
-	margin:20px 0 0 0;
-	padding-top:5px;
-	border-top:1px solid #AACCEE;
-}
-.copyRight div{
-	line-height:22px;
-}
-.btnBox{
-	height:19px;
-	max-width:120px;
-	min-width:20px;
-	cursor:pointer;
-}
-.btnBox .left{
-	width:5px;
-	height:19px;
-	font-size:1px;
-	float:left;
-	background:url(/RES/images/btn/btn-l.gif) left no-repeat;
-	cursor:pointer;
-}
-.btnBox .btnWrap{
-	height:19px;
-	line-height:19px;
-	padding:0 8px 0 3px;
-	color:#FFFFFF;
-	float:left;
-	background:url(/RES/images/btn/btn-r.gif) right no-repeat;
-	cursor:pointer;
-}
-/*a style for button*/
-.btnBox .btnWrap a{color:#FFFFFF;}
-.btnBox .btnWrap a.link{color:#FFFFFF;}
-.btnBox .btnWrap a.active{color:#FFFFFF;}
-.btnBox .btnWrap a.visited{color:#FFFFFF;}
-

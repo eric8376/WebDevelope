@@ -503,9 +503,10 @@ function initGrid(grid,define){
 	grid.enableDragOrder(true);
 	grid.dontSetSizes=true;
 	//grid.setEditable(false);
-	//grid.enableAutoWidth(true,920,920);
+	//grid.enableAutoWidth(true,300,300);
 
 	grid.init();
+	$("#gridbox").height(480);
 	return grid;
 }
 function addGridComboOptions(combo,datas){

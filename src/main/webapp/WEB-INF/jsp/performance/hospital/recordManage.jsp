@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<div id="gridbox" style="position: relative; height: 540px;"></div>
+<div id="gridbox" style="position: relative;"></div>
 
 
 </body>

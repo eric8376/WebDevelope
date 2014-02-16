@@ -9,12 +9,48 @@ function doOnLoad() {
 	loadSearchForm();
 	
 }
+var getInputList=function(){
+	  var sql="select user_name as value ,user_name as text from bureau.t_per_record where user_name is  not null and hosp_id='"+parent.loginedUserInfo.hospId+"' group by user_name ";
+	   var list2= db.queryForList(sql)
+	   list2.unshift({value:'ALL',text:"全部"});
+		var list3=toComboData(parent.getXMList(),'dict_id','dict_text');
+		list3.unshift({value:'ALL',text:"全部"});
+		sql="select hosp_id as value, hosp_name as text from bureau.t_per_hosp ";
+		 var list4= db.queryForList(sql)
+		 if(list4.length>0)
+			 list4.unshift({value:'',text:""});
+	var inputList=new Array();
+	inputList.push({type: "label", label: "数据范围",position:"label-left"}); 
+	if(parent.loginedUserInfo.jb==4){
+		inputList.push({type:"combo", name:"zkzx", label:"质控中心:",options:list4});
+	}
+	inputList.push({type:"combo", name:"user_name", label:"医疗机构:",options:list2,filtering:true});
+	inputList.push({type:"combo", name:"xm", label:"项目",options:list3});
+	inputList.push({type:"combo", name:"hj", label:"关键环节",options:null});
+	inputList.push({type:"combo", name:"zb", label:"一级指标",options:null});
+	inputList.push({type:"button", name:"search", value:"生成图形"});
+	inputList.push({type: "newcolumn", offset:50});
+	inputList.push({type: "label", label: "分析指标",position:"label-left"});
+	inputList.push({type: "radio", name: "keyIndex", value: "user_name", label: "医院",checked:"1"});
+	inputList.push({type: "radio", name: "keyIndex", value: "xm", label: "项目"});
+	inputList.push({type: "radio", name: "keyIndex", value: "hj", label: "关键环节"});
+	inputList.push({type: "radio", name: "keyIndex", value: "zb", label: "一级指标"});
+	inputList.push({type: "newcolumn", offset:50});
+	inputList.push({type: "label", label: "图表类型",position:"label-left"});
+	inputList.push({type: "radio", name: "chartType", value: "bar", label: "垂直柱状图",checked: "1"});
+	inputList.push({type: "radio", name: "chartType", value: "barH", label: "水平柱状图"});
+	inputList.push({type: "radio", name: "chartType", value: "pie", label: "饼状图"});
+	return inputList;
+}
 function doAnalysis(){
 	var condition="";
 	var user_name=myForm.getItemValue("user_name");
 	var xm=myForm.getItemValue("xm");
 	var hj=myForm.getItemValue("hj");
 	var zb=myForm.getItemValue("zb");
+	if(myForm.isItem("zkzx")){
+		var zkzx=myForm.getItemValue("zkzx");
+	}
 	keyIndex=myForm.getItemValue("keyIndex");
 	chartType=myForm.getItemValue("chartType");
 	
@@ -30,7 +66,13 @@ function doAnalysis(){
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
-	condition+=parent.getHospFilterSql();
+	if(parent.loginedUserInfo.jb==4){
+		if(!isEmpty(zkzx)){
+		condition+=" and hosp_id='"+zkzx+"' ";
+		}
+	}else{
+		condition+=parent.getHospFilterSql();
+	}
 	sql="select "+keyIndex+" as keyindex,ROUND(sum(kaohe),1) as number from bureau.t_per_vrecord where 1=1 "+condition+"group by "+keyIndex+ " ";
 	data=db.queryForList(sql);
 	if(data.length==0){
@@ -126,11 +168,7 @@ function createPieChart(){
 function loadSearchForm(){
 	//owner
  	
-    var sql="select user_name as value ,user_name as text from bureau.t_per_record where user_name is  not null and hosp_id='"+parent.loginedUserInfo.hospId+"' group by user_name ";
-   var list2= db.queryForList(sql)
-   list2.unshift({value:'ALL',text:"全部"});
-	var list3=toComboData(parent.getXMList(),'dict_id','dict_text');
-	list3.unshift({value:'ALL',text:"全部"});
+  
 	dhtmlx.skin = "dhx_skyblue";
 	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
    formData = [
@@ -140,30 +178,14 @@ function loadSearchForm(){
 	    labelWidth: 80,
 	    inputWidth: 180
 	},          
-    { type: "fieldset", name: "data1", label: "分析条件", inputWidth: "auto", list:[
-    {type: "label", label: "数据范围",position:"label-left"},                                                                                
-	{type:"combo", name:"user_name", label:"医疗机构:",options:list2,filtering:true},
-	{type:"combo", name:"xm", label:"项目",options:list3},
-	{type:"combo", name:"hj", label:"关键环节",options:null},
-	{type:"combo", name:"zb", label:"一级指标",options:null},
-	 {type:"button", name:"search", value:"生成图形"},
-	{type: "newcolumn", offset:50},
-    {type: "label", label: "分析指标",position:"label-left"},
-    {type: "radio", name: "keyIndex", value: "user_name", label: "医院", checked: "1"},
-    {type: "radio", name: "keyIndex", value: "xm", label: "项目"},
-    {type: "radio", name: "keyIndex", value: "hj", label: "关键环节"},
-    {type: "radio", name: "keyIndex", value: "zb", label: "一级指标"},
-    {type: "newcolumn", offset:50},
-  {type: "label", label: "图表类型",position:"label-left"},
-  {type: "radio", name: "chartType", value: "bar", label: "垂直柱状图",checked: "1"},
-  {type: "radio", name: "chartType", value: "barH", label: "水平柱状图"},
-  {type: "radio", name: "chartType", value: "pie", label: "饼状图"}
+    {type: "fieldset", name: "data1", label: "分析条件", inputWidth: "auto", list:getInputList()
+    
  
   //{type: "radio", name: "chartType", value: "line", label: "折线图"},
   //{type: "radio", name: "chartType", value: "radar", label: "雷达图"},
   //{type: "radio", name: "chartType", value: "scatter", label: "点状图"},
                                                          	
-           ]
+           
   }];
   
 myForm = new dhtmlXForm("form_container", formData);

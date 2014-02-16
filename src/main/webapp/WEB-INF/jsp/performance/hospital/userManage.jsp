@@ -19,6 +19,6 @@
 </style>
 </head>
 <body>
-<div id="gridbox" style="position: relative;   width:100%; height: 540px;"></div>
+<div id="gridbox" style="position: relative;width:100%;"></div>
 </body>
 </html>

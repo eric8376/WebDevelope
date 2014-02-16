@@ -3,7 +3,7 @@ $(document).ready(function(){
 		   var data=$("#loginForm").serialize();
 	        $.post(contextPath+"/logon.spr", data, function(res){
 				//var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");
-				if(res.result=='success')
+	        	if(res.result.success==true)
 				{
 					window.location.href=contextPath+"/workbench.spr";
 				}else{

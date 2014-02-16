@@ -25,6 +25,14 @@
  <listener>
   <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
  </listener>
+   <listener>
+    <display-name>WebContainerListener</display-name>
+    <listener-class>com.microwill.framework.listener.WebContainerListener</listener-class>
+  </listener>
+  <listener>
+    <display-name>SessionListener</display-name>
+    <listener-class>com.microwill.framework.listener.SessionListener</listener-class>
+  </listener>
  <servlet>
   <servlet-name>spring</servlet-name>
   <servlet-class>com.microwill.framework.web.AppServlet</servlet-class>

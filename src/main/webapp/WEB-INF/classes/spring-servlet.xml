@@ -16,7 +16,15 @@
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages" />
 	</bean>
-
+	<bean class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="order">
+			<value>0</value>
+		</property>
+		<property name="location">
+			<value>classpath:spring-views.xml</value>
+		</property>
+	</bean >
+	
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
@@ -48,13 +56,16 @@
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 	<mvc:interceptors>
-		<bean
-			class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor" />
-		<bean class="com.microwill.framework.web.interceptor.LoginCheckInterceptor" />
+		<bean class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor" />
+		<bean class="com.microwill.framework.web.interceptor.AccessInterceptor" />
+		<bean class="com.microwill.framework.web.interceptor.SysLogIntercepter" />
 	</mvc:interceptors>
 	<mvc:annotation-driven />
 	<context:component-scan base-package="com.microwill.prfrmn.hospital" />
 	<context:component-scan base-package="com.microwill.prfrmn.bureau" />
 	<context:component-scan base-package="com.microwill.framework.web" />
 	<context:component-scan base-package="com.microwill.prfrmn.BGM" />
+	
+	
+	
 </beans>

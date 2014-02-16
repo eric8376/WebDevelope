@@ -121,8 +121,10 @@ $(document).ready(function(){
             <div style="height: 80px; line-height: 80px; float: right;padding-right:30px;">
                 <form action="login.spr" method="post" id="loginForm">
                 <div>
+                	 
                 	<div id="hosp">
-                  		 质控中心:<select  name="hospital" id="hospital"></select>
+                		<input type="radio" name="type" value="bureau" checked="checked" onclick="$('#hospital').attr('disabled',true)"> 我是卫生局用户
+                  		<input type="radio" name="type" value="center" onclick="$('#hospital').attr('disabled',false);"> 我是质控中心用户:<select  name="hospital" id="hospital" disabled='disabled'></select>
                		</div>      
                     <div id="user">
            				用户:<input type="text" name="username" id="userInput"/>

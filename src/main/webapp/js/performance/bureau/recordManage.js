@@ -7,11 +7,13 @@ function doOnLoad() {
 	var zb=getParam('zb');
 	var hj=getParam('hj');
 	var xm=getParam('xm');
+	var zkzx=getParam('zkzx');
     conditionSql="";
 	if(owner==null){owner='';}
 	if(hj==null){hj='';}
 	if(xm==null){xm='';}
 	if(zb==null){zb='';}
+	if(zkzx==null){zkzx='';}
 	if(owner!=null&&owner!=''){
 		conditionSql+=" and user_name='"+owner+"' ";
 	}
@@ -23,6 +25,9 @@ function doOnLoad() {
 	}
 	if(xm!=null&&xm!=''&&xm!='ALL'){
 		conditionSql+=" and xm_id='"+xm+"' ";
+	}
+	if(zkzx!=null&&zkzx!=''&&zkzx!='ALL'){
+		conditionSql+=" and hosp_id='"+zkzx+"' ";
 	}
 	if(kssj!=null&&kssj!='')
 	{

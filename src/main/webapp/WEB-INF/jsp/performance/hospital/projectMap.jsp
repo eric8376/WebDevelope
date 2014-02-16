@@ -11,7 +11,7 @@
 
 <body>
 
-<div id="gridbox" style="position: relative;   width:100%; height: 540px; aborder: #B5CDE4 1px solid;"></div>
+<div id="gridbox" style="position: relative;   width:100%;border: #B5CDE4 1px solid;"></div>
 
 </body>
 </html>

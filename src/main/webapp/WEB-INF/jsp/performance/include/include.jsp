@@ -19,5 +19,9 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css"
 	type="text/css" media="screen">
+	
+	<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/style/base.css"
+	type="text/css" media="screen">
 
 

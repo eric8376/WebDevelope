@@ -44,7 +44,7 @@ function doOnLoad() {
     });
 	/*工具栏*/
 	/*状态栏*/
-	//statusbar = dhxLayout.attachStatusBar();
+	statusbar = dhxLayout.attachStatusBar();
 	/*状态栏*/
 	/*菜单栏*/
 	dhxTree=dhxLayout.cells("a").attachTree();
