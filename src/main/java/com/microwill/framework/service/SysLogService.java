@@ -71,8 +71,7 @@ public class SysLogService {
 	    if (event.getToken() != null) {
 		syslog.setOperatorid((String)event.getToken().get("user_id"));
 		syslog.setOperator((String)event.getToken().get("user_name"));
-		syslog.setRole(Integer.valueOf((int)event.getToken().get("role"))
-			);
+		//syslog.setRole(Integer.valueOf((int)event.getToken().get("role")));
 	    } else if (detail.containsKey(CommonConstant.EXTEND_SYS_LOG)) {
 		Map<String, String> exSysLogContext = (Map<String, String>) detail
 			.get(CommonConstant.EXTEND_SYS_LOG);

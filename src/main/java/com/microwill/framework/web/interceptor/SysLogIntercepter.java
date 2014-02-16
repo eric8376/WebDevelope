@@ -61,7 +61,7 @@ public class SysLogIntercepter extends HandlerInterceptorAdapter {
 		    Map<String,Object> token = LoginHelper.getToken(request);
 		    Map<String, String[]> requestParam = new HashMap<>(
 			    request.getParameterMap());
-		    logContext.put(EXTEND_SYS_LOG, request.getAttribute(EXTEND_SYS_LOG));
+		    //logContext.put(EXTEND_SYS_LOG, request.getAttribute(EXTEND_SYS_LOG));
 		    logContext.put(HTTP_REQUEST_PARAM, requestParam);
 		    Map<String, String> requestHeader = getHeaderMap(request);
 		    logContext.put(HTTP_REQUEST_HEADER, requestHeader);

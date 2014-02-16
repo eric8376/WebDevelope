@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "t_syslog", schema = "base")
+@Table(name = "t_syslog", catalog = "base")
 public class TSyslog implements java.io.Serializable {
 	private static final long serialVersionUID = 3098865916351598059L;
 	// Fields
@@ -67,7 +67,7 @@ public class TSyslog implements java.io.Serializable {
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
 	@Id
 	@GeneratedValue(generator = "generator")
-	@Column(name = "syslogid", unique = true, nullable = false, length = 32)
+	@Column(name = "syslogid", unique = true, nullable = false, length = 36)
 	public String getSyslogid() {
 		return this.syslogid;
 	}
@@ -86,7 +86,7 @@ public class TSyslog implements java.io.Serializable {
 		this.logtime = logtime;
 	}
 
-	@Column(name = "operatorid", nullable = false, length = 32)
+	@Column(name = "operatorid", nullable = false, length = 36)
 	public String getOperatorid() {
 		return this.operatorid;
 	}
@@ -104,7 +104,7 @@ public class TSyslog implements java.io.Serializable {
 		this.operator = operator;
 	}
 
-	@Column(name = "role", nullable = false)
+	@Column(name = "role")
 	public Integer getRole() {
 		return this.role;
 	}
@@ -149,7 +149,7 @@ public class TSyslog implements java.io.Serializable {
 		this.background = background;
 	}
 	
-	@Column(name = "state", nullable = false)
+	@Column(name = "state")
 	public Integer getState() {
 		return this.state;
 	}

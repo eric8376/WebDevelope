@@ -27,7 +27,10 @@ public class UserTypeLogicFactory {
 		}
 		else if(UserType.ORGANIZATION.equals(userType)){
 			userTypeLogic=new OrganizationLogic();
-		}else{
+		}else if(UserType.BUREAULEADER.equals(userType)){
+			userTypeLogic=new BureauLeader();
+		}
+		else{
 			throw new IllegalArgumentException("User type can't match.");
 		}
 		userTypeLogic.setJdbcTemplate(jdbcTemplate);

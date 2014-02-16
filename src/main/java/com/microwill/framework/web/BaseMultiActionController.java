@@ -12,10 +12,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.microwill.framework.web.util.LoginHelper;
@@ -94,5 +97,36 @@ public class BaseMultiActionController extends MultiActionController {
 
 	protected Map getToken(HttpServletRequest request) {
 		return (Map) request.getSession().getAttribute(LoginHelper.TOKEN);
+	}
+
+	protected HttpServletRequest getRequest() {
+		return ((ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes()).getRequest();
+	}
+
+	public void setSessionAttribute(String name, Object obj) {
+		HttpSession session = getRequest().getSession();
+		session.setAttribute(name, obj);
+	}
+
+	public Object getSessionAttribute(String name) {
+		HttpSession session = getRequest().getSession(false);
+		return (session != null ? session.getAttribute(name) : null);
+	}
+
+	public void removeSessionAttribute(String name) {
+		HttpSession session = getRequest().getSession(false);
+		if (session != null) {
+			session.removeAttribute(name);
+		}
+
+	}
+
+	public void invalidateSession() {
+		HttpSession session = getRequest().getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+
 	}
 }

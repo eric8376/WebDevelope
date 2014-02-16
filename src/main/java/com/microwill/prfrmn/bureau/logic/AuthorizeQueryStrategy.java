@@ -84,6 +84,9 @@ public  class AuthorizeQueryStrategy {
 		return jsonTxt;
 	}
 	private String getHospSql() {
+		if(getLoginedUserContext().get("jb").equals("4")){
+			return "";
+		}
 		String hosp_id=(String)getLoginedUserContext().get("hosp_id");
 		
 		return " and hosp_id='"+hosp_id+"' ";

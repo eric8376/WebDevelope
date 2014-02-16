@@ -39,6 +39,8 @@ public class TSysLogDao {
 	public void addLog(TSyslog syslog) {
 		Session session=sessionFactory.openSession();
 		session.saveOrUpdate(syslog);
+		session.flush();
+		session.close();
 	}
 
 

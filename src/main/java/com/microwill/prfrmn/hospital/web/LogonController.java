@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.annotation.NotLogin;
+import com.microwill.framework.annotation.SysLog;
+import com.microwill.framework.enums.SysLogEnum;
 import com.microwill.framework.vo.Result;
 import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.framework.web.util.LoginHelper;
@@ -33,6 +35,7 @@ public class LogonController extends BaseMultiActionController {
 
 	@RequestMapping
 	@NotLogin
+	@SysLog(SysLogEnum.HospitalLogin)
 	public ModelAndView handleDefault(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String username = request.getParameter("username");
