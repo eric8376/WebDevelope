@@ -42,7 +42,7 @@ body
             height: 28px;
             cursor: pointer;
             margin-top: 26px;
-            background: url(../images/performance/bureau/hospitalimg/login1.jpg) 50% 50% no-repeat;
+            background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/login1.jpg) 50% 50% no-repeat;
         }
         #button:hover
         {
@@ -50,7 +50,7 @@ body
             width: 100px;
             height: 28px;
             cursor: pointer;
-            background: url(../images/performance/bureau/hospitalimg/login2.jpg) 50% 50% no-repeat;
+            background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/login2.jpg) 50% 50% no-repeat;
         }
         input
         {
@@ -102,12 +102,12 @@ $(document).ready(function(){
 </head>
 <body>
 <div style="height: 580px; background: #bdd4e2;">
-        <div style="background: url(../images/performance/bureau/hospitalimg/bgts.jpg) 50% 50% no-repeat; height: 381px;
+        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgts.jpg) 50% 50% no-repeat; height: 381px;
             margin: 0 auto;">
         </div>
-        <div style="background: url(../images/performance/bureau/hospitalimg/barm1s.jpg)  repeat-x; height: 33px;">
+        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/barm1s.jpg)  repeat-x; height: 33px;">
         </div>
-        <div style="background: url(../images/performance/bureau/hospitalimg/bgbs.jpg)  repeat-x; height: 166px;">
+        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgbs.jpg)  repeat-x; height: 166px;">
             <div style="height: 80px; line-height: 80px; float: right;padding-right:30px;">
                 <form action="login.spr" method="post" id="loginForm">
                 <div>
@@ -126,7 +126,7 @@ $(document).ready(function(){
             </div>
             <div style="clear: both;">
             </div>
-            <div style="background: url(../images/performance/bureau/hospitalimg/bgb2.jpg) 50% 50% no-repeat; height: 50px;
+            <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgb2.jpg) 50% 50% no-repeat; height: 50px;
                 padding-top: 25px;">
             </div>
         </div>
