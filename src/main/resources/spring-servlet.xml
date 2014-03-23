@@ -11,6 +11,7 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<mvc:default-servlet-handler/> 
 	<!-- bundle a message resource -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -56,16 +57,23 @@
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 	<mvc:interceptors>
-		<bean class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor" />
-		<bean class="com.microwill.framework.web.interceptor.AccessInterceptor" />
-		<bean class="com.microwill.framework.web.interceptor.SysLogIntercepter" />
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json"/>
+			<mvc:mapping path="/**/*.spr"/>
+			<bean class="com.microwill.framework.web.interceptor.CharacterEncodingInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json"/>
+			<mvc:mapping path="/**/*.spr"/>
+				<bean class="com.microwill.framework.web.interceptor.AccessInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json"/>
+			<mvc:mapping path="/**/*.spr"/>
+			<bean class="com.microwill.framework.web.interceptor.SysLogIntercepter" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 	<mvc:annotation-driven />
-	<context:component-scan base-package="com.microwill.prfrmn.hospital" />
-	<context:component-scan base-package="com.microwill.prfrmn.bureau" />
 	<context:component-scan base-package="com.microwill.framework.web" />
-	<context:component-scan base-package="com.microwill.prfrmn.BGM" />
-	
-	
-	
+	<context:component-scan base-package="com.microwill.project" />	
 </beans>

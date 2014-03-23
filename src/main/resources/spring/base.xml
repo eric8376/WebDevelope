@@ -64,9 +64,7 @@
 		<property name="packagesToScan">
 			<list>
 				<value>com.microwill.framework.entity</value>
-				<value>com.microwill.prfrmn.bureau.entity</value>
-				<value>com.microwill.prfrmn.hospital.entity</value>
-				<value>com.microwill.prfrmn.BGM.entity</value>
+				<value>com.microwill.project</value>
 			</list>
 		</property>
 	</bean>
