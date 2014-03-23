@@ -63,7 +63,7 @@ a:active {color: #0000FF}
 <li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=projectManage&mapType=hj');">关键环节管理</a></li>
 <li><a href="#" onclick="changeBg(this);loadPage('manage.spr?action=projectManage&mapType=xm');">项目管理</a></li>
 <% }%>
-<li><a href="logon.spr?action=signout" >退出</a></li>
+<li><a href="signout.spr" >退出</a></li>
 </ul>
 
 </div>
