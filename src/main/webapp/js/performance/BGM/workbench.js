@@ -38,7 +38,7 @@ function doOnLoad() {
         if(id=="changepassword"){
         	loadPage('manage.spr?action=changePassword','修改密码');
         }else if(id=="logout"){
-        	window.location.href="logon.spr?action=signout";
+        	window.location.href="signout.spr";
         }
     });
 	/*工具栏*/

@@ -35,8 +35,8 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String ADD_RECORD_SQL = "insert into bureau.t_per_record(record_id,xm_id,hj_id,zb_id,user_name,check_time,result,dianping,kaohe,hosp_id) values(?,?,?,?,?,?,?,?,?,?)";
 	private static String UPDATE_RECORD_SQL = "update bureau.t_per_record set xm_id=?,hj_id=?,zb_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=? where record_id=?";
 	private static String DELETE_RECORD_SQL="delete from bureau.t_per_record where record_id=?";
-	private static String ADD_DICT_SQL = "insert into bureau.bureau.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) values(?,?,?,?,?)";
-	private static String DELETE_DICT_SQL = "delete from bureau.bureau.t_dict_table where dict_id= ?";
+	private static String ADD_DICT_SQL = "insert into bureau.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id) values(?,?,?,?,?)";
+	private static String DELETE_DICT_SQL = "delete from bureau.t_dict_table where dict_id= ?";
 	private static String DELETE_DICT_MAP_SQL = "delete from bureau.t_per_dict_map where parent_id=? and son_id=?";
 	private static String ADD_DICT_MAP_SQL = "insert into bureau.t_per_dict_map(parent_id,son_id,map_id) values(?,?,?)" ;
 	private static String DELETE_USER_ROLE_MAP_SQL = "delete from bureau.t_per_USER_ROLE where role_id=?";

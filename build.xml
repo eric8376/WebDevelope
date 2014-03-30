@@ -1,11 +1,52 @@
-<project name="peformance" default="java" basedir=".">
-	<property name="WEB-INF" value="WEBCONTENT/WEB-INF" />
-	<target name="clean">
-	<ant dir="WEBCONTENT/WEB-INF/classes" target="clean" />
+<project name="peformance" default="compress" basedir=".">
+
+	<property name="build.js.dir" value="src/main/webapp/js/dhtmlx/">
+	</property>
+
+	<import file="src/build/build-minifier.xml" />
+	<target name="compress">
+		<!--gc-js dir="${build.js.dir}" src="dhtmlx" /-->
+		<yc-js dir="${build.js.dir}" src="dhtmlx" />
 	</target>
-	<target name="java" depends="">
-			<copy toDir="${target.webapp}">
-					<fileset dir="jsproot"/>
-			</copy>
+	<target name="combinjs" depends="">
+		<concat destfile="${build}/mapfuncall.js" encoding="${charset}" outputencoding="${charset}">
+			<path path="${map_function_js}/DC.js" />
+			<path path="${map_function_js}/stringUtil.js" />
+			<path path="${map_function_js}/LOCALDC.js" />
+			<path path="${map_function_js}/screen.js" />
+			<path path="${map_function_js}/wfsQuery.js" />
+			<path path="${map_function_js}/Map.js" />
+			<path path="${map_function_js}/Query.js" />
+			<path path="${map_function_js}/ClassificationQuery.js" />
+			<path path="${map_function_js}/BusQuery.js" />
+			<path path="${map_function_js}/RouteQuery.js" />
+			<path path="${map_function_js}/cursorPosition.js" />
+			<path path="${map_function_js}/bufferAnalysis.js" />
+			<path path="${map_function_js}/divCtrl.js" />
+			<path path="${map_function_js}/mark.js" />
+			<path path="${map_function_js}/overlayAnalysis.js" />
+			<path path="${map_function_js}/BuildQuery.js" />
+			<path path="${map_function_js}/PopShow.js" />
+			<path path="${map_function_js}/correct.js" />
+			<path path="${map_function_js}/style_result.js" />
+			<path path="${map_function_js}/style_ui.js" />
+			<path path="${map_function_js}/Catalog.js" />
+			<path path="${map_function_js}/scenario.js" />
+			<path path="${map_function_js}/wfs.js" />
+			<path path="${map_function_js}/Uuid.js" />
+			<path path="${map_function_js}/Gps.js" />
+			<path path="${map_function_js}/typhoon.js" />
+			<path path="${map_function_js}/Monitor.js" />
+			<path path="${map_function_js}/RainWater.js" />
+			<path path="${map_function_js}/Approval.js" />
+			<path path="${map_function_js}/statistics.js" />
+			<path path="${map_function_js}/statisticsNew.js" />
+			<path path="${map_function_js}/OTileCacheCustom.js" />
+			<path path="${map_function_js}/BQTool.js" />
+			<path path="${map_function_js}/CityPositionQuery.js" />
+			<path path="${map_function_js}/IFieldService.js" />
+			<path path="${map_function_js}/SpecialQuery.js" />
+		</concat>
+		<replaceregexp match="@DEBUG@" replace="" flags="g" byline="true" file="${build}/mapfuncall.js" encoding="${charset}" />
 	</target>
 </project>
