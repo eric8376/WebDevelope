@@ -395,7 +395,8 @@ function createGridObject(id,define){
 		grid.sql=sql;
 		}
 		if(grid.page==null){
-			grid.page=new Page(15);
+			var pageSize=define.pageSize?define.pageSize:15;
+			grid.page=new Page(pageSize);
 		}
 		var data
 		if(grid.loadcallback){
@@ -506,7 +507,11 @@ function initGrid(grid,define){
 	//grid.enableAutoWidth(true,300,300);
 
 	grid.init();
+	if(define.height){
+		$("#gridbox").height(define.height);
+	}else{
 	$("#gridbox").height(480);
+	}
 	return grid;
 }
 function addGridComboOptions(combo,datas){

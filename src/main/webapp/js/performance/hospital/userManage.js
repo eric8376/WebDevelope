@@ -54,6 +54,7 @@ function doOnLoad() {
 				],
 			key:"user_id",
 			sql:sql
+		
 				 
 	}
 	grid=createGridObject('gridbox',grid_define);
