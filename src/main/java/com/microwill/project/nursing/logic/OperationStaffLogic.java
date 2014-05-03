@@ -28,15 +28,13 @@ public class OperationStaffLogic extends UserTypeLogic{
 
 	@Override
 	public String getScopeSql() {
-		String ks_id=(String)getLoginedUserContext().get("ks");
+		String ks_text=(String)getLoginedUserContext().get("ks_text");
 		String real_name=(String)getLoginedUserContext().get("real_name");
-		return "and ks_id='"+ks_id+"' and user_name='"+real_name+"'";
+		return "and apartment_name='"+ks_text+"' and executor='"+real_name+"'";
 	}
 	@Override
 	protected void init(Map<String, Boolean> priviageMap) {
 		super.init(priviageMap);
-		priviageMap.put("/record/search/", true);
-		priviageMap.put("/record/query/", true);
-		priviageMap.put("/record/analysis/", true);
+		priviageMap.put("/record/ks/query/", true);
 	}
 }

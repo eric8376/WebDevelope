@@ -27,15 +27,12 @@ public class OperationLeaderLogic extends UserTypeLogic{
 
 	@Override
 	public String getScopeSql() {
-		String ks_id=(String)getLoginedUserContext().get("ks");
-		return "and ks_id='"+ks_id+"' ";
+		String ks_text=(String)getLoginedUserContext().get("ks_text");
+		return "and apartment_name='"+ks_text+"' ";
 	}
 	@Override
 	protected void init(Map<String, Boolean> priviageMap) {
 		super.init(priviageMap);
-		priviageMap.put("/record/search/", true);
-		priviageMap.put("/record/query/", true);
-		priviageMap.put("/record/analysis/", true);
-		priviageMap.put("/user/query/", true);
+		priviageMap.put("/record/ks/query/", true);
 	}
 }

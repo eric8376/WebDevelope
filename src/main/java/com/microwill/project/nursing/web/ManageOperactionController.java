@@ -30,9 +30,9 @@ import com.microwill.framework.web.util.LoginHelper;
 public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	private static String ADD_USER_SQL = "insert into t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
-	private static String UPDATE_USER_SQL="update t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
-	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
+	private static String ADD_USER_SQL = "insert into nursing.t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
+	private static String UPDATE_USER_SQL="update nursing.t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
+	private static String DELETE_USER_SQL="delete from nursing.t_per_user where user_id=?";
 	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=? where record_id=?";
 	private static String DELETE_RECORD_SQL = "delete from t_per_record where record_id=?";
@@ -45,9 +45,9 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String DELETE_ROLE_XM_MAP_SQL = "delete from T_PER_ROLE_XM where ksxm_id=? ";
 	private static String ADD_ROLE_XM_MAP_SQL = "insert into T_PER_ROLE_XM(role_id,ksxm_id) values(?,?)";
 	private static String QUERY_RECORD_OF_PROJRCT = "select count(1) from t_per_record t1,t_per_dict_map t2 where t1.ksxm_id= t2.ksxm_id and t2.xm_id =? and t2.ks_id=?";
-	private static String ADD_PARAMETER_SQL="";
-	private static String UPDATE_PARAMETER_SQL="";
-	private static String DEL_PARAMETER_SQL="";
+	private static String ADD_PARAMETER_SQL="insert into nursing.t_parameter(param_id,charge_code,weight) values(?,?,?) ";
+	private static String UPDATE_PARAMETER_SQL="update nursing.t_parameter set charge_code=?,weight=? where param_id=?";
+	private static String DEL_PARAMETER_SQL="delete from nursing.t_parameter where param_id=?";
 	
 	@RequestMapping(params = "action=updateParameter")
 	public String updateParameter(Model model,String paramId,String charge_code,String weight) throws Exception {
@@ -57,13 +57,13 @@ public class ManageOperactionController extends BaseMultiActionController {
 		try {
 				int result = jdbcTemplate.update(
 					UPDATE_PARAMETER_SQL,
-					new Object[] { paramId,charge_code, weight });
+					new Object[] {charge_code, weight,paramId });
 					rs.setSuccess(result > 0);
 			
 		}catch (Exception e) {
 			error(e, model, rs);
 		}
-		
+		model.addAttribute("result", rs);
 		return "jsonview";
 
 	}
@@ -81,6 +81,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 		} catch (Exception e) {
 			error(e, model, rs);
 		}
+		model.addAttribute("result", rs);
 		return "jsonview";
 
 	}
@@ -95,7 +96,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 		} catch (Exception e) {
 			error(e, model, rs);
 		}
-		
+		model.addAttribute("result", rs);
 		return  "jsonview";
 
 

@@ -81,7 +81,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 		        	 var userId=getParam('userId');
 		        	 var serviceCall = new ServiceCall();
 					    var obj=new Object();
-					    obj.sql="select * from t_per_user where user_id='"+userId+"'";
+					    obj.sql="select * from nursing.t_per_user where user_id='"+userId+"'";
 						serviceCall.init("queryDataSvc");
 						var result= serviceCall.execute(obj);
 						//alert(Object.toJSON(result));

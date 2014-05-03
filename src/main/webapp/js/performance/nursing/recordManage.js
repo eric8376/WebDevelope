@@ -1,9 +1,7 @@
 dhtmlxEvent(window,"load", doOnLoad);
 var grid,pagetoolbar,toolbar,page,conditionSql="",resultSet,ksmc,executor,kssj,jssj;
 function doOnLoad() {
-	if(getParam('bm')!=null){
-		
-	}
+	
 	 window.dhx_globalImgPath=parent.contextPath+"/js/dhtmlx/imgs/";
 
 	 ksmc = new dhtmlXCombo("ksmc", "ksmc", 200);
@@ -35,16 +33,19 @@ function doOnLoad() {
 				 {title:"时间",width:150,type:"ro"},
 				 {title:"数量",width:100,type:"ro",align:"left"},
 				 {title:"风险系数",width:100,type:"ro"},
-				 {title:"技术难度",width:100,type:"ro"},
-				 {title:"权重",width:100,type:"ro"},
-				 {title:"分值",width:100,type:"ro"},
-				 {title:"容错",width:100,type:"ro"}
+				 {title:"技术难度",width:100,type:"ro"}
+				
 				],
 			key:"record_id",
 			callback:loadData,
 			height:430,
 			pageSize:10
 				 
+	}
+	if(getParam('bm')!=null){
+		grid_define.columns.push({title:"权重",width:100,type:"ro"});
+		grid_define.columns.push({title:"分值",width:100,type:"ro"});
+		grid_define.columns.push({title:"容错",width:100,type:"ro"});
 	}
 	grid=createGridObject('gridbox',grid_define);
 	initToolBar(grid);

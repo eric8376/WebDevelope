@@ -49,7 +49,7 @@ public class LogonController extends BaseMultiActionController {
 //		String sql="select hosp_id from t_per_hosp where hosp_name=?";
 //		String hosp_id=jdbcTemplate.queryForObject(sql, String.class,new Object[]{""});
 		//查询关联科室和部门，没有科室和部门的将通不过验证
-		String sql = "select t.*,ks.DICT_TEXT as ks_text from T_PER_USER t left join (select * from t_per_ks union select * from t_per_bm)  ks on t.ks=ks.DICT_ID where user_name=? and password=? and t.hosp_id=?";
+		String sql = "select t.*,ks.DICT_TEXT as ks_text from nursing.T_PER_USER t left join (select * from nursing.t_per_ks union select * from nursing.t_per_bm)  ks on t.ks=ks.DICT_ID where user_name=? and password=? and t.hosp_id=?";
 		List results = jdbcTemplate.queryForList(sql,
 				new Object[] { username, password,"MB" });
 		if (results.size() > 0) {

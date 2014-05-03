@@ -4,16 +4,16 @@ var treeDefine={id:0,
         item:[
             {id:1,text:"数据管理",open:1,im0 :'folderClosed.gif',
           	  item:[
-          	        	  {id:"/record/ks/query/", text:"部门搜索",href:"p.spr?page=recordManage&bm=true"},
-	                      {id:"/record/bm/query/", text:"科室搜索",href:"p.spr?page=recordManage"},
+          	        	  {id:"/record/bm/query/", text:"部门搜索",href:"p.spr?page=recordManage&bm=true"},
+	                      {id:"/record/ks/query/", text:"科室搜索",href:"p.spr?page=recordManage"},
 	                      {id:"/record/parameter/", text:"参数管理",href:"p.spr?page=parameterManage"}
 	                      
 	                  ]},
             {id:2, text:"权限管理",open:1,im0 :'folderClosed.gif',
                 item:[
-                    {id:"/user/query/", text:"用户管理",href:"manage.spr?action=userManage"},
-                    {id:"/ks/query/", text:"科室管理",href:"manage.spr?action=roomManage&roomType=ks"},
-                    {id:"/bm/query/", text:"部门管理",href:"manage.spr?action=roomManage&roomType=bm"}
+                    {id:"/user/query/", text:"用户管理",href:"p.spr?page=userManage"},
+                    {id:"/ks/query/", text:"科室管理",href:"p.spr?page=roomManage&roomType=ks"},
+                    {id:"/bm/query/", text:"部门管理",href:"p.spr?page=roomManage&roomType=bm"}
                 ]}
 ]
 };

@@ -49,7 +49,7 @@ function doOnLoad() {
 	}
 	 
 	 
-	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
+	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from nursing."+viewName+" where 1=1 "+filterCondition;
 		
 	var grid_define={
 		columns:

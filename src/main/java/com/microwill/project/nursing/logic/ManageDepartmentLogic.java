@@ -43,46 +43,20 @@ public class ManageDepartmentLogic extends UserTypeLogic {
 
 	@Override
 	public String getScopeSql() {
-		String ks_id=(String)getLoginedUserContext().get("ks");
-		String hosp_id=(String)getLoginedUserContext().get("hosp_id");
-		List<Map<String,Object>> kslist=getJdbcTemplate().queryForList(KSSql,hosp_id);
-		List<Map<String,Object>> xmlist=getJdbcTemplate().queryForList(XMSql,new Object[]{ks_id,hosp_id});
-		String scopeSql="";
-		if(kslist.size()>0){
-			scopeSql="and ks_id in (";
 		
-		for(Map<String,Object> item:kslist){
-			scopeSql+="'"+item.get("dict_id")+"',";
-		}
-		scopeSql=scopeSql.substring(0, scopeSql.length()-1)+") ";
-		}
-		if(xmlist.size()>0){
-		scopeSql+="and xm_id in (";
-		for(Map<String,Object> item:xmlist){
-			scopeSql+="'"+item.get("dict_id")+"',";
-		}
-		scopeSql=scopeSql.substring(0, scopeSql.length()-1)+") ";
-		}
-		return scopeSql;
+		 return "and 1=1 and hosp_id='"+getLoginedUserContext().get("hosp_id")+"'";
 	}
 
 	@Override
 	protected void init(Map<String, Boolean> priviageMap) {
 		super.init(priviageMap);
 		if (getRoleType().equals(RoleType.BMMANAGER)) {
-			priviageMap.put("/record/add/", true);
-			priviageMap.put("/record/search/", true);
-			priviageMap.put("/record/query/", true);
-			priviageMap.put("/record/analysis/", true);
+			
+			priviageMap.put("/record/bm/query/", true);
 			priviageMap.put("/user/query/", true);
-			priviageMap.put("/project/query/", true);
-			priviageMap.put("/hj/query/", true);
-			priviageMap.put("/zb/query/", true);
+			
 		} else if (getRoleType().equals(RoleType.BMSTAFF)) {
-			priviageMap.put("/record/add/", true);
-			priviageMap.put("/record/search/", true);
-			priviageMap.put("/record/query/", true);
-			priviageMap.put("/record/analysis/", true);
+			priviageMap.put("/record/bm/query/", true);
 			
 		}
 	}

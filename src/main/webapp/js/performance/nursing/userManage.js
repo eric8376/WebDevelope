@@ -31,9 +31,9 @@ function doAuthorise(id){
 function doOnLoad() {
 	 var filterCondition="and hosp_id='"+parent.loginedUserInfo.hospId+"'";
 	    if(parent.loginedUserInfo.jb=='2'){
-	    	filterCondition+=" and ks='"+parent.loginedUserInfo.ks+"' and jb='"+d+"'";
+	    	filterCondition+=" and ks='"+parent.loginedUserInfo.ks+"' ";//+"' and jb='"+d+"'";
 	    }
-	var sql="select user_id,user_name,real_name,BM,KS,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\");^_self')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\");^_self') as au from t_per_user where 1=1 "+filterCondition;
+	var sql="select user_id,user_name,real_name,BM,KS,JB,CONCAT('Delete^javascript:doDelete(\"',user_id,'\");^_self')  as de,CONCAT('Authorise^javascript:doAuthorise(\"',user_id,'\");^_self') as au from nursing.t_per_user where 1=1 "+filterCondition;
 	
 	var grid_define={
 			columns:

@@ -38,16 +38,14 @@ public  abstract class UserTypeLogic {
 
 	protected void init(Map<String, Boolean> priviageMap) {
 		//menu
-		priviageMap.put("/record/add/", false);
-		priviageMap.put("/record/search/", false);
-		priviageMap.put("/record/query/", false);
-		priviageMap.put("/record/analysis/", false);
+		priviageMap.put("/record/ks/query/", false);
+		priviageMap.put("/record/bm/query/", false);
+		priviageMap.put("/record/parameter/", false);
+		
 		priviageMap.put("/user/query/", false);
 		priviageMap.put("/ks/query/", false);
 		priviageMap.put("/bm/query/", false);
-		priviageMap.put("/project/query/", false);
-		priviageMap.put("/hj/query/", false);
-		priviageMap.put("/zb/query/", false);
+	
 		//button
 		//link
 		
