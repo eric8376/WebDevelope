@@ -3,6 +3,7 @@
  */
 package com.microwill.project.nursing.logic;
 
+import java.text.Format;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public  class AuthorizeQueryStrategy {
 			"IFNULL(p.weight*n.zs,'0') as value ," +
 			"IF(p.weight,'','*') as error " +
 			"from nursing.t_nursing n left join nursing.t_parameter p on n.sf_code=p.charge_code where 1=1 ";
-	private String summarySql="select sum(p.weight*n.zs) as summary from  nursing.t_nursing n left join nursing.t_parameter p on n.sf_code=p.charge_code where 1=1  group by n.apartment_name ";
+	private String summarySql="select sum(p.weight*n.zs) as summary from  nursing.t_nursing n left join nursing.t_parameter p on n.sf_code=p.charge_code where 1=1  %s ";
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;
 	private UserTypeLogic userTypeLogic;
@@ -72,7 +73,8 @@ public  class AuthorizeQueryStrategy {
 		String countSql = "select count(1) "
 				+ sql.substring(index, sql.length());
 		int totalCount = jdbcTemplate.queryForInt(countSql);
-		Float summaryNum= jdbcTemplate.queryForObject(summarySql+getHospSql()+getScopeSql() + getConditionSql(),Float.class);
+		
+		Float summaryNum= jdbcTemplate.queryForObject(String.format(summarySql, getHospSql()+getScopeSql() + getConditionSql()),Float.class);
 		List list = jdbcTemplate.queryForList(
 				sql + getPageSql());
 		System.out.println(sql + getPageSql());

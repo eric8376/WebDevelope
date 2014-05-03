@@ -48,7 +48,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String ADD_PARAMETER_SQL="insert into nursing.t_parameter(param_id,charge_code,weight) values(?,?,?) ";
 	private static String UPDATE_PARAMETER_SQL="update nursing.t_parameter set charge_code=?,weight=? where param_id=?";
 	private static String DEL_PARAMETER_SQL="delete from nursing.t_parameter where param_id=?";
-	
+	private static String UPDATE_PASSWORD_SQL = "update nursing.t_per_user set password=? where user_id=? and password=?";
 	@RequestMapping(params = "action=updateParameter")
 	public String updateParameter(Model model,String paramId,String charge_code,String weight) throws Exception {
 		
@@ -442,7 +442,29 @@ public class ManageOperactionController extends BaseMultiActionController {
 		return null;
 
 	}
+	@RequestMapping(params = "action=changePassword")
+	public ModelAndView changePassword(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String oldpass = request.getParameter("oldpass");
+		String newpass = request.getParameter("newpass");
+		String userId = (String)getToken(request).get("user_id");
+		int result = 0;
+		try {
+			result = jdbcTemplate.update(UPDATE_PASSWORD_SQL,
+					new Object[] { newpass, userId ,oldpass});
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (result > 0) {
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} else {
+			outputJSON(response, "{result:false}");
+		}
+		return null;
 
+	}
 	private String getHospIdFromSession(HttpServletRequest request){
 		
 		return(String)LoginHelper.getToken(request).get("hosp_id");

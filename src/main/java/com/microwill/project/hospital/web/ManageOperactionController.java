@@ -44,7 +44,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String DELETE_ROLE_XM_MAP_SQL = "delete from T_PER_ROLE_XM where ksxm_id=? ";
 	private static String ADD_ROLE_XM_MAP_SQL = "insert into T_PER_ROLE_XM(role_id,ksxm_id) values(?,?)";
 	private static String QUERY_RECORD_OF_PROJRCT = "select count(1) from t_per_record t1,t_per_dict_map t2 where t1.ksxm_id= t2.ksxm_id and t2.xm_id =? and t2.ks_id=?";
-	
+	private static String UPDATE_PASSWORD_SQL = "update t_per_user set password=? where user_id=? and password=?";
 
 	@RequestMapping(params = "action=updateUser")
 	public ModelAndView updateUser(HttpServletRequest request,
@@ -386,7 +386,29 @@ public class ManageOperactionController extends BaseMultiActionController {
 		return null;
 
 	}
+	@RequestMapping(params = "action=changePassword")
+	public ModelAndView changePassword(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String oldpass = request.getParameter("oldpass");
+		String newpass = request.getParameter("newpass");
+		String userId = (String)getToken(request).get("user_id");
+		int result = 0;
+		try {
+			result = jdbcTemplate.update(UPDATE_PASSWORD_SQL,
+					new Object[] { newpass, userId ,oldpass});
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (result > 0) {
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} else {
+			outputJSON(response, "{result:false}");
+		}
+		return null;
 
+	}
 	private String getHospIdFromSession(HttpServletRequest request){
 		
 		return(String)LoginHelper.getToken(request).get("hosp_id");
