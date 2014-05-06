@@ -22,8 +22,8 @@ public  class AuthorizeQueryStrategy {
 			"IFNULL(p.weight,'0') as weight, " +
 			"IFNULL(p.weight*n.zs,'0') as value ," +
 			"IF(p.weight,'','*') as error " +
-			"from nursing.t_nursing n left join nursing.t_parameter p on n.sf_code=p.charge_code where 1=1 ";
-	private String summarySql="select sum(p.weight*n.zs) as summary from  nursing.t_nursing n left join nursing.t_parameter p on n.sf_code=p.charge_code where 1=1  %s ";
+			"from t_nursing n left join t_parameter p on n.sf_code=p.charge_code where 1=1 ";
+	private String summarySql="select sum(p.weight*n.zs) as summary from  t_nursing n left join t_parameter p on n.sf_code=p.charge_code where 1=1  %s ";
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;
 	private UserTypeLogic userTypeLogic;
@@ -72,6 +72,7 @@ public  class AuthorizeQueryStrategy {
 		int index = sql.indexOf("from");
 		String countSql = "select count(1) "
 				+ sql.substring(index, sql.length());
+		jdbcTemplate.execute("use nursing;");
 		int totalCount = jdbcTemplate.queryForInt(countSql);
 		
 		Float summaryNum= jdbcTemplate.queryForObject(String.format(summarySql, getHospSql()+getScopeSql() + getConditionSql()),Float.class);

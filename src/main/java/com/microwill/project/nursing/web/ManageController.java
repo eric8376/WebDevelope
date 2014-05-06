@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
+import com.microwill.project.nursing.util.NursingHelper;
 
 /**
  * @author Administrator
  *
  */
 @Controller("nursing.manage.controller")
-@RequestMapping("/nursing/manage.spr")
+@RequestMapping(NursingHelper.URL_CONTEXT_NURSING+"/manage.spr")
 public class ManageController extends BaseMultiActionController {
 	@RequestMapping(params = "action=addRecord")
 	public ModelAndView addRecord(HttpServletRequest request,

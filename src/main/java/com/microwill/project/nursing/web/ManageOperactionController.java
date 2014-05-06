@@ -20,13 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.microwill.framework.vo.Result;
 import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.framework.web.util.LoginHelper;
+import com.microwill.project.nursing.util.NursingHelper;
 
 /**
  * @author Administrator
  * 
  */
 @Controller("nursing.manageoperation.controller")
-@RequestMapping("/nursing/manageOperation.spr")
+@RequestMapping(NursingHelper.URL_CONTEXT_NURSING+"/manageOperation.spr")
 public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
