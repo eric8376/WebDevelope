@@ -545,6 +545,27 @@ function Page(pageSize){
 	
 }
 /*
+ * window forms
+ */
+function createWindowForm(define){
+	 var dhxWins = new dhtmlXWindows();
+	 var win = dhxWins.createWindow(define.formName,150,150,600,400);
+	 dhxWins.window(define.formName).setText(define.title);
+	 var addDhxForm =dhxWins.window(define.formName).attachForm(define.formData);
+	 addDhxForm.attachEvent("onButtonClick", function(name) {
+	    	if(name =='save'){
+	    		this.send("manageOperation.spr?action=addParameter","post",function(respon){
+	    			parent.loadPage('p.spr?page=parameterManage');
+	    		});
+	    		dhxWins.window(define.formName).close();
+	    	
+	    	}else if(name =='cancel'){
+	    		dhxWins.window(define.formName).close();
+	    	}
+		});
+	 return addDhxForm;
+}
+/*
  * 
  * form.js
  */
