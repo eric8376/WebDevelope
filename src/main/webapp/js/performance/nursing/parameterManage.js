@@ -67,7 +67,7 @@ function initToolBar(grid){
     });
 }
 function doAdd(dhxWins){
-	dhtmlx.skin = "dhx_skyblue";
+	//dhtmlx.skin = "dhx_skyblue";
 	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
 	 
 	 var win = dhxWins.createWindow('addParameter',150,150,600,400);
