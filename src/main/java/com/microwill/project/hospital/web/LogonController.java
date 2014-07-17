@@ -32,11 +32,7 @@ import com.microwill.project.hospital.bo.RoleType;
 public class LogonController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	@RequestMapping("")
-	@NotLogin
-	public String handleDefault(){
-		return "/performance/hospital/index";
-	}
+
 	@RequestMapping("/logon.spr")
 	@NotLogin
 	@SysLog(SysLogEnum.HospitalLogin)

@@ -22,18 +22,26 @@ import com.microwill.framework.vo.Result;
  * 
  */
 @Controller("base.simplepage.controller")
-@RequestMapping("/{context}/p.spr")
+@RequestMapping("/{context}")
 public class SimplePageController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@NotLogin
+	@RequestMapping("")
+	public String handleDefault(@PathVariable("context") String context,Model model) throws Exception {
+		AtomicInteger inte=new AtomicInteger();
+		return "/performance/" + context + "/index";
 
-	@RequestMapping
-	public String handleDefault(@PathVariable("context") String context,
+	}
+	@NotLogin
+	@RequestMapping("/p.spr")
+	public String goPage(@PathVariable("context") String context,
 			String page, Model model) throws Exception {
 		AtomicInteger inte=new AtomicInteger();
 		return "/performance/" + context + "/" + page;
 
 	}
+	@NotLogin
 	@RequestMapping("action=test")
 	public String test(@PathVariable("context") String context,
 			String page, Model model) throws Exception {

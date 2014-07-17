@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.microwill.project.BGM.web;
+package com.microwill.project.DG.web;
 
 import java.util.List;
 import java.util.Map;
@@ -25,11 +25,16 @@ import com.microwill.framework.web.util.LoginHelper;
  * @author Administrator
  * 
  */
-@Controller("BGM.logon.controller")
-@RequestMapping("/BGM")
+@Controller("DG.logon.controller")
+@RequestMapping("/DG")
 public class LogonController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@RequestMapping("")
+	@NotLogin
+	public String handleDefault(){
+		return "/performance/DG/index";
+	}
 	@RequestMapping("/logon.spr")
 	@NotLogin
 	public ModelAndView logon(HttpServletRequest request,
@@ -39,7 +44,7 @@ public class LogonController extends BaseMultiActionController {
 		Result result = new Result();
 		try {
 
-			String sql = "select * from bgm.t_user where user_name=? and password=?";
+			String sql = "select * from DG.t_user where user_name=? and password=?";
 			List results = jdbcTemplate.queryForList(sql, new Object[] {
 					username, password });
 			if (results.size() > 0) {

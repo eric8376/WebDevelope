@@ -33,11 +33,7 @@ import com.microwill.project.bureau.bo.UserType;
 public class LogonController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	@RequestMapping("")
-	@NotLogin
-	public String handleDefault(){
-		return "/performance/bureau/index";
-	}
+
 	@RequestMapping("/logon.spr")
 	@NotLogin
 	public String logon(String username, String password, String hospital,String type,Model model) throws Exception {
