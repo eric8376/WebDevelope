@@ -10,6 +10,7 @@
 <script language="javascript" src="<%=request.getContextPath()%>/js/prototype.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/helper/dhtmlxhelper.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/workbench.js"></script>
 <%
    Map loginedUserInfo=(Map)request.getSession().getAttribute("token");

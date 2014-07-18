@@ -11,6 +11,7 @@ var contextPath='<%=request.getContextPath()%>';
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/helper/dhtmlxhelper.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/bureau/login.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
 <style type="text/css">
