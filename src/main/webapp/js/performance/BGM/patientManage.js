@@ -177,15 +177,24 @@ function initToolBar(grid){
         	 doAdd();
         	
         }else if(id=="updateUser"){
+        	if(!checkGridRowSelected(grid)){
+        		return;
+        	}
         	var patientId = getSelectGridCellValue(grid,0);
         	doUpdate(patientId)
         }else if(id=='deleteUser'){
+        	if(!checkGridRowSelected(grid)){
+        		return;
+        	}
         	var patientId = getSelectGridCellValue(grid,0);
         	doDelete(patientId);
         }else if(id=='search'){
         	 createWindowForm(searchFormDefine);
         }else if(id=='genPlan'){
         	var obj={};
+        	if(!checkGridRowSelected(grid)){
+        		return;
+        	}
         	obj.patient_id = getSelectGridCellValue(grid,0);
         	obj.patient_name = getSelectGridCellValue(grid,4);
         	var dhxForm =createWindowForm(genPlanFormDefine);

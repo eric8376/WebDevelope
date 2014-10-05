@@ -208,12 +208,17 @@ function Page(pageSize){
 }
 function getSelectGridCellValue(grid,colIndex){
 	var index=grid.getSelectedRowId();
-	index=grid.getRowIndex(index)
+	index=grid.getRowIndex(index);
+	return  grid.cellByIndex(index, colIndex).getValue();
+}
+function checkGridRowSelected(grid){
+	var index=grid.getSelectedRowId();
+	index=grid.getRowIndex(index);
 	if(index==-1){
 		alert("请选择一条记录");
-		return null;
+		return false;
 	}
-	return  grid.cellByIndex(index, colIndex).getValue();
+	return true;
 }
 /**
  * window forms
