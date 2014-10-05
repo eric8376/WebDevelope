@@ -14,45 +14,60 @@ function doDelete(id){
 		});
 	}
 }
-function doAdd(dhxWins){
-	dhtmlx.skin = "dhx_skyblue";
-	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
-	 
-	 var win = dhxWins.createWindow('addUser',150,150,600,400);
-	 dhxWins.window('addUser').setText("新增用户");
-	 var addDhxForm =dhxWins.window('addUser').attachForm(addFormData);
-	 
-	 addDhxForm.attachEvent("onButtonClick", function(name) {
-	    	if(name =='save'){
-	    		this.send("manageOperation.spr?action=addOrUpdateUser","post",function(respon){
-	    			parent.loadPage('p.spr?page=userManage');
-	    		});
-	    		dhxWins.window('addUser').close();
-	    	
-	    	}else if(name =='cancel'){
-	    		dhxWins.window('addUser').close();
-	    	}
-		});
-};
-function doUpdate(dhxWins,userId){
-	 
-	 var win = dhxWins.createWindow('updateUser',150,150,600,400);
-	 dhxWins.window('updateUser').setText("修改用户");
-	 var updateDhxForm =dhxWins.window('updateUser').attachForm(updateFormData);
+var addFormData = {
+		formName:"addUser",
+		title:"新增用户",
+		fieldData:[
+	 				
+	 				{type:"input", name:"userName", label:"用户名:"},
+	 				{type:"password", name:"password", label:"密码:"},
+	 				{type:"password", name:"repassword", label:"确认密码:"},
+	 				{type:"input", name:"email", label:"邮箱:"},
+	 				{type:"input", name:"phone", label:"手机:"},
+	 				{type:"combo", name: 'role', label:'角色:',options:[
+	 					                                   				{value: "1", text: "管理员"},
+	 					                                				{value: "2", text: "职员"}
+	 					                                		]},
+	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	 	                                		
+	 				{type:"input", name: 'houseId', label:'负责病房:'},
+	 				{type:"input", name: 'bedId', label:'负责病床:'}
+	 				],
+	   buttonData:[	
+                 {type:"button", name:"save", value:"保存"},
+                 {type:"button", name:"cancel", value:"取消" }
+                 ],
+       submitUrl:"manageOperation.spr?action=addOrUpdateUser",
+	   returnUrl:"p.spr?page=userManage"
+			};
+var updateFormData =  {
+		formName:"updateUser",
+		title:"修改用户",
+		fieldData: [
+   	 				
+   	 				{type:"hidden", name:"userId"},
+   	 				{type:"input", name:"userName", label:"用户名:"},
+   	 				{type:"password", name:"password", label:"密码:"},
+   	 				{type:"password", name:"repassword", label:"确认密码:"},
+   	 				{type:"input", name:"email", label:"邮箱:"},
+   	 				{type:"input", name:"phone", label:"手机:"},
+   	 				{type:"combo", name: 'role', label:'角色:',options:[
+   	 					                                   				{value: "1", text: "管理员"},
+   	 					                                				{value: "2", text: "职员"}
+   	 					                                		]},
+   	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	                                		
+   	 				{type:"input", name: 'houseId', label:'负责病房:'},
+   	 				{type:"input", name: 'bedId', label:'负责病床:'}],
+   	   buttonData:[			
+   	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }
+   	 			  ],
+   	 	   submitUrl:"manageOperation.spr?action=addOrUpdateUser",
+   		   returnUrl:"p.spr?page=userManage"
+   				};
+function doUpdate(userId){
+	 var updateDhxForm=createWindowForm(updateFormData);
 	 var sql="select * from BGM.t_user where user_id='"+userId+"'";
 	 var list=db.queryForList(sql);
-	 copyObjectToForm(list[0],updateFormData,updateDhxForm);
-	 updateDhxForm.attachEvent("onButtonClick", function(name) {
-	    	if(name =='save'){
-	    		this.send("manageOperation.spr?action=addOrUpdateUser","post",function(respon){
-	    			//alert(respon);
-	    			parent.loadPage('p.spr?page=userManage');
-	    		});
-	    		dhxWins.window('updateUser').close();
-	    	}else if(name =='cancel'){
-	    		dhxWins.window('updateUser').close();
-	    	}
-		});
+	 copyObjectToForm(list[0],updateFormData.formData,updateDhxForm);
 };
 function doOnLoad() {
 	
@@ -74,8 +89,7 @@ function initToolBar(grid){
 	
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="addUser"){
-        	 var dhxWins = new dhtmlXWindows();
-        	 doAdd(dhxWins);
+        	createWindowForm(addFormData);
         	
         }else if(id=="updateUser"){
         	var index=grid.getSelectedRowId();
@@ -84,9 +98,9 @@ function initToolBar(grid){
         		alert("请选择一条记录");
         		return;
         	}
-        	var patientId = grid.cellByIndex(index, 0).getValue();
+        	var userId = grid.cellByIndex(index, 0).getValue();
         	var dhxWins = new dhtmlXWindows();
-        	doUpdate(dhxWins,patientId)
+        	doUpdate(userId)
         }else if(id=='deleteUser'){
         	var index=grid.getSelectedRowId();
         	index=grid.getRowIndex(index)
@@ -102,49 +116,10 @@ function initToolBar(grid){
 
 //源数据
 var roomOption=db.queryForList("select dict_id as value, dict_text as text from BGM.t_dict where dict_code='ks'");
-var addFormData = [
-	 				{
-	 				    type: "settings",
-	 				    position: "label-left",
-	 				    labelWidth: 240,
-	 				    inputWidth: 300
-	 				},
-	 				{type:"input", name:"userName", label:"用户名:"},
-	 				{type:"password", name:"password", label:"密码:"},
-	 				{type:"password", name:"repassword", label:"确认密码:"},
-	 				{type:"input", name:"email", label:"邮箱:"},
-	 				{type:"input", name:"phone", label:"手机:"},
-	 				{type:"combo", name: 'role', label:'角色:',options:[
-	 					                                   				{value: "1", text: "管理员"},
-	 					                                				{value: "2", text: "职员"}
-	 					                                		]},
-	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	 	                                		
-	 				{type:"input", name: 'houseId', label:'负责病房:'},
-	 				{type:"input", name: 'bedId', label:'负责病床:'},
-	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
 
 
-var updateFormData =  [
-	 				{
-	 				    type: "settings",
-	 				    position: "label-left",
-	 				    labelWidth: 240,
-	 				    inputWidth: 300
-	 				},
-	 				{type:"hidden", name:"userId"},
-	 				{type:"input", name:"userName", label:"用户名:"},
-	 				{type:"password", name:"password", label:"密码:"},
-	 				{type:"password", name:"repassword", label:"确认密码:"},
-	 				{type:"input", name:"email", label:"邮箱:"},
-	 				{type:"input", name:"phone", label:"手机:"},
-	 				{type:"combo", name: 'role', label:'角色:',options:[
-	 					                                   				{value: "1", text: "管理员"},
-	 					                                				{value: "2", text: "职员"}
-	 					                                		]},
-	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	                                		
-	 				{type:"input", name: 'houseId', label:'负责病房:'},
-	 				{type:"input", name: 'bedId', label:'负责病床:'},
-	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
+
+
 var grid_define={
 		columns:
 			[{title:"",width:0,type:"ro"},

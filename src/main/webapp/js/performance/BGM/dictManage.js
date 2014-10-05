@@ -14,46 +14,14 @@ function doDelete(id){
 		});
 	}
 }
-function doAdd(dhxWins){
+
+function doUpdate(userId){
 	
 	 
-	 var win = dhxWins.createWindow('addUser',150,150,600,400);
-	 dhxWins.window('addUser').setText("新增字典");
-	 var addDhxForm =dhxWins.window('addUser').attachForm(addFormData);
-	 
-	 addDhxForm.attachEvent("onButtonClick", function(name) {
-	    	if(name =='save'){
-	    		this.send("manageOperation.spr?action=addOrUpdateDict","post",function(respon){
-	    			parent.loadPage('p.spr?page=dictManage');
-	    		});
-	    		dhxWins.window('addUser').close();
-	    	
-	    	}else if(name =='cancel'){
-	    		dhxWins.window('addUser').close();
-	    	}
-		});
-};
-function doUpdate(dhxWins,userId){
-	dhtmlx.skin = "dhx_skyblue";
-	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
-	 
-	 var win = dhxWins.createWindow('updateUser',150,150,600,400);
-	 dhxWins.window('updateUser').setText("修改字典");
-	 var updateDhxForm =dhxWins.window('updateUser').attachForm(updateFormData);
+	 var updateDhxForm=createWindowForm(updateFormData);
 	 var sql="select * from BGM.t_dict where dict_id='"+userId+"'";
 	 var list=db.queryForList(sql);
-	 copyObjectToForm(list[0],updateFormData,updateDhxForm);
-	 updateDhxForm.attachEvent("onButtonClick", function(name) {
-	    	if(name =='save'){
-	    		this.send("manageOperation.spr?action=addOrUpdateDict","post",function(respon){
-	    			//alert(respon);
-	    			parent.loadPage('p.spr?page=dictManage');
-	    		});
-	    		dhxWins.window('updateUser').close();
-	    	}else if(name =='cancel'){
-	    		dhxWins.window('updateUser').close();
-	    	}
-		});
+	 copyObjectToForm(list[0],updateFormData.formData,updateDhxForm);
 };
 function doOnLoad() {
 	
@@ -75,8 +43,7 @@ function initToolBar(grid){
 	
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="addUser"){
-        	 var dhxWins = new dhtmlXWindows();
-        	 doAdd(dhxWins);
+        	createWindowForm(addFormData);
         	
         }else if(id=="updateUser"){
         	var index=grid.getSelectedRowId();
@@ -86,8 +53,7 @@ function initToolBar(grid){
         		return;
         	}
         	var patientId = grid.cellByIndex(index, 0).getValue();
-        	var dhxWins = new dhtmlXWindows();
-        	doUpdate(dhxWins,patientId)
+        	doUpdate(patientId)
         }else if(id=='deleteUser'){
         	var index=grid.getSelectedRowId();
         	index=grid.getRowIndex(index)
@@ -102,33 +68,41 @@ function initToolBar(grid){
 }
 
 //源数据
-var addFormData = [
-	 				{
-	 				    type: "settings",
-	 				    position: "label-left",
-	 				    labelWidth: 240,
-	 				    inputWidth: 300
-	 				},
+var addFormData = {
+		formName:"addDict",
+		title:"新增字典",
+		fieldData:[
+	 				
 	 				{type:"input", name:"dictText", label:"字典名:"},
 	 				{type:"combo", name: 'dictCode', label:'类别:',options:[
 		 					                                   				{value: "ks", text: "科室"},
-		 					                                				{value: "bm", text: "部门"}
-		 					                                		]},
-	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
-var updateFormData =  [
-	 				{
-	 				    type: "settings",
-	 				    position: "label-left",
-	 				    labelWidth: 240,
-	 				    inputWidth: 300
-	 				},
+		 					                                				{value: "bm", text: "部门"}]
+	 				}
+	 				],
+		buttonData:[{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }],
+		submitUrl:"manageOperation.spr?action=addOrUpdateDict",
+		returnUrl:"p.spr?page=dictManage"
+		             };
+var updateFormData = {
+		formName:"updateDict",
+		title:"修改字典",
+		fieldData: [
+	 				
 	 				{type:"hidden", name:"dictId"},
 	 				{type:"input", name:"dictText", label:"字典名:"},
 	 				{type:"combo", name: 'dictCode', label:'类别:',options:[
 		 					                                   				{value: "ks", text: "科室"},
 		 					                                				{value: "bm", text: "部门"}
-		 					                                		]},
-	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
+		 					                                		]}
+	 				],
+	 	buttonData:[
+	 	            {type:"button", name:"save", value:"保存"},
+	 	            {type:"button", name:"cancel", value:"取消" }
+	 	            ],
+	 				submitUrl:"manageOperation.spr?action=addOrUpdateDict",
+	 				returnUrl:"p.spr?page=dictManage"
+	 				             };			
+	 			
 var grid_define={
 		columns:
 			[{title:"",width:0,type:"ro"},

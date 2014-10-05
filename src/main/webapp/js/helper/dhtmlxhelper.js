@@ -220,14 +220,43 @@ function getSelectGridCellValue(grid,colIndex){
  * define.type:submit,common,
  * define.formName
  * define.title
- * define.formData
+ * define.fieldData
+ * define.buttonData
  * define.submitUrl
  * define.returnUrl
  * define.searchFunction
  * define.saveFunction
  */
 function createWindowForm(define){
+	if(define.formData==null){
+	 define.formData=[];
+	 var leftFieldColumn=[];
+	 var rightFieldColumn=[];
+	 var combinFieldColumn=[];
+	 var index=0;
+	 for(var item in define.fieldData){
+		 index++;
+		 if(index%2==0){
+			 rightFieldColumn.push(define.fieldData[item]);
+		 }else{
+			 leftFieldColumn.push(define.fieldData[item]);
+		 }
+	 }
+	 combinFieldColumn= combinFieldColumn.concat(leftFieldColumn);
+	 combinFieldColumn.push({type: "newcolumn", offset:80});
+	 combinFieldColumn=combinFieldColumn.concat(rightFieldColumn);
+	 var combinButtonColumn=[];
+	 for(var item in define.buttonData){
+		 combinButtonColumn.push(define.buttonData[item]);
+		 combinButtonColumn.push({type: "newcolumn", offset:10});
+	 }
+	 combinButtonColumn.pop();
 	
+	 define.formData=[
+	                  {type: "block", width: 600, list:combinFieldColumn}
+	                  ,{type: "block", width: 600, list:combinButtonColumn}
+	                  ];
+	}
 	 var dhxWins = new dhtmlXWindows();
 	 var height=(define.formData[0].list.length/2+3)*30;
 	 var win = dhxWins.createWindow(define.formName,100,100,650,height);
