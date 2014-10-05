@@ -15,11 +15,10 @@
 
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/js/performance<%=loginedUserInfo.get("relativeInernalContext")%>/dao.js"></script>
-
-<link rel="stylesheet"
-	href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css"
-	type="text/css" media="screen">
-	
+<!--  script src="http://s4.cnzz.com/z_stat.php?id=1253352188&web_id=1253352188" language="JavaScript"></script-->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_skyblue.css" type="text/css" media="screen">
+<!--link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_terrace.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_web.css" type="text/css" media="screen"-->	
 	<link rel="stylesheet"
 	href="<%=request.getContextPath()%>/style/base.css"
 	type="text/css" media="screen">

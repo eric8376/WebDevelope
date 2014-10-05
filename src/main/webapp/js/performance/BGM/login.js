@@ -6,15 +6,7 @@ $(document).ready(function(){
 		   loadingbar(true);
 	        $.post(contextPath+"/logon.spr", data, function(res){
 				//var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");
-	        	loadingbar(false);
-	        	if(res.success==true)
-				{
-					window.location.href=contextPath+"/p.spr?page=workbench";
-					
-				}else{
-					alert(res.msg);
-					
-				}
+	        	
 			});
 	}
 	

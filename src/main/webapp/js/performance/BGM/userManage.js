@@ -35,8 +35,6 @@ function doAdd(dhxWins){
 		});
 };
 function doUpdate(dhxWins,userId){
-	dhtmlx.skin = "dhx_skyblue";
-	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
 	 
 	 var win = dhxWins.createWindow('updateUser',150,150,600,400);
 	 dhxWins.window('updateUser').setText("修改用户");
@@ -67,10 +65,11 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
-	toolbar.addButton('addUser',1,"新增用户","iconWrite2.gif",null);
-	toolbar.addButton('updateUser',2,"修改用户","iconWrite2.gif",null);
-	toolbar.addButton('deleteUser',3,"删除用户","iconWrite2.gif",null);
+	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
+	toolbar.setIconSize(32);
+	toolbar.addButton('addUser',1,"新增","add.ico",null);
+	toolbar.addButton('updateUser',2,"修改","edit.ico",null);
+	toolbar.addButton('deleteUser',3,"删除","delete.ico",null);
 	
 	
 	toolbar.attachEvent("onClick", function(id) {
@@ -148,17 +147,17 @@ var updateFormData =  [
 	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
 var grid_define={
 		columns:
-			[{title:"用户编号",width:0,type:"ro"},
-			 {title:"用户名",width:180,type:"ro"},
-			 {title:"邮箱",width:180,type:"ro"},
-			 {title:"手机",width:180,type:"ro"},
-			 {title:"角色",width:150,type:"co",data:[
+			[{title:"",width:0,type:"ro"},
+			 {title:"用户名",width:90,type:"ro"},
+			 {title:"邮箱",width:90,type:"ro"},
+			 {title:"手机",width:90,type:"ro"},
+			 {title:"角色",width:90,type:"co",data:[
 			                                       {key: "1", value: "管理员"},
 	 					                           {key: "2", value: "职员"}
 			                                      ]},
-			 {title:"科室",width:150,type:"co",dataSql:"select dict_id as 'key', dict_text as value from BGM.t_dict where dict_code='ks'"},                                     
-			 {title:"负责病房",width:150,type:"ro"}, 
-			 {title:"负责病床",width:180,type:"ro"}
+			 {title:"科室",width:50,type:"co",dataSql:"select dict_id as 'key', dict_text as value from BGM.t_dict where dict_code='ks'"},                                     
+			 {title:"负责病房",width:100,type:"ro"}, 
+			 {title:"负责病床",width:100,type:"ro"}
 			],
 		key:"user_id",
 		sql:"select user_id,user_name,email,phone,role,bm_id,house_id,bed_id from BGM.t_user where 1=1 "

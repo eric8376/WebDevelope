@@ -68,14 +68,15 @@ function doOnLoad() {
 	
     dhxLayout.cells("b").hideHeader();
     contentTab=dhxLayout.cells("b").attachTabbar()
-    contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+    //contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     contentTab.addTab("a1", "","70px");
-    contentTab.setTabActive("a1");
+  //contentTab.setTabActive("a1");
+    contentTab.tabs("a1").setActive();
     /*菜单栏*/
     /*过滤栏*/
     
     tabbar = dhxLayout.cells("c").attachTabbar();
-    tabbar.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+   // tabbar.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     tabbar.setSkin('dhx_skyblue');
     tabbar.addTab("a1", "科室","70px");
     var grid = tabbar.cells("a1").attachGrid();
@@ -107,7 +108,8 @@ function doOnLoad() {
   
 	var data=toGridData(getXMList(),'dict_id');
 	grid1.parse(data,"json");
-	tabbar.setTabActive("a1");
+	 //contentTab.setTabActive("a1");
+    contentTab.tabs("a1").setActive();
 	//alert(Object.toJSON(data));
 	//
 	dhxLayout.cells("c").setText("分类过滤");
@@ -140,7 +142,8 @@ function loadPage(url,text)
 	
 	contentTab.cells("a1").attachURL(url);
 	if(text){
-	contentTab.setLabel("a1",text,200);
+		//contentTab.setLabel("a1",text,200);
+		contentTab.tabs("a1").setText(text);
 	}
 	var ifr=contentTab.cells("a1").getFrame();
 	dhtmlxEvent(ifr, "load", function(){

@@ -66,7 +66,7 @@ var gridSql="select t1.plan_id,t3.name,t2.user_name,t1.begin_time,t1.end_time,t1
 		" where 1=1 ";
 var grid_define={
 		columns:
-			[{title:"计划号",width:0,type:"ro"},
+			[{title:"",width:0,type:"ro"},
 			 {title:"病患姓名",width:130,type:"ro"},
 			 {title:"检测人姓名",width:130,type:"ro"},
 			 {title:"开始时间",width:130,type:"ro"},

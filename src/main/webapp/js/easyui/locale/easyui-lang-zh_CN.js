@@ -14,6 +14,7 @@ if ($.messager){
 	$.messager.defaults.cancel = '取消';
 }
 if ($.fn.validatebox){
+	
 	$.fn.validatebox.defaults.missingMessage = '该输入项为必输项';
 	$.fn.validatebox.defaults.rules.email.message = '请输入有效的电子邮件地址';
 	$.fn.validatebox.defaults.rules.url.message = '请输入有效的URL地址';
@@ -67,4 +68,7 @@ if ($.fn.datetimebox && $.fn.datebox){
 		okText: $.fn.datebox.defaults.okText,
 		missingMessage: $.fn.datebox.defaults.missingMessage
 	});
+}
+if ($.fn.datetimespinner){
+	$.fn.datetimespinner.defaults.selections = [[0,4],[5,7],[8,10],[11,13],[14,16],[17,19]]
 }

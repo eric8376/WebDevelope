@@ -61,9 +61,10 @@ function doOnLoad() {
 	
     dhxLayout.cells("b").hideHeader();
     contentTab=dhxLayout.cells("b").attachTabbar()
-    contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+   // contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     contentTab.addTab("a1", "","70px");
-    contentTab.setTabActive("a1");
+  //contentTab.setTabActive("a1");
+    contentTab.tabs("a1").setActive();
     /*菜单栏*/
     /*过滤栏*/
     
@@ -133,7 +134,8 @@ function loadPage(url,text)
 	
 	contentTab.cells("a1").attachURL(url);
 	if(text){
-	contentTab.setLabel("a1",text,200);
+		//contentTab.setLabel("a1",text,200);
+		contentTab.tabs("a1").setText(text);
 	}
 	var ifr=contentTab.cells("a1").getFrame();
 	dhtmlxEvent(ifr, "load", function(){

@@ -5,132 +5,87 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>血糖仪管理系统</title>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/easyui/themes/icon.css">
+
 <script type="text/javascript">
-var contextPath='<%=request.getContextPath()%>';
-</script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/helper/dhtmlxhelper.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/BGM/login.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
-<style type="text/css">
-body
-        {
-            padding: 0;
-            margin: 0;
-            background: #ebebeb;
-        }
-        #hosp
-        {
-            float: left;
-            margin-right: 10px;
-        }
-        #user
-        {
-            float: left;
-            margin-right: 10px;
-        }
-        #pass
-        {
-            float: left;
-            margin-right: 10px;
-        }
-        #button
-        {
-            float: left;
-            width: 100px;
-            height: 28px;
-            cursor: pointer;
-            margin-top: 26px;
-            background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/login1.jpg) 50% 50% no-repeat;
-        }
-        #button:hover
-        {
-            float: left;
-            width: 100px;
-            height: 28px;
-            cursor: pointer;
-            background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/login2.jpg) 50% 50% no-repeat;
-        }
-        input
-        {
-            width: 120px;
-            height: 20px;
-        }
-</style>
-<script>
-//add by zxt,套用赋值原来的登陆界面
 var contextPath='<%=request.getContextPath()%>/BGM';
-
- 
-$(document).ready(function(){	
-	function mylogin(){
-		var users=$('#userInput').val();
-		var pss=$('#passwordInput').val();
-		var hospital=$('#hospSelect').val();
-		var oldname=$("input[name='username']");
-		var oldpss=$("input[name='password']");
-		var oldhosp=$("input[name='hospital']");
-		oldname.val(users);
-		oldpss.val(pss);
-		oldhosp.val(hospital);
-		
-	    login();//login.js里面的方法		
-	}
-	
-
-    $('#button').bind("click",function(){        	
-    	mylogin();   	  
-    	});
-    
-    $('#userInput').bind('keyup', function(event){
-    	   if (event.keyCode=="13"){
-    		   mylogin();   	
-    		   }
-    });
-    
-    $('#passwordInput').bind('keyup', function(event){
- 	   if (event.keyCode=="13"){
-		   mylogin();   	
-		   }
-     });
-    
-    
-});
-
 </script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/easyui/jquery.min.js"></script>
+<script trpe="text/javascript" src="<%=request.getContextPath()%>/js/easyui/locale/easyui-lang-zh_CN.js"></script> 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/easyui/jquery.easyui.min.js"></script>
+
+<script type="text/javascript">
+		$(function(){
+			$('#login').form({
+				 url:contextPath+"/logon.spr",
+				onSubmit:function(){
+					//return $(this).form('validate');
+				},
+				success:function(res){
+					res = $.parseJSON(res);
+					//loadingbar(false);
+		        	if(res.success==true)
+					{
+						window.location.href=contextPath+"/p.spr?page=workbench";
+						
+					}else{
+						$.messager.alert("错误",res.msg);
+						
+					}
+				}
+			});
+		});
+		function loadingbar(state){
+			if(window._progressCover==null){
+			var p1 = document.createElement("DIV");
+			p1.className = "dhtmlxLayoutPolyProgressGlobal_dhx_skyblue";
+			document.body.appendChild(p1);
+			var p2 = document.createElement("DIV");
+			p2.className = "dhtmlxLayoutPolyProgressBGIMGGlobal_dhx_skyblue";
+			document.body.appendChild(p2);
+			window._progressCover=new Array(p1,p2);
+			}
+			window._progressCover[0].style.display = (state==true?"":"none");
+			window._progressCover[1].style.display = this._progressCover[0].style.display;
+		}
+	</script>
+
 </head>
-<body>
-<div style="height: 580px; background: #bdd4e2;">
-        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgts.jpg) 50% 50% no-repeat; height: 381px;
-            margin: 0 auto;">
+<body style="background-image: url('<%=request.getContextPath()%>/images/performance/BGM/bg.jpg');">
+<div style="margin:150px auto;width:500px;height:200;">
+    <div class="easyui-panel" title="血糖仪管理系统" style="margin:0 auto;width:400px;">
+        <div style="padding:10px 60px 20px 60px">
+        <form id="login" method="post" >
+            <table cellpadding="2">
+                <tr>
+                    <td><label for="username">用户名:</label></td>
+                    <td><input class="easyui-textbox easyui-validatebox" type="text" name="username" data-options="required:true,missingMessage:'用户名不能为空'"></input></td>
+                </tr>
+                <tr>
+                    <td><label for="password">密 码:</label></td>
+                    <td><input class="easyui-textbox easyui-validatebox" type="password" name="password" data-options="required:true,missingMessage:'密码不能为空'"></input></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm();">登 录</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();">清 空</a>
         </div>
-        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/barm1s.jpg)  repeat-x; height: 33px;">
-        </div>
-        <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgbs.jpg)  repeat-x; height: 166px;">
-            <div style="height: 80px; line-height: 80px; float: right;padding-right:30px;">
-                <form action="login.spr" method="post" id="loginForm">
-                <div>
-                	   
-                    <div id="user">
-           				用户:<input type="text" name="username" id="userInput"/>
-           			</div>
-                    <div id="pass">
-                        	密码:<input type="password" name="password" id="passwordInput"/>
-                     </div>       
-                    <div id="button">
-                    </div>
-                </div>
-                      <div id="form_container" style="display:none;position:absolute;left:550px;top:290px;" ></div>
-                </form>
-            </div>
-            <div style="clear: both;">
-            </div>
-            <div style="background: url(<%=request.getContextPath()%>/images/performance/bureau/hospitalimg/bgb2.jpg) 50% 50% no-repeat; height: 50px;
-                padding-top: 25px;">
-            </div>
         </div>
     </div>
+   </div>
+    <script>
+
+
+ function submitForm(){
+     $('#login').form('submit');
+ }
+ function clearForm(){
+     $('#login').form('clear');
+ }
+
+
+    </script>
 </body>
 </html>

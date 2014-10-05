@@ -4,27 +4,31 @@ var treeDefine={id:0,
         item:[
             {id:1,text:"人员管理",open:1,im0 :'folderClosed.gif',
           	  item:[
-	                      {id:"/user/add/", text:"病患管理",href:"p.spr?page=patientManage"},
-	                      {id:"/record/add/", text:"用户管理",href:"p.spr?page=userManage"}
+	                  {id:"/user/add/", text:"病患管理",href:"p.spr?page=patientManage"},
+	                  {id:"/record/add/", text:"用户管理",href:"p.spr?page=userManage"}
 	                      
-	                      
-	                  ]},
+	               ]       
+	        },
             {id:2, text:"检测管理",open:1,im0 :'folderClosed.gif',
                 item:[
                     {id:"/user/query/", text:"数据查询",href:"p.spr?page=resultManage"},
                     //{id:"/ks/query/", text:"数据分析",href:"manage.spr?action=roomManage&roomType=ks"},
                     {id:"/bm/query/", text:"检测计划",href:"p.spr?page=planManage"}
-                ]},
+                     ]
+            },
             {id:3,text:"系统设置",open:1,im0 :'folderClosed.gif',
           	  item:[
 				       {id:"/project/query/", text:"字典管理",href:"p.spr?page=dictManage"},
                      //{id:"/hj/query/", text:"系统设置",href:"manage.spr?action=projectManage&mapType=hj"}
                    
-					                  ]},
+					]
+            },
 ]
 };
 function doOnLoad() {
+	//dhtmlx.skin="dhx_web";
 	dhxLayout = new dhtmlXLayoutObject(document.body, "2U");
+	//dhxLayout.setSkin("dhx_web");
 	dhxLayout.progressOn();
 	//dhxLayout.attachHeader('headerDiv');
 	/*工具栏*/
@@ -67,9 +71,10 @@ function doOnLoad() {
 	
     dhxLayout.cells("b").hideHeader();
     contentTab=dhxLayout.cells("b").attachTabbar()
-    contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
+    //contentTab.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     contentTab.addTab("a1", "","70px");
-    contentTab.setTabActive("a1");
+    //contentTab.setTabActive("a1");
+    contentTab.tabs("a1").setActive();
     /*菜单栏*/
    
     //loadPage('manage.spr?action=welcome','首页');
@@ -81,7 +86,8 @@ function loadPage(url,text)
 	
 	contentTab.cells("a1").attachURL(url);
 	if(text){
-	contentTab.setLabel("a1",text,200);
+	//contentTab.setLabel("a1",text,200);
+		contentTab.tabs("a1").setText(text);
 	}
 	var ifr=contentTab.cells("a1").getFrame();
 	dhtmlxEvent(ifr, "load", function(){

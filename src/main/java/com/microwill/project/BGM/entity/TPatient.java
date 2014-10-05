@@ -77,7 +77,7 @@ public class TPatient implements java.io.Serializable {
 		this.recordNo = recordNo;
 	}
 
-	@Column(name = "id_no", length = 16)
+	@Column(name = "id_no", length = 18)
 	public String getIdNo() {
 		return this.idNo;
 	}

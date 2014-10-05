@@ -15,8 +15,7 @@ function doDelete(id){
 	}
 }
 function doAdd(dhxWins){
-	dhtmlx.skin = "dhx_skyblue";
-	window.dhx_globalImgPath =parent.contextPath+"/js/dhtmlx/imgs/";
+	
 	 
 	 var win = dhxWins.createWindow('addUser',150,150,600,400);
 	 dhxWins.window('addUser').setText("新增字典");
@@ -67,10 +66,11 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
-	toolbar.addButton('addUser',1,"新增字典","iconWrite2.gif",null);
-	toolbar.addButton('updateUser',2,"修改字典","iconWrite2.gif",null);
-	toolbar.addButton('deleteUser',3,"删除字典","iconWrite2.gif",null);
+	toolbar.setIconSize(32);
+	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
+	toolbar.addButton('addUser',1,"新增","add.ico",null);
+	toolbar.addButton('updateUser',2,"修改","edit.ico",null);
+	toolbar.addButton('deleteUser',3,"删除","delete.ico",null);
 	
 	
 	toolbar.attachEvent("onClick", function(id) {
@@ -131,7 +131,7 @@ var updateFormData =  [
 	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
 var grid_define={
 		columns:
-			[{title:"字典编号",width:0,type:"ro"},
+			[{title:"",width:0,type:"ro"},
 			 {title:"字典类别",width:150,type:"co",data:[
 				                                       {key:"ks",value:"科室"},
 				                                       {key:"bm",value:"部门"},
