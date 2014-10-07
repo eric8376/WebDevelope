@@ -41,6 +41,17 @@ public class ClientController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * 登录
+	 *http://localhost/hospital/BGM/invoke.spr?action=login&username=admin&password=111
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("action=login")
 	@NotLogin
 	public String login(Model model, HttpServletRequest request,
@@ -72,6 +83,16 @@ public class ClientController extends BaseMultiActionController {
 
 	}
 
+	/**
+	 * 获取病患讯息
+	 *http://localhost/hospital/BGM/invoke.spr?action=getPatient&patientId=20131216091200501
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param patientId
+	 * @return
+	 * @throws Exception
+	 */
 	@NotLogin
 	@RequestMapping(params = "action=getPatient")
 	public String getPatient(Model model, HttpServletRequest request,
@@ -101,6 +122,16 @@ public class ClientController extends BaseMultiActionController {
 
 	}
 
+	/**
+	 * 获取当天的检验计划
+	 * http://localhost/hospital/BGM/invoke.spr?action=getTodayPlanByUser&userId=4028818842f17d9b0142f5ee954f0001
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	@NotLogin
 	@RequestMapping(params = "action=getTodayPlanByUser")
 	public String getTodayPlanByUser(Model model,
@@ -131,6 +162,15 @@ public class ClientController extends BaseMultiActionController {
 
 	}
 
+	/**
+	 * 新增病患
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param patient
+	 * @return
+	 * @throws Exception
+	 */
 	@NotLogin
 	@RequestMapping(params = "action=addPatient")
 	public String addPatient(Model model, HttpServletRequest request,
@@ -156,12 +196,21 @@ public class ClientController extends BaseMultiActionController {
 
 	}
 
+	/**
+	 * 上传检测结果
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param result
+	 * @return
+	 * @throws Exception
+	 */
 	@NotLogin
 	@RequestMapping(params = "action=addResult")
 	public String addResult(Model model, HttpServletRequest request,
 			HttpServletResponse response, TResult result) throws Exception {
 		try {
-			result.setCheckId("");
+			result.setCheckId(IDGenerator.UUIDgenerate());
 			Session session=sessionFactory.openSession();
 			session.saveOrUpdate(result);
 			session.flush();
