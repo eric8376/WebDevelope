@@ -33,7 +33,7 @@ public class SimplePageController extends BaseMultiActionController {
 		return "/performance/" + context + "/index";
 
 	}
-	@NotLogin
+	
 	@RequestMapping("/p.spr")
 	public String goPage(@PathVariable("context") String context,
 			String page, Model model) throws Exception {
