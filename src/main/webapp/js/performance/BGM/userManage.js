@@ -14,6 +14,8 @@ function doDelete(id){
 		});
 	}
 }
+//源数据
+var roomOption=db.queryForList("select dict_id as value, dict_text as text from BGM.t_dict where dict_code='ks'");
 var addFormData = {
 		formName:"addUser",
 		title:"新增用户",

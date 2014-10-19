@@ -167,13 +167,36 @@ function initGrid(grid,define){
 	grid.dontSetSizes=true;
 	//grid.setEditable(false);
 	//grid.enableAutoWidth(true,300,300);
-
+	var menu = new dhtmlXMenuObject();
+	menu.grid=grid;
+	menu.renderAsContextMenu();
+	menu.addNewChild(null,null, "detail", "查看详情", false, "", "");
+	menu.attachEvent("onClick",function(){
+		
+		var detailItems=new Array();
+		var index=this.grid.getSelectedRowId();
+		index=this.grid.getRowIndex(index);
+		
+		for(var i=0;i<this.grid.getColumnsNum();i++){
+			var title=this.grid.getColLabel(i);
+			var value=this.grid.cellByIndex(index, i).getValue();
+			detailItems.push({type:"input", name:title, label:title,value:value,readonly:true});
+		}
+		var detailDefine={
+				formName:"updateUser",
+				title:"修改病患",
+				fieldData:detailItems
+		};
+		createWindowForm(detailDefine);
+	});
+	grid.enableContextMenu(menu);
 	grid.init();
 	if(define.height){
 		$("#gridbox").height(define.height);
 	}else{
 	$("#gridbox").height(480);
 	}
+
 	return grid;
 }
 function addGridComboOptions(combo,datas){
@@ -382,3 +405,32 @@ function createFileImport2(url){
 	dhxWins.window("importExcelForRecord").setText("导入记录文件Excel");
 	dhxWins.window("importExcelForRecord").attachURL("import.spr?action=showUploadFrom", false);
 }	
+//grid改进
+eXcell_co.prototype.setValue=function(val){
+	if (typeof (val) == "object"&&val!=null){
+		var optCol = this.grid.xmlLoader.doXPath("./option", val);
+
+		if (optCol.length)
+			this.cell._combo=new dhtmlXGridComboObject();
+
+		for (var j = 0;
+			j < optCol.length;
+			j++)this.cell._combo.put(optCol[j].getAttribute("value"),
+			optCol[j].firstChild
+				? optCol[j].firstChild.data
+				: "");
+		val=val.firstChild.data;
+	}
+
+	if ((val||"").toString()._dhx_trim() == "")
+		val=null
+	this.cell.combo_value=val;
+	
+	if (val !== null){
+		var label = (this.cell._combo||this.grid.getCombo(this.cell._cellIndex)).get(val);
+		this.setCValue(label===null?val:label, val);
+	}else
+		this.setCValue("&nbsp;", val);
+
+	
+}

@@ -114,6 +114,7 @@ var addFormDefine = {
 function doAdd(){
 	createWindowForm(addFormDefine);
 };
+
 var updateFormDefine = {
 		formName:"updateUser",
 		title:"修改病患",
@@ -223,6 +224,7 @@ var grid_define={
 			 {title:"性别",width:50,type:"co",data:[
 			                                       {key:"1",value:"男"},
 			                                       {key:"2",value:"女"},
+			                                       {key: "null", value: "请选择"}
 			                                      ]},
 			                                      
 			 {title:"年龄",width:50,type:"ro"}, 
@@ -233,6 +235,7 @@ var grid_define={
 			 {title:"类型",width:50,type:"co",data:[
 			                                       {key:"1",value:"门诊"},
 			                                       {key:"2",value:"住院"},
+			                                       {key: "null", value: "请选择"}
 			                                      ]},
 			 {title:"入院时间",width:80,type:"ro"},
 			 {title:"出院时间",width:80,type:"ro"},
