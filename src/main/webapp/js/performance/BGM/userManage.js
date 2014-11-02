@@ -21,18 +21,18 @@ var addFormData = {
 		title:"新增用户",
 		fieldData:[
 	 				
-	 				{type:"input", name:"userName", label:"用户名:"},
-	 				{type:"password", name:"password", label:"密码:"},
-	 				{type:"password", name:"repassword", label:"确认密码:"},
-	 				{type:"input", name:"email", label:"邮箱:"},
-	 				{type:"input", name:"phone", label:"手机:"},
+	 				{type:"input", name:"userName", label:"用户名:",required:true},
+	 				{type:"password", name:"password", label:"密码:",required:true},
+	 				{type:"password", name:"repassword", label:"确认密码:",required:true},
+	 				{type:"input", name:"email", label:"邮箱:",required:true},
+	 				{type:"input", name:"phone", label:"手机:",required:true},
 	 				{type:"combo", name: 'role', label:'角色:',options:[
 	 					                                   				{value: "1", text: "管理员"},
 	 					                                				{value: "2", text: "职员"}
-	 					                                		]},
-	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	 	                                		
-	 				{type:"input", name: 'houseId', label:'负责病房:'},
-	 				{type:"input", name: 'bedId', label:'负责病床:'}
+	 					                                		],required:true},
+	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption,required:true},	 	                                		
+	 				{type:"input", name: 'houseId', label:'负责病房:',required:true,validate:"ValidNumeric"},
+	 				{type:"input", name: 'bedId', label:'负责病床:',required:true,validate:"ValidNumeric"}
 	 				],
 	   buttonData:[	
                  {type:"button", name:"save", value:"保存"},
@@ -47,18 +47,18 @@ var updateFormData =  {
 		fieldData: [
    	 				
    	 				{type:"hidden", name:"userId"},
-   	 				{type:"input", name:"userName", label:"用户名:"},
-   	 				{type:"password", name:"password", label:"密码:"},
-   	 				{type:"password", name:"repassword", label:"确认密码:"},
-   	 				{type:"input", name:"email", label:"邮箱:"},
-   	 				{type:"input", name:"phone", label:"手机:"},
+   	 				{type:"input", name:"userName", label:"用户名:",required:true},
+   	 				{type:"password", name:"password", label:"密码:",required:true},
+   	 				{type:"password", name:"repassword", label:"确认密码:",required:true},
+   	 				{type:"input", name:"email", label:"邮箱:",required:true},
+   	 				{type:"input", name:"phone", label:"手机:",required:true},
    	 				{type:"combo", name: 'role', label:'角色:',options:[
    	 					                                   				{value: "1", text: "管理员"},
    	 					                                				{value: "2", text: "职员"}
-   	 					                                		]},
+   	 					                                		],required:true},
    	 				{type:"combo", name: 'bmId', label:'科室:',options:roomOption},	                                		
-   	 				{type:"input", name: 'houseId', label:'负责病房:'},
-   	 				{type:"input", name: 'bedId', label:'负责病床:'}],
+   	 				{type:"input", name: 'houseId', label:'负责病房:',required:true,validate:"ValidNumeric"},
+   	 				{type:"input", name: 'bedId', label:'负责病床:',required:true,validate:"ValidNumeric"}],
    	   buttonData:[			
    	 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }
    	 			  ],

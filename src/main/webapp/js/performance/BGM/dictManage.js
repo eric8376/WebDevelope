@@ -73,10 +73,10 @@ var addFormData = {
 		title:"新增字典",
 		fieldData:[
 	 				
-	 				{type:"input", name:"dictText", label:"字典名:"},
+	 				{type:"input", name:"dictText", label:"字典名:",required:true},
 	 				{type:"combo", name: 'dictCode', label:'类别:',options:[
 		 					                                   				{value: "ks", text: "科室"},
-		 					                                				{value: "bm", text: "部门"}]
+		 					                                				{value: "bm", text: "部门"}],required:true
 	 				}
 	 				],
 		buttonData:[{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }],
@@ -89,11 +89,11 @@ var updateFormData = {
 		fieldData: [
 	 				
 	 				{type:"hidden", name:"dictId"},
-	 				{type:"input", name:"dictText", label:"字典名:"},
+	 				{type:"input", name:"dictText", label:"字典名:",required:true},
 	 				{type:"combo", name: 'dictCode', label:'类别:',options:[
 		 					                                   				{value: "ks", text: "科室"},
 		 					                                				{value: "bm", text: "部门"}
-		 					                                		]}
+		 					                                		],required:true}
 	 				],
 	 	buttonData:[
 	 	            {type:"button", name:"save", value:"保存"},

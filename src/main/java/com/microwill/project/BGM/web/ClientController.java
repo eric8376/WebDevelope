@@ -141,9 +141,9 @@ public class ClientController extends BaseMultiActionController {
 		result.setSuccess(false);
 		try {
 			String today=DateFormatUtils.format(new Date(), "yyyy-MM-dd");
-			String sql = "select * from bgm.t_plan where user_id=? and begin_time<? and end_time>?";
+			String sql = "select * from bgm.t_plan where user_id=?";
 			List results = jdbcTemplate.queryForList(sql,
-					new Object[] { userId ,today,today});
+					new Object[] { userId});
 			if (results.size() > 0) {
 				
 				result.setSuccess(true);

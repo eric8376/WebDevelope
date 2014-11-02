@@ -2,22 +2,22 @@ dhtmlxEvent(window,"load", doOnLoad);
 var grid,toolbar;
 //
 var roomOption=db.queryForList("select dict_id as value, dict_text as text from BGM.t_dict where dict_code='ks'");
-
+var userOption=db.queryForList("select user_id as value, user_name as text from BGM.t_user ");
 var genPlanFormDefine={
 		formName:"genPlan",
 		title:"生成计划",
 		formData:[
 	 				
 	 				{type: "block", width: 600, list:[
-	 				{type:"input", name:"patientId", label:"受测人流水号:"},
-	 				{type:"input", name:"patientName", label:"受测人姓名:"},
-	 				{type:"combo", name: 'bmId', label:'检测科室:',options:roomOption},	 
-	 				{type:"combo", name: 'userId', label:'检测人员:'},	
+	 				{type:"input", name:"patientId", label:"受测人流水号:",required:true},
+	 				{type:"input", name:"patientName", label:"受测人姓名:",required:true},
+	 				{type:"combo", name: 'bmId', label:'检测科室:',options:roomOption,required:true},	 
+	 				{type:"combo", name: 'userId', label:'检测人员:',options:userOption,required:true},	
 	 				{type: "newcolumn", offset:80},	
-	 				{type:"calendar", name:"beginTime", label:"开始时间:",readonly:1,dateFormat: "%Y-%m-%d"},
-	 				{type:"calendar", name:"endTime", label:"结束时间:",readonly:1,dateFormat: "%Y-%m-%d"},
-	 				{type:"input", name:"dectectTime", label:"检测时间:"},
-	 				{type:"input", name:"memo", label:"备注:"},
+	 				{type:"calendar", name:"beginTime", label:"开始时间:",readonly:1,dateFormat: "%Y-%m-%d",required:true},
+	 				{type:"calendar", name:"endTime", label:"结束时间:",readonly:1,dateFormat: "%Y-%m-%d",required:true},
+	 				{type:"input", name:"dectectTime", label:"检测时间:",required:true},
+	 				{type:"input", name:"memo", label:"备注:",required:true},
 	 				 ]},
 	 				{type: "block", width: 600, list:[
 	 				{type:"button", name:"save", value:"生成"},{type: "newcolumn", offset:10},	{type:"button", name:"cancel", value:"取消" }
@@ -80,30 +80,30 @@ var addFormDefine = {
 		title:"新增病患",
 		formData:[
 	 				{type: "block", width: 600, list:[
-	 				{type:"input", name:"recordNo", label:"病例号:"},
-	 				{type:"input", name:"idNo", label:"身份证号:",validate: "NotEmpty"},
-	 				{type:"input", name:"insuranceId", label:"医保号:"},
-	 				{type:"input", name:"name", label:"姓名:"},
-	 				{type:"combo", name: 'sex', label:'性别:',options:[
+	 				{type:"input", name:"recordNo", label:"病例号:",required:true},
+	 				{type:"input", name:"idNo", label:"身份证号:",required:true},
+	 				{type:"input", name:"insuranceId", label:"医保号:",required:true},
+	 				{type:"input", name:"name", label:"姓名:",required:true},
+	 				{type:"combo", name: 'sex', label:'性别:',required:true,options:[
 	 					                                   				{value: "1", text: "男"},
 	 					                                				{value: "2", text: "女"}
 	 					                                		]},
 	 			                               		
-	 				{type:"input", name: 'age', label:'年龄:'},
+	 				{type:"input", name: 'age', label:'年龄:',required:true},
 	 			
-	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,dateFormat: "%Y-%m-%d"},
+	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,required:true,dateFormat: "%Y-%m-%d"},
 	 				
 	 				{type: "newcolumn", offset:80},	 
-	 				{type:"input", name:"contact1", label:"联系方式1:"},
-	 				{type:"input", name:"contact2", label:"联系方式2:"},
-	 				{type:"input", name:"address", label:"通讯地址:"},
-	 				{type:"combo", name: 'type', label:'类型:',options:[
+	 				{type:"input", name:"contact1", label:"联系方式1:",required:true},
+	 				{type:"input", name:"contact2", label:"联系方式2:",required:true},
+	 				{type:"input", name:"address", label:"通讯地址:",required:true},
+	 				{type:"combo", name: 'type', label:'类型:',required:true,options:[
 	 					                                   				{value: "1", text: "门诊"},
 	 					                                				{value: "2", text: "住院"}
 	 					                                		]},
-	 				{type:"calendar", name:"checkinTime", label:"入院时间:",readonly:1,dateFormat: "%Y-%m-%d"},
-	 				{type:"calendar", name:"checkoutTime", label:"出院时间:",readonly:1,dateFormat: "%Y-%m-%d"},
-	 				{type:"input", name:"memo", label:"备注信息:"},
+	 				{type:"calendar", name:"checkinTime", label:"入院时间:",required:true,readonly:1,dateFormat: "%Y-%m-%d"},
+	 				{type:"calendar", name:"checkoutTime", label:"出院时间:",required:true,readonly:1,dateFormat: "%Y-%m-%d"},
+	 				{type:"input", name:"memo", label:"备注信息:",required:true},
 	 				 ]},{type: "block", width: 600, list:[
 	 				                                  
 	 				{type:"button", name:"save", value:"保存"},{type: "newcolumn", offset:10},{type:"button", name:"cancel", value:"取消" }]
@@ -121,27 +121,27 @@ var updateFormDefine = {
 		formData:[
   	 				{type: "block", width: 600, list:[
   	 				{type:"hidden", name:"patientId"},
-  	 				{type:"input", name:"recordNo", label:"病例号:"},
-  	 				{type:"input", name:"idNo", label:"身份证号:"},
-  	 				{type:"input", name:"insuranceId", label:"医保号:"},
-  	 				{type:"input", name:"name", label:"姓名:"},
-  	 				{type:"combo", name: 'sex', label:'性别:',options:[
+  	 				{type:"input", name:"recordNo", label:"病例号:",required:true},
+  	 				{type:"input", name:"idNo", label:"身份证号:",required:true},
+  	 				{type:"input", name:"insuranceId", label:"医保号:",required:true},
+  	 				{type:"input", name:"name", label:"姓名:",required:true},
+  	 				{type:"combo", name: 'sex', label:'性别:',required:true,options:[
   	 					                                   				{value: "1", text: "男"},
   	 					                                				{value: "2", text: "女"}
   	 					                                		]},
-  	 				{type:"input", name: 'age', label:'年龄:'},
-  	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,dateFormat: "%Y-%m-%d"},
+  	 				{type:"input", name: 'age', label:'年龄:',required:true},
+  	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,dateFormat: "%Y-%m-%d",required:true},
   	 				{type: "newcolumn", offset:80},	 
-  	 				{type:"input", name:"contact1", label:"联系方式1:"},
-  	 				{type:"input", name:"contact2", label:"联系方式2:"},
-  	 				{type:"input", name:"address", label:"通讯地址:"},
-  	 				{type:"combo", name: 'type', label:'类型:',options:[
+  	 				{type:"input", name:"contact1", label:"联系方式1:",required:true},
+  	 				{type:"input", name:"contact2", label:"联系方式2:",required:true},
+  	 				{type:"input", name:"address", label:"通讯地址:",required:true},
+  	 				{type:"combo", name: 'type', label:'类型:',required:true,options:[
   	 					                                   				{value: "1", text: "门诊"},
   	 					                                				{value: "2", text: "住院"}
   	 					                                		]},
-  	 				{type:"calendar", name:"checkinTime", label:"入院时间:",readonly:1,dateFormat: "%Y-%m-%d",button: "icon"},
-  	 				{type:"calendar", name:"checkoutTime", label:"出院时间:",readonly:1,dateFormat: "%Y-%m-%d"},
-  	 				{type:"input", name:"memo", label:"备注信息:"},
+  	 				{type:"calendar", name:"checkinTime", label:"入院时间:",readonly:1,dateFormat: "%Y-%m-%d",button: "icon",required:true},
+  	 				{type:"calendar", name:"checkoutTime", label:"出院时间:",readonly:1,dateFormat: "%Y-%m-%d",required:true},
+  	 				{type:"input", name:"memo", label:"备注信息:",required:true},
   	 				 ]},{type: "block", width: 600, list:[
   	 				{type:"button", name:"save", value:"保存"},{type: "newcolumn", offset:10},{type:"button", name:"cancel", value:"取消" }]
   	 				}],
