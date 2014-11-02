@@ -2,6 +2,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 var grid,toolbar;
 //
 var roomOption=db.queryForList("select dict_id as value, dict_text as text from BGM.t_dict where dict_code='ks'");
+roomOption.unshift({value:'ALL',text:"全部"});
 var userOption=db.queryForList("select user_id as value, user_name as text from BGM.t_user ");
 var genPlanFormDefine={
 		formName:"genPlan",
@@ -26,13 +27,20 @@ var genPlanFormDefine={
 		submitUrl:"manageOperation.spr?action=addOrUpdatePlan",
 		returnUrl:"p.spr?page=patientManage"};
 
-function onChangeHandle(){
+function onChangeHandle(id){
+	if(id=="bmId"){
  	var selectBmId=this.getCombo("bmId").getSelectedValue();
- 	var sql="select user_name ,user_id from BGM.t_user where bm_id='"+selectBmId+"'";
+ 	var sql="select user_id as value, user_name as text from BGM.t_user ";
+ 	if(selectBmId!="ALL"){
+ 		sql+="where bm_id='"+selectBmId+"'";
+ 	}
  	var list=db.queryForList(sql);
  	this.getCombo("userId").clearAll();
- 	list.unshift({value:'ALL',text:"全部"});
- 	this.getCombo("userId").addOption(toComboData(list,'user_id','user_name'));
+ 	list.unshift({value:'',text:"请选择"});
+ 	this.getCombo("userId").addOption(list);
+ 	this.getCombo("userId").setComboValue('');
+ 	
+	}
  }
 var searchFormDefine={
 		formName:"search",
@@ -202,7 +210,7 @@ function initToolBar(grid){
         	copyObjectToForm(obj,genPlanFormDefine.formData,dhxForm);
         	dhxForm.attachEvent("onSelectionChange", onChangeHandle );
         	dhxForm.attachEvent("onChange", onChangeHandle );
-        	onChangeHandle();
+        	//onChangeHandle("bmId");
         }
     });
 }
