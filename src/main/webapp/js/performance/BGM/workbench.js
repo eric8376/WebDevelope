@@ -40,7 +40,7 @@ function doOnLoad() {
 	toolbar.addButton('logout',1,"退出系统","exit.ico",null);
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="changepassword"){
-        	loadPage('manage.spr?action=changePassword','修改密码');
+        	loadPage('p.spr?page=changePassword','修改密码');
         }else if(id=="logout"){
         	window.location.href="signout.spr";
         }

@@ -18,5 +18,19 @@ function doOnLoad() {
 				{type:"button", name:"save", value:"确定"}] 
 			   }
                         ]
-			myForm = new dhtmlXForm("form_container", formData);
+		    	myForm = new dhtmlXForm("form_container", formData);
+		        myForm.attachEvent("onButtonClick", function(name) {
+		        	if(name =='save'){
+		        			this.send("manageOperation.spr?action=changePassword","post",function(respon){
+		        				var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
+		        			if(res.result=='success')
+		        			{
+		        				alert("修改成功");
+		        				return;
+		        			}else{
+		        				alert("修改失败,请联系管理员.");
+		        			}
+		        		});
+		        			
+		        	}});
 }	

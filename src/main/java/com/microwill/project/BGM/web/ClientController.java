@@ -175,23 +175,24 @@ public class ClientController extends BaseMultiActionController {
 	@RequestMapping(params = "action=addPatient")
 	public String addPatient(Model model, HttpServletRequest request,
 			HttpServletResponse response, TPatient patient) throws Exception {
-		
+		Result result = new Result();
+		result.setSuccess(false);
 		try {
 			patient.setPatientId(IDGenerator.getCommonID());
 			Session session=sessionFactory.openSession();
 			session.saveOrUpdate(patient);
 			session.flush();
 			session.close();
+			result.setSuccess(true);
+			result.setMsg("提交成功");
 		} catch (DataAccessException e) {
-			outputJSON(response, "{result:false}");
-			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg(e.getMessage());
 		} catch (Exception e) {
-			outputJSON(response, "{result:false}");
-			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg(e.getMessage());
 		}
-
-		outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
-
+		model.addAttribute("result", result);
 		return "jsonview";
 
 	}
@@ -208,23 +209,26 @@ public class ClientController extends BaseMultiActionController {
 	@NotLogin
 	@RequestMapping(params = "action=addResult")
 	public String addResult(Model model, HttpServletRequest request,
-			HttpServletResponse response, TResult result) throws Exception {
+			HttpServletResponse response, TResult tresult) throws Exception {
+		Result result = new Result();
+		result.setSuccess(false);
 		try {
-			result.setCheckId(IDGenerator.UUIDgenerate());
+			tresult.setCheckId(IDGenerator.UUIDgenerate());
 			Session session=sessionFactory.openSession();
-			session.saveOrUpdate(result);
+			session.saveOrUpdate(tresult);
 			session.flush();
 			session.close();
+			result.setSuccess(true);
+			result.setMsg("提交成功");
 		} catch (DataAccessException e) {
-			outputJSON(response, "{result:false}");
-			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg(e.getMessage());
 		} catch (Exception e) {
-			outputJSON(response, "{result:false}");
-			e.printStackTrace();
+			result.setSuccess(false);
+			result.setMsg(e.getMessage());
 		}
-
-		outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
-
+		
+		model.addAttribute("result", result);
 		return "jsonview";
 
 	}

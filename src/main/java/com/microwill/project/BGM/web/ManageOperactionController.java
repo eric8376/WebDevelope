@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,7 +32,9 @@ import com.microwill.project.BGM.entity.TUser;
 public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private SessionFactory sessionFactory;
-
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	private static String UPDATE_PASSWORD_SQL = "update t_per_user set password=? where user_id=? and password=?";
 	@RequestMapping(params = "action=addOrUpdatePatient")
 	public ModelAndView addOrUpdatePatient(HttpServletRequest request,
 			HttpServletResponse response, TPatient patient) throws Exception {
@@ -53,6 +56,29 @@ public class ManageOperactionController extends BaseMultiActionController {
 
 		outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
 
+		return null;
+
+	}
+	@RequestMapping(params = "action=changePassword")
+	public ModelAndView changePassword(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String oldpass = request.getParameter("oldpass");
+		String newpass = request.getParameter("newpass");
+		String userId = (String)getToken(request).get("user_id");
+		int result = 0;
+		try {
+			result = jdbcTemplate.update(UPDATE_PASSWORD_SQL,
+					new Object[] { newpass, userId ,oldpass});
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (result > 0) {
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} else {
+			outputJSON(response, "{result:false}");
+		}
 		return null;
 
 	}
