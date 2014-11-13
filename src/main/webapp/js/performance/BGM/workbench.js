@@ -79,6 +79,7 @@ function doOnLoad() {
    
     //loadPage('manage.spr?action=welcome','首页');
     dhxLayout.progressOff();
+    loadPage('p.spr?page=patientManage','首页');
 }
 function loadPage(url,text)
 {

@@ -17,7 +17,7 @@ function doOnLoad() {
 				{type:"input", name:"comfirmpass", label:"确认新密码:"},
 				{type:"button", name:"save", value:"确定"}] 
 			   }
-                        ]
+                        ];
 		    	myForm = new dhtmlXForm("form_container", formData);
 		        myForm.attachEvent("onButtonClick", function(name) {
 		        	if(name =='save'){

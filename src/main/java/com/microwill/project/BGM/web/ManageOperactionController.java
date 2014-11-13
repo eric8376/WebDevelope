@@ -34,7 +34,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private SessionFactory sessionFactory;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	private static String UPDATE_PASSWORD_SQL = "update t_per_user set password=? where user_id=? and password=?";
+	private static String UPDATE_PASSWORD_SQL = "update BGM.t_user set password=? where user_id=? and password=?";
 	@RequestMapping(params = "action=addOrUpdatePatient")
 	public ModelAndView addOrUpdatePatient(HttpServletRequest request,
 			HttpServletResponse response, TPatient patient) throws Exception {
