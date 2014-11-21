@@ -7,7 +7,7 @@
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/projectMap.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
 <input type="button" value='保存'onclick="saveMap();"/>
 <input type="button" value='返回' onclick="parent.loadPage('manage.spr?action=projectManage&mapType='+getParam('mapType'));"/>

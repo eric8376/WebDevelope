@@ -8,7 +8,7 @@
 <jsp:include page="../include/include.jsp" />
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/addUser.js"></script>
 
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
 <body>
 <form action="logon.spr" method="post">

@@ -7,7 +7,7 @@
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/bureau/userManage.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
 <body>
 <div id="toolbarObj"></div>

@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>厦门市卫生局医疗机构医疗服务关键环节质量监督管理系统</title>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/prototype.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
@@ -30,7 +30,7 @@ function changeBg(obj){
 	$(obj).parent().addClass('fn');
 }
 </script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx_custom.css" type="text/css" media="screen">
 <style type="text/css">
 .fn{
 background-color:#b6cdec;

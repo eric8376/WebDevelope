@@ -8,12 +8,12 @@
 <script type="text/javascript">
 var contextPath='<%=request.getContextPath()%>';
 </script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/helper/dhtmlxhelper.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/login.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx3.0/dhtmlx.css" type="text/css" media="screen">
 <style type="text/css">
 body
         {
