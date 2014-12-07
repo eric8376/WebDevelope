@@ -10,12 +10,15 @@ function doOnLoad() {
 	
 }
 function doAnalysis(){
+	
 	var condition="";
 	var user_name=myForm.getItemValue("user_name");
 	var xm=myForm.getItemValue("xm");
 	var ks=myForm.getItemValue("ks");
 	var zb=myForm.getItemValue("zb");
 	var hj=myForm.getItemValue("hj");
+	var kssj=myForm.getCalendar("beginTime").getFormatedDate("%Y-%m-%d");
+	var jssj=myForm.getCalendar("endTime").getFormatedDate("%Y-%m-%d");
 	keyIndex=myForm.getItemValue("keyIndex");
 	chartType=myForm.getItemValue("chartType");
 	
@@ -34,6 +37,13 @@ function doAnalysis(){
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
+	if(!isEmpty(kssj)){
+		condition+=" and check_time>='"+kssj+"'";
+	}
+	if(!isEmpty(jssj)){
+		condition+=" and check_time<='"+jssj+"'";
+	}
+	
 	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&condition="+condition+"&keyIndex="+keyIndex);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=res.list;
@@ -143,17 +153,23 @@ function loadSearchForm(){
 	{
 	    type: "settings",
 	    position: "label-left",
-	    labelWidth: 80,
-	    inputWidth: 180
+	    labelWidth: 60,
+	    inputWidth: 110
 	},          
     { type: "fieldset", name: "data1", label: "分析条件", inputWidth: "auto", list:[
-    {type: "label", label: "数据范围",position:"label-left"},                                                                                
+    {type: "label", label: "数据范围",position:"label-left"}, 
+    {type:"calendar", name:"beginTime", label:"开始时间:",readonly:0,dateFormat: "%Y-%m-%d"},
+	{type:"calendar", name:"endTime", label:"结束时间:",readonly:0,dateFormat: "%Y-%m-%d"},
     {type:"combo", name:"user_name", label:"相关人员:",options:list1,filtering:true},
 	{type:"combo", name:"xm", label:"项目",options:list3},
-	{type:"combo", name:"ks", label:"科室",options:list2},
-	{type:"combo", name:"hj", label:"关键环节",options:null},
-	{type:"combo", name:"zb", label:"一级指标",options:null},
+	
 	 {type:"button", name:"search", value:"生成图形"},
+	 {type: "newcolumn", offset:50},
+	 {type: "label", label: ""},
+	 {type: "label", label: ""},
+	 {type:"combo", name:"ks", label:"科室",options:list2},
+		{type:"combo", name:"hj", label:"关键环节",options:null},
+		{type:"combo", name:"zb", label:"一级指标",options:null},
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析指标",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
