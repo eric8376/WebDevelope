@@ -38,5 +38,6 @@ public class OperationStaffLogic extends UserTypeLogic{
 		priviageMap.put("/record/search/", true);
 		priviageMap.put("/record/query/", true);
 		priviageMap.put("/record/analysis/", true);
+		priviageMap.put("/record/analysis2/", true);
 	}
 }

@@ -7,7 +7,8 @@ var treeDefine={id:0,
 	                      {id:"/record/add/", text:"记录录入",href:"manage.spr?action=addRecord&operation=add"},
 	                      {id:"/record/search/", text:"记录搜索",href:"manage.spr?action=searchRecord"},
 	                      {id:"/record/query/", text:"记录管理",href:"manage.spr?action=recordManage"},
-	                      {id:"/record/analysis/", text:"记录分析",href:"manage.spr?action=recordAnalysis"}
+	                      {id:"/record/analysis/", text:"记录分析",href:"manage.spr?action=recordAnalysis"},
+	                      {id:"/record/analysis2/", text:"折线分析",href:"p.spr?page=recordAnalysis2"}
 	                      
 	                  ]},
             {id:2, text:"权限管理",open:1,im0 :'folderClosed.gif',

@@ -88,6 +88,17 @@ public  class AuthorizeQueryStrategy {
 				"}";
 		return jsonTxt;
 	}
+	public String queryAnalysis2(String condition,String keyIndex) throws Exception {
+		String sql ="select left(check_time,7) as keyindex,ROUND(sum(kaohe+0.00),1) as number "
+				+ "from hospital.t_per_vrecord where 1=1 "
+				+ ""+condition+""+getScopeSql()+"group by left(check_time,7) ";
+		List list = jdbcTemplate.queryForList(
+				sql);
+		System.out.println(sql);
+		String jsonTxt = "{'list':" + JSONExecuteHelp.parseJSONText(list)+
+				"}";
+		return jsonTxt;
+	}
 	private String getHospSql() {
 		String hosp_id=(String)getLoginedUserContext().get("hosp_id");
 		

@@ -47,11 +47,15 @@ public class AuthorizeController extends BaseMultiActionController {
 			HttpServletResponse response) throws Exception {
 		String condition = request.getParameter("condition");
 		String keyIndex = request.getParameter("keyIndex");
+		String type = request.getParameter("type");
 		Map loginedUserContext = getToken(request);
 		AuthorizeQueryStrategy strategy = new AuthorizeQueryStrategy(
 				loginedUserContext, jdbcTemplate);
-
+        if("time".equals(type)){
+        	outputJSON(response, strategy.queryAnalysis2(condition, keyIndex));
+        }else{
 		outputJSON(response, strategy.queryAnalysis(condition, keyIndex));
+        }
 		return null;
 	}
 	@RequestMapping(params = "action=getKSList")

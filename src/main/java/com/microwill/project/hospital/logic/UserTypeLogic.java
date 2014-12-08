@@ -42,6 +42,7 @@ public  abstract class UserTypeLogic {
 		priviageMap.put("/record/search/", false);
 		priviageMap.put("/record/query/", false);
 		priviageMap.put("/record/analysis/", false);
+		priviageMap.put("/record/analysis2/", true);
 		priviageMap.put("/user/query/", false);
 		priviageMap.put("/ks/query/", false);
 		priviageMap.put("/bm/query/", false);

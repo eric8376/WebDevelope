@@ -49,6 +49,7 @@ public class AdminLogic extends UserTypeLogic {
 		priviageMap.put("/record/search/", true);
 		priviageMap.put("/record/query/", true);
 		priviageMap.put("/record/analysis/", true);
+		priviageMap.put("/record/analysis2/", true);
 		priviageMap.put("/user/query/", true);
 		priviageMap.put("/ks/query/", true);
 		priviageMap.put("/bm/query/", true);
