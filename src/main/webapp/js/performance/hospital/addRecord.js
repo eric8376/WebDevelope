@@ -114,6 +114,13 @@ dhtmlxEvent(window,"load", doOnLoad);
 			var parentComboValue=myForm.getCombo(parentObj).getSelectedValue();
 			sonCombo.clearAll();
 			sonCombo.setComboValue("");
-			sonCombo.addOption(parent.getDictListByParent(parentComboValue,sonObj));
+			var list=new Array();
+			list2=parent.getDictListByParent(parentComboValue,sonObj);
+			var list=new Array();
+			for(var i=0;i< list2.length;i++){
+				list.push({text:list2[i].text,value:list2[i].value});
+				
+				}
+			sonCombo.addOption(list);
 		}
  	

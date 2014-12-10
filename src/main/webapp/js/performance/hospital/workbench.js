@@ -202,9 +202,9 @@ function getDictListByParent(parent_id,type){
 		"from hospital.t_dict_table t1,hospital.t_per_dict_map t2 " +
 		"where t2.son_id=t1.dict_id and t2.parent_id='"+parent_id+"' and t1.group_code='"+type+"'";
 	}
-
 	return db.queryForList(sql);
 }
+
 /**
  * 对菜单进行权限控制
  * @param tree
