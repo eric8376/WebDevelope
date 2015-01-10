@@ -63,9 +63,10 @@ var searchFormDefine={
   	 			 ]}
   	 				],
   	 		searchFunction:function(searchForm){
-  	 			var searchSql=gridSql+copyFormToCondition(searchForm);
+  	 			var likelist="name";
+  	 			var searchSql=gridSql+copyFormToCondition(searchForm,likelist);
 	    		grid.doQuery(searchSql);
-	    		dhxWins.window('search').close();
+	    		searchForm.parentWins.window('search').close();
   	 		}		
 		};
 
@@ -89,29 +90,30 @@ var addFormDefine = {
 		formData:[
 	 				{type: "block", width: 600, list:[
 	 				{type:"input", name:"recordNo", label:"病例号:",required:true},
-	 				{type:"input", name:"idNo", label:"身份证号:",required:true},
-	 				{type:"input", name:"insuranceId", label:"医保号:",required:true},
+	 				{type:"input", name:"idNo", label:"身份证号:"},
+	 				{type:"input", name:"insuranceId", label:"医保号:"},
 	 				{type:"input", name:"name", label:"姓名:",required:true},
 	 				{type:"combo", name: 'sex', label:'性别:',required:true,options:[
 	 					                                   				{value: "1", text: "男"},
 	 					                                				{value: "2", text: "女"}
 	 					                                		]},
 	 			                               		
-	 				{type:"input", name: 'age', label:'年龄:',required:true},
+	 				{type:"input", name: 'age', label:'年龄:'},
 	 			
-	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,required:true,dateFormat: "%Y-%m-%d"},
-	 				
+	 				{type:"calendar", name:"bornDate", label:"出生时间:",readonly:1,dateFormat: "%Y-%m-%d"},
+	 				{type:"input", name:"source", label:"病例来源:"},
 	 				{type: "newcolumn", offset:80},	 
-	 				{type:"input", name:"contact1", label:"联系方式1:",required:true},
-	 				{type:"input", name:"contact2", label:"联系方式2:",required:true},
-	 				{type:"input", name:"address", label:"通讯地址:",required:true},
+	 				{type:"input", name:"contact1", label:"联系方式1:"},
+	 				{type:"input", name:"contact2", label:"联系方式2:"},
+	 				{type:"input", name:"address", label:"通讯地址:"},
 	 				{type:"combo", name: 'type', label:'类型:',required:true,options:[
 	 					                                   				{value: "1", text: "门诊"},
 	 					                                				{value: "2", text: "住院"}
 	 					                                		]},
 	 				{type:"calendar", name:"checkinTime", label:"入院时间:",required:true,readonly:1,dateFormat: "%Y-%m-%d"},
 	 				{type:"calendar", name:"checkoutTime", label:"出院时间:",required:true,readonly:1,dateFormat: "%Y-%m-%d"},
-	 				{type:"input", name:"memo", label:"备注信息:",required:true},
+	 				{type:"input", name:"memo", label:"备注信息:"},
+	 				{type:"input", name:"creator", label:"录入人:"},
 	 				 ]},{type: "block", width: 600, list:[
 	 				                                  
 	 				{type:"button", name:"save", value:"保存"},{type: "newcolumn", offset:10},{type:"button", name:"cancel", value:"取消" }]
@@ -120,7 +122,11 @@ var addFormDefine = {
 	 				returnUrl:"p.spr?page=patientManage"
 	};
 function doAdd(){
-	createWindowForm(addFormDefine);
+	var addForm=createWindowForm(addFormDefine);
+	addForm.setItemValue("checkinTime",new Date().format('yyyy-MM-dd'));
+	addForm.setItemValue("checkoutTime","2099-01-01");
+	addForm.setItemValue("recordNo",new Date().format('yyyyMMddhhmmss'));
+	addForm.setItemValue("source","WEB录入");
 };
 
 var updateFormDefine = {

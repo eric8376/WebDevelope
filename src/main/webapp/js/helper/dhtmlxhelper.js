@@ -320,7 +320,7 @@ function createWindowForm(define){
 	    		dhxWins.window(define.formName).close();
 	    	}
 		});
-	 
+	 dhxForm.parentWins=dhxWins;
 	 return dhxForm;
 }
 /*
@@ -345,14 +345,19 @@ function copyObjectToForm(object,updateFormData,updateDhxForm){
 		}
 	}
 }
-function copyFormToCondition(form){
+function copyFormToCondition(form,likelist){
 	var list=form.getFormData();
 	var returnSql="";
 	for(var key in list)
 	{
 		if(list[key]!=""){
 			var dbName=S(key).underscore().s;
-			returnSql+=" and "+dbName+"='"+list[key]+"'";
+			if(likelist!=undefined&&likelist!=null&&likelist.indexOf(key)>=0){
+				returnSql+=" and "+dbName+ " like '%2525"+encodeURIComponent(encodeURIComponent(list[key]))+"%2525'";
+			}
+			else{
+			returnSql+=" and "+dbName+"='"+encodeURIComponent(encodeURIComponent(list[key]))+"'";
+			}
 		}
 	}
 	console.log(returnSql);

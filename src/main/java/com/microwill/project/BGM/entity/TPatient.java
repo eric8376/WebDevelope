@@ -28,6 +28,8 @@ public class TPatient implements java.io.Serializable {
 	private Integer type;
 	private String checkinTime;
 	private String checkoutTime;
+	private String creator;
+	private String source;
 	private String memo;
 
 	public TPatient() {
@@ -40,7 +42,7 @@ public class TPatient implements java.io.Serializable {
 	public TPatient(String patientId, String recordNo, String idNo,
 			String insuranceId, String name, Integer sex, Integer age,
 			String bornDate, String contact1, String contact2, String address,
-			Integer type, String checkinTime, String checkoutTime, String memo) {
+			Integer type, String checkinTime, String checkoutTime, String memo,String creator,String source) {
 		this.patientId = patientId;
 		this.recordNo = recordNo;
 		this.idNo = idNo;
@@ -56,6 +58,8 @@ public class TPatient implements java.io.Serializable {
 		this.checkinTime = checkinTime;
 		this.checkoutTime = checkoutTime;
 		this.memo = memo;
+		this.creator=creator;
+		this.source=source;
 	}
 
 	@Id
@@ -183,6 +187,22 @@ public class TPatient implements java.io.Serializable {
 
 	public void setCheckoutTime(String checkoutTime) {
 		this.checkoutTime = checkoutTime;
+	}
+	@Column(name = "creator", length = 150)
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	@Column(name = "source", length = 150)
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	@Column(name = "memo", length = 150)

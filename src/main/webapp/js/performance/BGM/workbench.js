@@ -36,7 +36,7 @@ function doOnLoad() {
 	toolbar.setAlign('right');
 	toolbar.setIconSize(32);
 	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
-	toolbar.addButton('changepassword',1,"控制面板","setting.ico",null);
+	toolbar.addButton('changepassword',1,"修改密码","setting.ico",null);
 	toolbar.addButton('logout',1,"退出系统","exit.ico",null);
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="changepassword"){
