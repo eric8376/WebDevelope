@@ -63,7 +63,7 @@ function doOnLoad() {
         return true;
    });
 	
-	//doPriviage(dhxTree);//暂时不做权限控制
+	doPriviage(dhxTree);//暂时不做权限控制
 	//dhxLayout.cells("a").setText("我的菜单");
 	dhxLayout.cells("a").hideHeader();
 	dhxLayout.cells("a").setWidth(220);

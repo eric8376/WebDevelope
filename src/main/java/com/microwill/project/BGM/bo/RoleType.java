@@ -8,8 +8,8 @@ package com.microwill.project.BGM.bo;
  *
  */
 public enum RoleType {
-	ADMIN("admin", "管理员"), 
-	STAFF("bmstaff", "职员");
+	ADMIN("1", "管理员"), 
+	STAFF("2", "职员");
 	private RoleType(String role, String desc) {
 		this.role = role;
 		this.desc = desc;
@@ -37,9 +37,9 @@ public enum RoleType {
 	}
 
 	public static RoleType fromCode(String jb,String bm) {
-		if(jb.equals("0")){//管理员
+		if(jb.equals("1")){//管理员
 			return RoleType.ADMIN;
-		}else if(jb.equals("1")&&bm.equals("bm")){
+		}else if(jb.equals("2")){
 			return RoleType.STAFF;
 		}
 		throw new IllegalArgumentException();

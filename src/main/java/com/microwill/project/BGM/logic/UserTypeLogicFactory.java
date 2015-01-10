@@ -17,7 +17,7 @@ import com.microwill.project.BGM.bo.RoleType;
 public class UserTypeLogicFactory {
 	public static UserTypeLogic createUserTypeLogic(Map loginedUserContext,JdbcTemplate jdbcTemplate){
 		UserTypeLogic userTypeLogic=null;
-		String roleName = (String) loginedUserContext.get("role_name");
+		String roleName = (String) loginedUserContext.get("role").toString();
 		RoleType roleType = RoleType.fromCode(roleName);
 		if(RoleType.ADMIN.equals(roleType)){
 			userTypeLogic=new AdminLogic();

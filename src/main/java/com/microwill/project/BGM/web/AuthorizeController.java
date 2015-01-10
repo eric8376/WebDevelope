@@ -16,9 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.framework.web.util.LoginHelper;
-import com.microwill.project.hospital.logic.AuthorizeQueryStrategy;
-import com.microwill.project.hospital.logic.UserTypeLogic;
-import com.microwill.project.hospital.logic.UserTypeLogicFactory;
+import com.microwill.project.BGM.logic.UserTypeLogic;
+import com.microwill.project.BGM.logic.UserTypeLogicFactory;
 
 /**
  * @author Administrator
