@@ -35,9 +35,8 @@ public class StaffLogic extends UserTypeLogic{
 	@Override
 	protected void init(Map<String, Boolean> priviageMap) {
 		super.init(priviageMap);
-		priviageMap.put("/record/search/", true);
-		priviageMap.put("/record/query/", true);
-		priviageMap.put("/record/analysis/", true);
-		priviageMap.put("/record/analysis2/", true);
+		priviageMap.put("/patient/add/", true);
+		priviageMap.put("/result/query/", true);
+		priviageMap.put("/plan/query/", true);
 	}
 }
