@@ -230,17 +230,38 @@ function Page(pageSize){
 	
 }
 function getSelectGridCellValue(grid,colIndex){
-	var index=grid.getSelectedRowId();
-	index=grid.getRowIndex(index);
+	var rowid=grid.getSelectedRowId();
+	if(rowid.split(",").length>1){
+		var rowids=rowid.split(",");
+		var values="";
+		for(var i=0;i<rowids.length;i++){
+			values+=_getSelectGridCellValue(grid,rowids[i],colIndex)+",";
+		}
+		return values;
+	}else{
+	 return _getSelectGridCellValue(grid,rowid,colIndex);
+	
+	}
+}
+function _getSelectGridCellValue(grid,rowid,colIndex){
+	index=grid.getRowIndex(rowid);
 	return  grid.cellByIndex(index, colIndex).getValue();
 }
-function checkGridRowSelected(grid){
-	var index=grid.getSelectedRowId();
-	index=grid.getRowIndex(index);
-	if(index==-1){
+function checkGridRowSelected(grid,isAllowMulti){
+	var rowId=grid.getSelectedRowId();
+	if(isEmpty(rowId)){
 		alert("请选择一条记录");
 		return false;
 	}
+	if(isEmpty(isAllowMulti)){
+		isAllowMulti=false;
+	}
+	
+	if(!isAllowMulti&&rowId.split(",").length>1){
+		alert("不允许同时操作多条记录");
+		return false;
+	}
+	
 	return true;
 }
 /**

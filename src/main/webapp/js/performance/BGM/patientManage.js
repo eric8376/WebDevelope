@@ -207,7 +207,7 @@ function initToolBar(grid){
         	 createWindowForm(searchFormDefine);
         }else if(id=='genPlan'){
         	var obj={};
-        	if(!checkGridRowSelected(grid)){
+        	if(!checkGridRowSelected(grid,true)){
         		return;
         	}
         	obj.patient_id = getSelectGridCellValue(grid,0);

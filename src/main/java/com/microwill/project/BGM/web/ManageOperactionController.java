@@ -21,6 +21,7 @@ import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.project.BGM.entity.TDict;
 import com.microwill.project.BGM.entity.TPatient;
 import com.microwill.project.BGM.entity.TPlan;
+import com.microwill.project.BGM.entity.TTerminal;
 import com.microwill.project.BGM.entity.TUser;
 
 /**
@@ -35,6 +36,50 @@ public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	private static String UPDATE_PASSWORD_SQL = "update BGM.t_user set password=? where user_id=? and password=?";
+	@RequestMapping(params = "action=addOrUpdateMach")
+	public ModelAndView addOrUpdateMach(HttpServletRequest request,
+			HttpServletResponse response, TTerminal terminal) throws Exception {
+		if (StringUtils.isEmpty(terminal.getMachId())) {
+			terminal.setMachId(IDGenerator.getCommonID());
+		}
+		try {
+			Session session=sessionFactory.openSession();
+			session.saveOrUpdate(terminal);
+			session.flush();
+			session.close();
+		} catch (DataAccessException e) {
+			outputJSON(response, "{result:false}");
+			e.printStackTrace();
+		} catch (Exception e) {
+			outputJSON(response, "{result:false}");
+			e.printStackTrace();
+		}
+
+		outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+
+		return null;
+
+	}
+	@RequestMapping(params = "action=deleteMach")
+	public ModelAndView deleteMach(HttpServletRequest request,
+			HttpServletResponse response, TTerminal terminal) throws Exception {
+		try {
+			Session session=sessionFactory.openSession();
+			session.delete(terminal);
+			session.flush();
+			session.close();
+		} catch (DataAccessException e) {
+			outputJSON(response, "{result:false}");
+			e.printStackTrace();
+		} catch (Exception e) {
+			outputJSON(response, "{result:false}");
+			e.printStackTrace();
+		}
+
+		outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+
+		return null;
+	}
 	@RequestMapping(params = "action=addOrUpdatePatient")
 	public ModelAndView addOrUpdatePatient(HttpServletRequest request,
 			HttpServletResponse response, TPatient patient) throws Exception {

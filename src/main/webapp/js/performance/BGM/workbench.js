@@ -12,7 +12,7 @@ var treeDefine={id:0,
             {id:2, text:"检测管理",open:1,im0 :'folderClosed.gif',
                 item:[
                     {id:"/result/query/", text:"数据查询",href:"p.spr?page=resultManage"},
-                    //{id:"/ks/query/", text:"数据分析",href:"manage.spr?action=roomManage&roomType=ks"},
+                    {id:"/mach/query/", text:"仪器管理",href:"p.spr?page=machManage"},
                     {id:"/plan/query/", text:"检测计划",href:"p.spr?page=planManage"}
                      ]
             },

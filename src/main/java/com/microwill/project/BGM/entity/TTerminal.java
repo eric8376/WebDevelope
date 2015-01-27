@@ -16,18 +16,30 @@ public class TTerminal implements java.io.Serializable {
 
 	private String machId;
 	private Integer isRegister;
+	private String machNo;
+	private String ksId;
+	private String bmId;
+	private String area;
+	private String company;
 
 	public TTerminal() {
 	}
 
-	public TTerminal(String machId) {
-		this.machId = machId;
-	}
 
-	public TTerminal(String machId, Integer isRegister) {
+
+	public TTerminal(String machId, Integer isRegister, String machNo,
+			String ksId, String bmId, String area, String company) {
+		super();
 		this.machId = machId;
 		this.isRegister = isRegister;
+		this.machNo = machNo;
+		this.ksId = ksId;
+		this.bmId = bmId;
+		this.area = area;
+		this.company = company;
 	}
+
+
 
 	@Id
 	@Column(name = "mach_id", unique = true, nullable = false, length = 32)
@@ -46,6 +58,66 @@ public class TTerminal implements java.io.Serializable {
 
 	public void setIsRegister(Integer isRegister) {
 		this.isRegister = isRegister;
+	}
+
+
+	@Column(name = "mach_no")
+	public String getMachNo() {
+		return machNo;
+	}
+
+
+
+	public void setMachNo(String machNo) {
+		this.machNo = machNo;
+	}
+
+
+	@Column(name = "ks_id")
+	public String getKsId() {
+		return ksId;
+	}
+
+
+
+	public void setKsId(String ksId) {
+		this.ksId = ksId;
+	}
+
+
+	@Column(name = "bm_id")
+	public String getBmId() {
+		return bmId;
+	}
+
+
+
+	public void setBmId(String bmId) {
+		this.bmId = bmId;
+	}
+
+
+	@Column(name = "area")
+	public String getArea() {
+		return area;
+	}
+
+
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+
+	@Column(name = "company")
+	public String getCompany() {
+		return company;
+	}
+
+
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

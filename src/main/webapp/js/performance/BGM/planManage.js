@@ -1,12 +1,12 @@
+var grid;
 dhtmlxEvent(window,"load", doOnLoad);
 function doOnLoad() {
-	
 	
 	
 	grid=createGridObject('gridbox',grid_define);
 	grid.enableMultiselect(true);
 	initToolBar(grid);
-
+	
  
 }
 function initToolBar(grid){
@@ -76,6 +76,22 @@ var grid_define={
 			
 			],
 		key:"plan_id",
-		sql:gridSql
+		sql:gridSql,
+		eventHandlers:[{event:"onXLE",handler:doReminder}
+		               ]
 			 
+}
+
+function doReminder(){
+	  //var rowid=grid.getSelectedRowId();
+      //
+	window.grid.forEachRow(function(id){
+		var detecttime=grid.cellById(id, 6).getValue();
+		if(detecttime!=null&&detecttime!=""){//已检测
+		//window.grid.setRowColor(id,"green");
+			window.grid.setRowTextStyle(id, "background-color: #FFEFE2; font-family: arial;");
+		}else{
+			window.grid.setRowTextStyle(id, "background-color: #E0E3F7; font-family: arial;");
+		}
+    	});
 }
