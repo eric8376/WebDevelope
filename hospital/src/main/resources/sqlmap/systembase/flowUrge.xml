@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【任务管理平台】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<sqlMap namespace="flowUrge">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+
+    <!-- 【流程催促设置主表】 -->
+    <!-- 新增一条 设置信息-->
+    <insert id="insertT_SB_FLOW_URGE">
+        insert into T_SB_FLOW_URGE(urge_no,flow_no,point_no,use_time,is_urge,urge_count,explain,urge_type)
+        values(#urge_no#,#flow_no#,#point_no#,#use_time#,#is_urge#,#urge_count#,#explain#,#urge_type#)
+    </insert>
+
+    <!-- 删除一条 设置信息 -->
+    <delete id="deleteT_SB_FLOW_URGE">
+        delete from T_SB_FLOW_URGE
+        where urge_no=#urge_no#
+    </delete>
+
+    <!-- 修改一条 设置信息 -->
+    <update id="updateT_SB_FLOW_URGE">
+        update T_SB_FLOW_URGE
+        set
+        use_time=#use_time#,
+        is_urge=#is_urge#,
+        urge_count=#urge_count#,
+        explain=#explain#,
+        urge_type=#urge_type#
+        where urge_no=#urge_no#
+    </update>
+
+    <!-- 按流程号、环节号 查询设置信息 -->
+    <select id="queryT_SB_FLOW_URGE1" resultClass="dto">
+        select * from T_SB_FLOW_URGE
+        where flow_no=#flow_no# and
+        point_no=#point_no#
+    </select>
+    <!-- 查询设置信息 -->
+    <select id="queryT_SB_FLOW_URGE" resultClass="dto">
+        select * from T_SB_FLOW_URGE
+        where flow_no like '%$searchKey$%' or
+        point_no like '%$searchKey$%' or
+        explain like '%$searchKey$%'
+        order by urge_no
+    </select>
+    <!-- 查询设置信息【总数】 -->
+    <select id="countT_SB_FLOW_URGE" resultClass="java.lang.Integer">
+        select count(*) from T_SB_FLOW_URGE
+        where flow_no like '%$searchKey$%' or
+        point_no like '%$searchKey$%' or
+        explain like '%$searchKey$%'
+    </select>
+    <!-- 查询当前最大编号 -->
+    <select id="maxT_SB_FLOW_URGE" resultClass="java.lang.String">
+        select max(urge_no) from T_SB_FLOW_URGE
+    </select>
+
+
+    <!-- 【流程催促明细表】 -->
+    <!-- 新增一条 明细设置信息-->
+    <insert id="insertT_SB_FLOW_URGE_MX">
+        insert into
+        T_SB_FLOW_URGE_MX(mx_no,urge_no,interval_time,activity,receive_man,tpl_no,first_urge_type,repeat_urge_count,repeat_urge_interval,urge_type)
+        values(#mx_no#,#urge_no#,#interval_time#,#activity#,#receive_man#,#tpl_no#,#first_urge_type#,#repeat_urge_count#,#repeat_urge_interval#,#urge_type#)
+    </insert>
+
+    <!-- 删除一条 明细设置信息 -->
+    <delete id="deleteT_SB_FLOW_URGE_MX">
+        delete from T_SB_FLOW_URGE_MX
+        where mx_no=#mx_no#
+    </delete>
+    <!-- 按主编号 删除明细设置信息 -->
+    <delete id="deleteT_SB_FLOW_URGE_MX1">
+        delete from T_SB_FLOW_URGE_MX
+        where urge_no=#urge_no#
+    </delete>
+
+    <!-- 修改一条 明细设置信息 -->
+    <update id="updateT_SB_FLOW_URGE_MX">
+        update T_SB_FLOW_URGE_MX
+        set
+        interval_time=#interval_time#,
+        activity=#activity#,
+        receive_man=#receive_man#,
+        tpl_no=#tpl_no#,
+        first_urge_type=#first_urge_type#,
+        repeat_urge_count=#repeat_urge_count#,
+        repeat_urge_interval=#repeat_urge_interval#,
+        urge_type=#urge_type#
+        where mx_no=#mx_no#
+    </update>
+    <!-- 按主编号 查询设置信息 -->
+    <select id="queryT_SB_FLOW_URGE_MX" resultClass="dto">
+        select * from T_SB_FLOW_URGE_MX
+        where urge_no=#urge_no#
+        order by mx_no
+    </select>
+    <!-- 查询当前最大编号 -->
+    <select id="maxT_SB_FLOW_URGE_MX" resultClass="java.lang.String">
+        select max(mx_no) from T_SB_FLOW_URGE_MX
+    </select>
+
+
+</sqlMap>

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="workFlow">
+    <typeAlias alias="dto" type="org.nxstudio.core.model.impl.BaseDto"/>
+    <select id="flowLinkProjectTodoByUserId" parameterClass="map" resultClass="dto">
+        SELECT DISTINCT
+        hp.proc_inst_id_,
+        p.name_,
+        l.group_id_,
+        p.key_,
+        tk.task_def_key_,
+        tk.name_ AS taskName,
+        p.id_,
+        tk.id_ AS taskId,
+        tk.assignee_,
+        date_format(
+        tk.create_time_,
+        '%Y-%m-%d %H:%i'
+        ) AS create_time_,
+        date_format(
+        hp.start_time_,
+        '%Y-%m-%d %H:%i'
+        ) AS start_time_,
+        hp.business_key_,
+        IFNULL(
+        (
+        SELECT
+        hv.text_
+        FROM
+        act_hi_varinst hv
+        WHERE
+        hv.proc_inst_id_ = hp.proc_inst_id_
+        AND hv.name_ = 'wf_title'
+        ),
+        '无标题'
+        ) AS wf_title,
+        u.deptid,
+        u.username AS applyUserId
+        FROM
+        act_ru_task tk
+        LEFT JOIN act_re_procdef p ON tk.proc_def_id_ = p.id_
+        LEFT JOIN act_hi_procinst hp ON hp.proc_inst_id_ = tk.proc_inst_id_
+        LEFT JOIN ACT_RU_EXECUTION re ON re.proc_inst_id_ = tk.proc_inst_id_
+        LEFT JOIN act_ru_identitylink l ON l.task_id_ = tk.id_
+        LEFT JOIN act_hi_varinst hv ON hv.proc_inst_id_ = hp.PROC_INST_ID_
+        AND hv.name_ = 'applyUserId'
+        LEFT JOIN eauser u ON hv.text_ = u.account
+        where
+        re.suspension_state_ = 1
+        AND u.deptid like('%$deptid$%')
+        AND (
+        tk.assignee_ = #userid#
+        OR (
+        tk.assignee_ IS NULL
+        AND l.group_id_ IN (
+        SELECT DISTINCT
+        roleid
+        FROM
+        eauserauthorize
+        WHERE
+        userid = #user_id#
+        )
+        )
+        )
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                (select hv.text_ from act_hi_varinst hv where hv.proc_inst_id_=hp.proc_inst_id_ and hv.name_='wf_title')
+                like ('%$title$%')
+            </isNotEmpty>
+        </dynamic>
+        order by create_time_ desc
+
+    </select>
+    <select id="flowLinkProjectTodoByUserIdToCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(distinct hp.proc_inst_id_) from act_ru_task tk,act_re_procdef p,act_hi_procinst hp,ACT_RU_EXECUTION
+        re,
+        act_ru_identitylink l
+        ,(select u.*,hv.proc_inst_id_ from act_hi_varinst hv left join eauser u on
+        hv.text_=u.account where hv.name_ = 'applyUserId') as temp
+        where re.proc_inst_id_=tk.proc_inst_id_ and re.suspension_state_=1 and tk.proc_def_id_=p.id_
+        and l.task_id_=tk.id_
+        and hp.proc_inst_id_=tk.proc_inst_id_
+        and temp.proc_inst_id_ = hp.proc_inst_id_
+        and temp.deptid like('%$deptid$%')
+        and ((l.group_id_ in (SELECT distinct roleid
+        FROM eauserauthorize
+        where userid = #user_id#
+        ) and
+        tk.assignee_ is null)
+        or tk.assignee_ =#userid#)
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                (select hv.text_ from act_hi_varinst hv where hv.proc_inst_id_=hp.proc_inst_id_ and hv.name_='wf_title')
+                like ('%$title$%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!-- 获取已结束流程 -->
+    <select id="findEndProcess" parameterClass="map" resultClass="dto">
+        select * from (select distinct RES.id_,
+        res.proc_def_id_,
+        res.proc_inst_id_,
+        res.business_key_,
+        DATE_FORMAT(
+        res.start_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS start_time_,
+        DATE_FORMAT(
+        res.end_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS end_time_,
+        res.delete_reason_,
+        IFNULL((select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'wf_title'),
+        '无标题') as wf_title,
+        (select u.username
+        from act_hi_varinst hv
+        left join eauser u on hv.text_ = u.account
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'applyUserId') as applyUserId
+        from ACT_HI_PROCINST RES) t
+        where end_time_ is not null
+        <dynamic>
+            <isNotEmpty prepend="AND" property="findKey">
+                wf_title like ('%$findKey$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="projectno">
+                wf_title like ('%$projectno$%')
+            </isNotEmpty>
+        </dynamic>
+        order by t.end_time_ desc
+    </select>
+    <!-- 获取已结束流程的数量 -->
+    <select id="findEndProcessCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from (select IFNULL((select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'wf_title'),
+        '无标题') as wf_title
+        from ACT_HI_PROCINST RES
+        where res.end_time_ is not null) t where 1=1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="findKey">
+                t.wf_title like ('%$findKey$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="projectno">
+                wf_title like ('%$projectno$%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!-- 获取运行中的流程 -->
+    <select id="findRunningProcess" parameterClass="map" resultClass="dto">
+        select distinct t.*,rt.name_,rt.id_ as taskId,
+        u.username as curassignee,
+        DATE_FORMAT(
+        rt.create_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS create_time_
+        from (
+        select RES.*, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId,IFNULL((select hv.text_ from
+        act_hi_varinst hv where hv.proc_inst_id_=res.proc_inst_id_ and hv.name_='wf_title'),'无标题') as wf_title,
+        (select u.username
+        from act_hi_varinst hv
+        left join eauser u on hv.text_ = u.account
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'applyUserId') as applyUserId
+        from ACT_RU_EXECUTION RES
+        inner join ACT_RE_PROCDEF P on RES.PROC_DEF_ID_ = P.ID_) t left join act_ru_task rt on
+        t.proc_inst_id_=rt.proc_inst_id_ left join eauser u on rt.assignee_=u.account
+        WHERE t.PARENT_ID_ is null
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                wf_title like ('%$title$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="searchkey">
+                (UPPER(wf_title) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+        order by t.ID_ desc
+    </select>
+    <!-- 获取运行中的流程 -->
+    <select id="findProcessByProcInstId" parameterClass="map" resultClass="dto">
+        select distinct t.*,rt.name_,rt.id_ as taskId,
+        u.username as curassignee,
+        DATE_FORMAT(
+        rt.create_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS create_time_
+        as from (
+        select RES.*, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId,IFNULL((select hv.text_ from
+        act_hi_varinst hv where hv.proc_inst_id_=res.proc_inst_id_ and hv.name_='wf_title'),'无标题') as wf_title,
+        (select u.username
+        from act_hi_varinst hv
+        left join eauser u on hv.text_ = u.account
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'applyUserId') as applyUserId
+        from ACT_RU_EXECUTION RES
+        inner join ACT_RE_PROCDEF P on RES.PROC_DEF_ID_ = P.ID_) t left join act_ru_task rt on
+        t.proc_inst_id_=rt.proc_inst_id_ left join eauser u on rt.assignee_=u.account
+        WHERE t.proc_inst_id_=#PROC_DEF_ID_#
+    </select>
+    <!-- 获取运行中的流程数量 -->
+    <select id="findRunningProcessCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from (
+        select res.id_,vi.text_ as wf_title from ACT_RU_EXECUTION RES left join act_hi_varinst vi on
+        res.proc_inst_id_=vi.proc_inst_id_ where RES.PARENT_ID_ is null and vi.name_='wf_title'
+        ) t where 1=1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                wf_title like ('%$title$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="searchkey">
+                (UPPER(wf_title) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!-- 获取流程可回退环节 -->
+    <select id="findBackTask" parameterClass="map" resultClass="dto">
+        select distinct * from (select ti.name_,ti.task_def_key_ from act_hi_taskinst ti where
+        ti.proc_inst_id_=#proc_inst_id_# and ti.task_def_key_ not in (select distinct rt.task_def_key_ from act_ru_task
+        rt where rt.proc_inst_id_=#proc_inst_id_#) order by ti.end_time_ asc) t
+    </select>
+    <!-- 获取流程历史流转环节 -->
+    <select id="findHistoryTask" parameterClass="map" resultClass="dto">
+        select ti.id_,
+        ti.task_def_key_,
+        ti.proc_inst_id_,
+        ti.name_,
+        ti.description_,
+        ws.suggestion_desc,
+        ti.assignee_,
+        DATE_FORMAT(
+        ti.end_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS end_time_
+        ,
+        u.username,ws.suggestion_theme
+        from act_hi_taskinst ti
+        left join eauser u on ti.assignee_ = u.account left join T_WF_SUGGESTION ws on ti.id_=ws.task_Id
+        where ti.proc_inst_id_ = #proc_inst_id_# and ti.id_ not in (select tk.id_ from act_ru_task tk where
+        tk.proc_inst_id_=#proc_inst_id_#)
+        order by ti.end_time_ asc
+    </select>
+
+    <select id="findProcInstIdByBusinessKey" parameterClass="map" resultClass="java.lang.String">
+        select t.proc_inst_id_ from act_hi_procinst t where t.business_key_ = #businesskey#
+    </select>
+
+
+    <!-- 查询人员信息 -->
+    <select id="findUserByAccounts" parameterClass="map" resultClass="dto">
+        select distinct u.username,u.account from eauser u where u.enabled=1 and u.account in ($accounts$)
+    </select>
+    <!-- 查询人员信息 by roles -->
+    <select id="findUserByRoles" parameterClass="map" resultClass="dto">
+        select distinct b.username,b.account from eauserauthorize a left join eauser b on a.userid=b.userid where
+        a.roleid in ($roles$)
+    </select>
+    <!-- 查询角色信息 -->
+    <select id="findRoleByRoleId" parameterClass="map" resultClass="dto">
+        select * from earole r where r.roleid in ($roleids$)
+    </select>
+
+
+    <!-- 获取运行中的流程 by Account -->
+    <select id="findRunningProcessByAccount" parameterClass="map" resultClass="dto">
+        select distinct t.*,
+        rt.name_,
+        rt.id_ as taskId,
+        u.username as curassignee,
+        (select u.username from eauser u where u.account=applyuseraccount) as applyUserId,
+        date_format(rt.create_time_, '%Y-%m-%d %H:%i') as create_time_
+        from (select RES.*,
+        P.KEY_ as ProcessDefinitionKey,
+        P.NAME_ as processName,
+        P.ID_ as ProcessDefinitionId,
+        IFNULL((select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'wf_title'),
+        '无标题') as wf_title,
+        (select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'applyUserId') as applyuseraccount
+        from ACT_RU_EXECUTION RES
+        inner join ACT_RE_PROCDEF P on RES.PROC_DEF_ID_ = P.ID_) t
+        left join act_ru_task rt on t.proc_inst_id_ = rt.proc_inst_id_
+        left join eauser u on rt.assignee_ = u.account left join act_hi_taskinst ti on 1=1
+        WHERE t.PARENT_ID_ is null and t.proc_inst_id_=ti.proc_inst_id_ and (applyuseraccount=#assignee# or
+        ti.assignee_=#assignee#)
+        <dynamic>
+            <isNotEmpty prepend="AND" property="findKey">
+                t.wf_title like ('%$findKey$%')
+            </isNotEmpty>
+        </dynamic>
+        order by create_time_ desc
+    </select>
+    <!-- 获取运行中的流程数量 by Account -->
+    <select id="findRunningProcessByAccountCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from (
+        select distinct t.*
+        from (select RES.Proc_Inst_Id_,res.parent_id_,IFNULL((select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'wf_title'),
+        '无标题') as wf_title,
+        (select hv.text_
+        from act_hi_varinst hv
+        where hv.proc_inst_id_ = res.proc_inst_id_
+        and hv.name_ = 'applyUserId') as applyuseraccount
+        from ACT_RU_EXECUTION RES
+        inner join ACT_RE_PROCDEF P on RES.PROC_DEF_ID_ = P.ID_) t
+        left join act_ru_task rt on t.proc_inst_id_ = rt.proc_inst_id_
+        left join eauser u on rt.assignee_ = u.account left join act_hi_taskinst ti on 1=1
+        WHERE t.PARENT_ID_ is null and t.proc_inst_id_=ti.proc_inst_id_ and (applyuseraccount=#assignee# or
+        ti.assignee_=#assignee#)
+        <dynamic>
+            <isNotEmpty prepend="AND" property="findKey">
+                t.wf_title like ('%$findKey$%')
+            </isNotEmpty>
+        </dynamic>
+        )temp
+    </select>
+    <!-- 获取流程实例信息 by proc_inst_id_ -->
+    <select id="findProcessInstanceByProcInstId" parameterClass="map" resultClass="dto">
+        select pi.id_,pi.proc_inst_id_,pi.business_key_,
+        DATE_FORMAT(
+        pi.start_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS start_time_
+        ,
+        DATE_FORMAT(
+        pi.end_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS end_time_
+        ,pi.duration_,pi.start_user_id_,pi.start_act_id_,pi.end_act_id_,pi.super_process_instance_id_,pi.delete_reason_,(select
+        u.username from act_hi_varinst hv left join eauser u on hv.text_ = u.account where hv.proc_inst_id_ =
+        pi.proc_inst_id_ and hv.name_ = 'applyUserId') as applyUserId from act_hi_procinst pi where
+        pi.proc_inst_id_=#proc_inst_id_#
+    </select>
+    <!-- 插入流程意见 -->
+    <insert id="saveProcessSuggestion" parameterClass="map">
+        insert into T_WF_SUGGESTION ( suggestion_id, suggestion_theme, suggestion_desc, task_id) values
+        (#suggestion_id#,#suggestion_theme#,#suggestion_desc#,#task_id#)
+    </insert>
+    <!-- 查询流程意见 by taskId -->
+    <select id="findProcessSuggestionByTaskId" parameterClass="map" resultClass="dto">
+        select * from T_WF_SUGGESTION where task_id=#taskId#
+    </select>
+    <!-- 获取流程主题 -->
+    <select id="findProcessTitleByProcInstId" parameterClass="map" resultClass="java.lang.String">
+        select vi.text_ from act_hi_varinst vi where vi.proc_inst_id_=#PROC_DEF_ID_# and vi.name_='wf_title'
+    </select>
+    <!-- 查询某一制图下的定制件数量 -->
+    <select id="getCustomizeCountByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from T_AD_Customize c where c.Drawing_ID=#drawing_id#
+    </select>
+    <!-- 查询某一制图下的标准定制件数量 -->
+    <select id="getSCustomizeCountByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_drawing_product_link dpl left join t_set_design_link sdl on
+        dpl.product_id=sdl.design_id where dpl.drawing_id=#drawing_id# and sdl.id is null
+    </select>
+    <!-- 查询某一制图下的未报价标准定制件数量 -->
+    <select id="getWCustomizeCountByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from (
+        select distinct dpl.product_id from t_ad_drawing_product_link dpl left join t_set_design_link sdl on
+        dpl.product_id=sdl.design_id where dpl.drawing_id=#drawing_id#) t left join t_ad_product p
+        on p.product_id=t.product_id where p.price is null
+    </select>
+
+    <!-- 根据工程单号查询制图表ID -->
+    <select id="findDrawingIdByProjectId" parameterClass="map" resultClass="dto">
+        select p.drawing_id from t_or_plane p where p.projectid=#projectid# order by p.planeid desc
+    </select>
+    <!-- 根据工程单号查询标准件数量 -->
+    <select id="findDesignCountByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_drawing_product_link dpl where dpl.drawing_id=#drawing_id#
+    </select>
+    <!-- 根据工程单号查询标准件数量 -->
+    <select id="findDesignCountByDrawingIdAndSetId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_set_design_link dl where dl.set_id=(select dw.set_id from t_ad_drawing dw where
+        dw.drawing_id=#drawing_id#) and dl.design_id in (
+        select dpl.product_id from t_ad_drawing_product_link dpl where dpl.drawing_id=#drawing_id#)
+    </select>
+    <!-- 获取某一图纸内定制件审核情况 -->
+    <select id="findCustomizeAuthorizeByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_customize c where c.drawing_id=#drawing_id# and (c.approval_status=2 or
+        c.approval_status=0)
+    </select>
+    <select id="findSceneToUserByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_customscence cs where cs.drawing_id=#drawing_id# and cs.design_breed='2000380202'
+    </select>
+    <select id="findSceneByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_drawing_product_link dpl left join t_ad_product p on dpl.product_id=p.product_id where
+        p.product_breed='2000380202' and dpl.drawing_id=#drawing_id#
+    </select>
+    <!-- 获取姓名 by account-->
+    <select id="findNameByAccount" parameterClass="map" resultClass="java.lang.String">
+        select t.username from eauser t where t.account = #account#
+    </select>
+    <!-- 查询全定制件数量 -->
+    <select id="findCustomizeCountByDrawingId" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_customize c where c.drawing_id=#drawing_id#
+    </select>
+    <!-- 更新任务操作人 -->
+    <update id="updateTaskAssignee" parameterClass="map">
+        update act_ru_task tk set tk.ASSIGNEE_=#assignee# where tk.ID_=#taskid#
+    </update>
+    <select id="getUserProxyInfo" parameterClass="map" resultClass="dto">
+        select * from t_base_job_proxy b where b.user_bproxyer=#user_bproxyer# and b.job_proxy_state=1
+    </select>
+
+    <!-- 更新环节操作人-->
+    <update id="changeAssignee" parameterClass="map">
+        update act_hi_taskinst w set w.assignee_ = #changeAccount# where w.proc_inst_id_ = #proIsId# and w.task_def_key_
+        = #taskId#
+    </update>
+
+    <!-- 获取指定环节以及流程命的所有实例-->
+    <select id="getTaskByTaskIdAndProcessId" parameterClass="map" resultClass="dto">
+        select p.name_ as process_name,t.name_,
+        (select var.text_
+        from act_ru_variable var
+        where var.proc_inst_id_ = t.proc_inst_id_
+        and var.name_ = 'wf_title') as wf_title,
+        DATE_FORMAT(
+        t.create_time_,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS creat_time
+        ,
+        (select ea.username
+        from eauser ea
+        where ea.account =
+        (select var.text_
+        from act_ru_variable var
+        where var.proc_inst_id_ = t.proc_inst_id_
+        and var.name_ = 'applyUserId')) as servicename,
+        (select ea.username
+        from eauser ea
+        where ea.account = t.assignee_) as assignee
+        from act_ru_task t left join act_re_procdef p on t.proc_def_id_ = p.id_
+        where t.proc_def_id_ like '%$processId$%' and t.task_def_key_ = #taskId#
+    </select>
+    <!-- 查询任务紧急度 -->
+    <select id="queryTaskToLvByTaskIds" parameterClass="map" resultClass="dto">
+        select IFNULL(pio.urgent_level,0) as urgent_level,task.* from act_ru_task task left join act_hi_procinst pi on
+        task.proc_inst_id_=pi.proc_inst_id_ left join t_or_projectinfo pio on pi.business_key_=pio.projectid where
+        task.id_ in ($taskids$) order by task.create_time_,task.id_ desc
+    </select>
+
+    <update id="updateTaskAss" parameterClass="map">
+        update act_ru_task tk set tk.ASSIGNEE_=#assignee# where tk.ID_=#task_id#
+    </update>
+
+    <update id="updateTaskAssHi" parameterClass="map">
+        update act_hi_taskinst tk set tk.ASSIGNEE_=#assignee# where tk.ID_=#task_id#
+    </update>
+    <!--获取流程运行id-->
+    <select id="findProcessExcuteIdEx" parameterClass="dto" resultClass="dto">
+        select * from act_hi_varinst vi
+        <dynamic prepend="where">
+            <isNotEmpty property="proc_inst_id_" prepend="and">
+                vi.proc_inst_id_= #proc_inst_id_#
+            </isNotEmpty>
+            <isNotEmpty property="name_" prepend="and">
+                vi.name_= #name_#
+            </isNotEmpty>
+            <isNotEmpty property="id_" prepend="and">
+                vi.id_= #id_#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+</sqlMap>

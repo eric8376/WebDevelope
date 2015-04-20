@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【公共附件】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<!-- 公共附件管理 -->
+<sqlMap namespace="CMAppendix">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+    <!-- 往关联表里面加入一条记录 -->
+    <insert id="insertRelation" parameterClass="dto">
+        insert into $tableName$(appendix_id,from_id,to_id,type,file_name,explain,upload_user,upload_date)
+        values(#temp_id#,#from_id#,#to_id#,#type#,#file_name#,#explain#,#upload_user#,
+        str_to_date(#upload_date#,'%Y-%m-%d %H:%i:%S') )
+    </insert>
+    <select id="getRelation" parameterClass="dto" resultClass="dto">
+        select *from 　$tableName$ t left join sy_appendix a on a.from_id=t.from_id where t.to_id=#to_id# and
+        t.type=#type# and a.delete_status=0
+    </select>
+
+    <!-- 删除某关联信息 -->
+    <delete id="deleteRelation" parameterClass="dto">
+        delete from $tableName$
+        where appendix_id=#appendix_id#
+    </delete>
+
+    <!-- 更新关联表的文件名和描述 -->
+    <update id="updateRelation" parameterClass="dto">
+        update $tableName$
+        set file_name=#file_name#,
+        explain=#explain#
+        where appendix_id=#appendix_id#
+    </update>
+
+    <!-- 将附件和域使用id关联在一起(只能绑定to_id未被引用过的) -->
+    <update id="updateRelation2" parameterClass="dto">
+        update $tableName$
+        set to_id=#to_id#
+        where appendix_id in($appendix_ids$) and
+        to_id like 'none%'
+    </update>
+
+    <!-- 查询某to_id|copy_id|tmp_id、某种类型的所有附件(废除) -->
+    <select id="queryRelation" resultClass="dto">
+        select a.*,(select w.username from eauser w where a.upload_user = w.userid ）as username,b.save_key as
+        save_key,b.file_type as file_type,b.file_size as file_size,b.save_file_name as save_file_name
+        from $tableName$ a,sy_appendix b
+        where a.from_id=b.from_id and
+        a.type=#type# and
+        (a.to_id=#to_id#)
+    </select>
+    <!-- 查询某to_id、某种类型的所有附件 -->
+    <select id="queryRelation2" resultClass="dto" remapResults="true">
+        select a.*,(select w.username from eauser w where a.upload_user = w.userid ）as username,b.save_key as
+        save_key,b.file_type as file_type,b.file_size as file_size,b.save_file_name as save_file_name
+        from $tableName$ a,sy_appendix b
+        where a.from_id=b.from_id and
+        a.to_id=#to_id# and
+        a.type=#type#
+    </select>
+    <!-- 查询某to_id的所有附件 -->
+    <select id="queryRelation3" resultClass="dto" remapResults="true">
+        select * from $tableName$
+        where to_id=#to_id#
+    </select>
+    <!-- 查询一些id集合的的所有关联 -->
+    <select id="queryRelation4" resultClass="dto" remapResults="true">
+        select * from $tableName$
+        where appendix_id in($copy_ids$)
+    </select>
+    <!-- 查询某个id的中间表记录 -->
+    <select id="selectRelation" resultClass="dto" remapResults="true">
+        select * from $tableName$
+        where appendix_id=#appendix_id#
+    </select>
+    <!-- 查询某个附件在中间表被 引用 的次数 -->
+    <select id="countRelation" resultClass="java.lang.Integer">
+        select count(*) from $tableName$
+        where from_id =#from_id#
+    </select>
+
+    <!-- 查询某张中间表过度版本表 -->
+    <!--    <select id="countRelation" resultClass="java.lang.Integer">
+    select count(*) from $tableName$
+    where from_id =#from_id#
+    </select>-->
+    <select id='queryTempTable' resultClass="dto">
+        select t.id_ from $tableName$ t where t.projectid = #to_id# order by t.id_ desc
+    </select>
+
+    <!-- 往临时表 插入一条附件物理信息 -->
+    <insert id="insertTempRelation">
+        insert into sy_midappendix values (#temp_id#,#from_id#,#to_id#,#type#,#file_name#,#explain#,#upload_user#,
+        str_to_date(#upload_date#,'%Y-%m-%d %H:%i:%S') )
+    </insert>
+
+    <!--从临时表  删除一条附件物理信息 -->
+    <delete id="deleteTempRelation">
+        delete from T_SB_TEMP_APPENDIX
+        where temp_id=#temp_id#
+    </delete>
+
+    <!--修改临时表的文件名和描述-->
+    <update id="updateTempRelation" parameterClass="dto">
+        update T_SB_TEMP_APPENDIX
+        set file_name=#file_name#,
+        explain=#explain#
+        where temp_id=#temp_id#
+    </update>
+
+    <!-- 查询某临时id的所有附件关联 -->
+    <select id="selectTempRelation" resultClass="dto" remapResults="true">
+        select * from T_SB_TEMP_APPENDIX
+        where temp_id=#temp_id#
+    </select>
+
+    <!-- 查询某临时id的所有附件关联 -->
+    <select id="queryTempRelation" resultClass="dto" remapResults="true">
+        select a.*,b.save_key as save_key,b.file_type as file_type,b.file_size as file_size,b.save_file_name as
+        save_file_name
+        from T_SB_TEMP_APPENDIX a,sy_appendix b
+        where a.from_id=b.from_id and
+        a.to_id=#temp_to_id# and
+        a.type=#type#
+    </select>
+
+    <!-- 查询某临时id的所有附件关联 -->
+    <select id="queryTempRelation2" resultClass="dto" remapResults="true">
+        select * from T_SB_TEMP_APPENDIX
+        where to_id=#temp_to_id#
+    </select>
+
+
+    <!-- 插入一条附件物理信息 -->
+    <insert id="insertAppendix">
+        insert into sy_appendix values (#appendix_id#,#from_id#,#save_key#,#file_type#,#file_size#,#save_file_name#,'0')
+    </insert>
+
+    <!-- 删除一条附件物理信息 -->
+    <delete id="deleteAppendix">
+        delete from sy_appendix
+        where from_id=#from_id#
+    </delete>
+
+    <!-- 查询一条附件物理信息 -->
+    <select id="selectAppendix" resultClass="dto" remapResults="true">
+        select * from sy_appendix
+        where from_id=#from_id#
+    </select>
+    <!-- 查询一条附件物理信息 -->
+    <select id="DynamicSelectAppendix" resultClass="dto" remapResults="true">
+        select * from sy_appendix
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="from_id">
+                from_id=#from_id#
+            </isNotEmpty>
+            <isNotEmpty property="appendix_id" prepend="and">
+                appendix_id=#appendix_id#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+
+</sqlMap>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- 配置平台层面的G4Reader  -->
+    <bean id="g4Reader" class="org.nxstudio.core.dao.impl.ReaderImpl">
+        <property name="sqlMapClient" ref="sqlMapClientG4"/>
+    </bean>
+    <!-- 配置平台层面的G4Dao  -->
+    <!--   <bean id="g4Dao" class="org.nxstudio.core.dao.impl.DaoImpl">
+           <property name="sqlMapClient" ref="sqlMapClientG4"/>
+       </bean>-->
+
+</beans>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【组织查询】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<!-- 部门、部门人员 -->
+<sqlMap namespace="EAOrg">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+    <!-- **********部门********** -->
+    <!-- 查询下级部门（一级部门的parent_id=0） -->
+    <select id="queryEADEPT" resultClass="dto">
+        select * from eadept
+        where parentid=#parentid#
+        <dynamic prepend="and">
+            <isNotEmpty prepend="and" property="enabled">
+                enabled in (#enabled#)
+            </isNotEmpty>
+        </dynamic>
+        order by sortno
+    </select>
+
+    <!--查询某个部门-->
+    <select id="selectEADEPT" resultClass="dto">
+        select * from eadept where deptid=#deptid#
+    </select>
+
+
+    <!-- **********用户********** -->
+    <!-- 查询某部门下用户 -->
+    <select id="queryEaUser" resultClass="dto">
+        select userid,username from eauser
+        where deptid=#deptid#
+        <isNotEmpty prepend="and" property="enabled">
+            enabled=#enabled#
+        </isNotEmpty>
+    </select>
+
+    <!-- 查询所有用户的ID和名字 -->
+    <select id="queryEaUser1" resultClass="dto">
+        select userid,username from eauser
+    </select>
+
+    <!-- 查询所有用户的登录账号和名字 -->
+    <select id="queryEaUser2" resultClass="dto">
+        select account,username from eauser
+        where enabled=1
+    </select>
+
+    <!-- 根据账号查询某个用户 -->
+    <select id="selectEaUser" resultClass="dto">
+        select * from eauser where account=#account#
+    </select>
+
+
+</sqlMap>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VoMappings>
+    <Vo>
+        <key>test</key>
+        <map>com.sjyg.common.socketserver.integration.send.vo.test.TestVO</map>
+    </Vo>
+    <Vo>
+        <key>test2</key>
+        <map>com.sjyg.common.socketserver.integration.send.vo.test.TestVO2</map>
+    </Vo>
+
+</VoMappings>

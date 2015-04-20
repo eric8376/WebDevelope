@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 黄琦鸿
+* 主题:【用户关系】
+* 时间:2014年1月22日 11:31:24
+-->
+
+<sqlMap namespace="SysBase">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+    <select id="queryUserRelationData" parameterClass="map" resultClass="dto" remapResults="true">
+        select r.*, u.username as username, u.sex,(select count(1) from eauserrelation ir where ir.p_user_id=r.user_id
+        and ir.deletestatus=0)as sub,uu.username as p_username
+        from eauserrelation r
+        left join eauser u on u.userid = r.user_id
+        left join eauser uu on uu.userid = r.p_user_id
+        where r.deletestatus = 0
+        <dynamic>
+            <isNotEmpty prepend="and " property="isroot">
+                r.p_user_id is null
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="user_id">
+                r.user_id=#user_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="p_user_id">
+                r.p_user_id=#p_user_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="searchkey">
+                (UPPER(u.username) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="queryUserRelationDataCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(1)
+        from eauserrelation r
+        left join eauser u on u.userid = r.user_id
+        where r.deletestatus = 0
+        <dynamic>
+            <isNotEmpty prepend="and " property="isroot">
+                r.p_user_id is null
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="user_id">
+                r.user_id=#user_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="p_user_id">
+                r.p_user_id=#p_user_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and " property="searchkey">
+                (UPPER(u.username) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!--获取当前选择的用户的领导-->
+    <select id="getPerUser" parameterClass="map" resultClass="dto">
+        select r.p_user_id,r.user_id from eauserrelation r where r.user_id=#user_id# and r.deletestatus = 0
+    </select>
+    <!--判断该用户是否已经有领导了-->
+    <select id="UnionVerify" parameterClass="map" resultClass="dto">
+        select (select u.username from eauser u where u.userid=r.p_user_id) as per_username from eauserrelation r
+        where r.user_id=#user_id# and r.deletestatus = 0
+    </select>
+    <select id="synMemory" resultClass="dto" parameterClass="dto">
+        select r.*,u.account as user_account from eauserrelation r left join eauser u on u.userid = r.user_id where
+        r.deletestatus=0 order by r.p_user_id desc
+    </select>
+    <!--级联删除用户-->
+    <update id="deleteUserRelation" parameterClass="map">
+        UPDATE eauserrelation r
+        set r.deletestatus = 1 where
+        r.relation_id in
+        (select ir.relation_id
+        from eauserrelation ir
+        start with ir.user_id = #user_id#
+        connect by prior ir.user_id = ir.p_user_id)
+    </update>
+    <update id="updeteSubUserRelation" parameterClass="dto">
+        update eauserrelation r set r.p_user_id=#user_id# where r.p_user_id=#oldP_user_id# and r.deletestatus = 0
+    </update>
+    <select id="getAllLeaveUsers" resultClass="dto" parameterClass="dto">
+        select t.leavelUsersid,
+        u.username as leaveluser,
+        uu.username as agentuser,
+        date_format(t.leaveltime, '%Y-%m-%d %H:%i:%S') as leaveltime
+        from t_sb_LeavelUsers t
+        left join eauser u on u.account = t.leaveluser
+        left join eauser uu on uu.account = t.agentuser
+        <dynamic prepend=" where ">
+            <isNotEmpty prepend="and " property="searchkey">
+                (UPPER(u.username) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <select id="getAllLeaveUsersCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select count(1)
+        from t_sb_LeavelUsers t
+        left join eauser u on u.account = t.leaveluser
+        left join eauser uu on uu.account = t.agentuser
+        <dynamic prepend=" where ">
+            <isNotEmpty prepend="and " property="searchkey">
+                (UPPER(u.username) like '%%'||
+                UPPER(#searchkey#)||'%%')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <select id="verifyLeavelUser" resultClass="java.lang.Integer" parameterClass="dto">
+        select count(1) from t_sb_LeavelUsers t where t.leaveluser=#leaveluser#
+    </select>
+    <update id="updateRunTask" parameterClass="dto">
+        update act_ru_task tk set tk.assignee_=#agentuser# where tk.assignee_=#leaveluser#
+    </update>
+    <update id="updateHiTask" parameterClass="dto">
+        update act_hi_taskinst ti set ti.assignee_=#agentuser# where ti.assignee_=#leaveluser#
+    </update>
+</sqlMap>

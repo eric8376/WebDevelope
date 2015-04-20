@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="GB18030"?>
+<msg>
+    <comm_head>
+        <ver_no></ver_no>
+        <bank_id></bank_id>
+        <snd_chnl_no></snd_chnl_no>
+        <rcv_chnl_no></rcv_chnl_no>
+        <ext_txn_no></ext_txn_no>
+        <chnl_dt></chnl_dt>
+        <host_dt></host_dt>
+        <chnl_tm></chnl_tm>
+        <host_tm></host_tm>
+        <chnl_seq></chnl_seq>
+        <host_seq></host_seq>
+        <rsp_no></rsp_no>
+        <rsp_msg></rsp_msg>
+    </comm_head>
+    <main_data>
+        <request_type></request_type>
+    </main_data>
+</msg>

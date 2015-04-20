@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PhoneClient">
+    <typeAlias alias="dto" type="org.nxstudio.core.model.impl.BaseDto"/>
+    <select id="getChechRecordInfo" parameterClass="dto" resultClass="dto">
+        SELECT
+        c.checker,
+        c.completed,
+        c.course_id,
+        c.deptid,
+        d.DEPTNAME,
+        c.litigantrole,
+        c.litigant,
+        c.checknorm,
+        c.record_id,
+        c.remark,
+        DATE_FORMAT(
+        c.check_time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS check_time,
+        u.USERNAME AS checker_name,
+        cu.course_name
+        FROM
+        course_check_record c
+        LEFT JOIN eauser u ON u.USERID = c.checker
+        LEFT JOIN courseinfo cu ON cu.course_id = c.course_id
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        where
+        c.verify_statu='VS00101'
+    </select>
+    <select id="getChechRecordInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select count(1) from course_check_record c
+        where
+        c.verify_statu='VS00101'
+    </select>
+</sqlMap>

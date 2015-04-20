@@ -1,0 +1,3173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HospitalManage">
+    <typeAlias alias="dto" type="org.nxstudio.core.model.impl.BaseDto"/>
+    <!--查询医院信息-->
+    <select id="getHospitalInfo" parameterClass="dto" resultClass="dto" remapResults="true">
+        SELECT
+        b.Creater,
+        b.delete_Status,
+        b.hospitallevel,
+        b.deptid,
+        d.deptname,
+        b.Hospital_id,
+        b.hospital_name,
+        b.hospital_no,
+        b.end_of_valid,
+        DATE_FORMAT(
+        b.create_Time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS create_Time,
+        ex.address,
+        ex.area,ex.city,ex.province,ex.extend_id,
+        c.AREANAME as province_name,
+        cc.AREANAME as city_name,
+        ccc.AREANAME as area_name
+        FROM
+        hospital_baseinfo b
+        left join hospital_extendinfo ex on ex.Hospital_id=b.Hospital_id
+        left join eadept d on d.deptid= b.deptid
+        left join ea_demo_chinaarea c on c.AREACODE=ex.province
+        left join ea_demo_chinaarea cc on cc.AREACODE=ex.city
+        left join ea_demo_chinaarea ccc on ccc.AREACODE=ex.area
+        where b.delete_status='0'
+
+    </select>
+    <!--查询医院信息总数-->
+    <select id="getHospitalInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select count(1) from hospital_baseinfo b where b.delete_status='0'
+    </select>
+    <!--查询部门科目信息-->
+    <select id="queryDeptCourseInfo" parameterClass="dto" resultClass="dto" remapResults="true">
+        select c.course_id,
+        c.course_name,
+        c.creater,
+        DATE_FORMAT(
+        c.create_Time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS create_Time,
+        c.delete_status,
+        c.Hospital_id,
+        c.remark,
+        u.USERNAME,
+        l.link_id from course_dept_link l
+        left join courseinfo c ON l.course_id = c.course_id
+        LEFT JOIN eauser u ON u.USERID = c.creater
+        where c.delete_status='0'
+        <dynamic>
+            <isNotEmpty prepend="and" property="cur_deptid">
+                l.deptid=#cur_deptid#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!--查询部门科目总数-->
+    <select id="queryDeptCourseInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select count(1) from course_dept_link l
+        left join courseinfo c ON l.course_id = c.course_id
+        where c.delete_status='0'
+        <dynamic>
+            <isNotEmpty prepend="and" property="cur_deptid">
+                l.deptid=#cur_deptid#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!--查询科目信息-->
+    <select id="queryCourseInfo" parameterClass="dto" resultClass="dto" remapResults="true">
+        select c.course_id,
+        c.course_name,
+        c.creater,
+        DATE_FORMAT(
+        c.create_Time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS create_Time,
+        c.delete_status,
+        c.Hospital_id,
+        c.remark,
+        u.USERNAME from courseinfo c
+        LEFT JOIN eauser u ON u.USERID = c.creater
+        where c.delete_status='0'
+        <dynamic>
+            <isNotEmpty prepend="and" property="forChoice">
+                c.course_id not in (
+                select l.course_id from course_dept_link l where l.deptid=#cur_deptid#
+                )
+            </isNotEmpty>
+            <!--修改，选择时，不能选择当前的科目-->
+            <isNotEmpty prepend="and" property="ex_course_id">
+                c.course_id!=#ex_course_id#
+            </isNotEmpty>
+            <isEmpty property="justShowSelf">
+                and (c.Hospital_id !=''
+                OR c.Hospital_id = '')
+            </isEmpty>
+        </dynamic>
+    </select>
+    <!--查询科目总数-->
+    <select id="queryCourseInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select count(1) from courseinfo c
+        where c.delete_status='0'
+        <dynamic>
+            <isNotEmpty prepend="and" property="forChoice">
+                c.course_id not in (
+                select l.course_id from course_dept_link l where l.deptid=#cur_deptid#
+                )
+            </isNotEmpty>
+            <!--修改，选择时，不能选择当前的科目-->
+            <isNotEmpty prepend="and" property="ex_course_id">
+                c.course_id!=#ex_course_id#
+            </isNotEmpty>
+            <isEmpty property="justShowSelf">
+                and (c.Hospital_id !=''
+                OR c.Hospital_id = '')
+            </isEmpty>
+        </dynamic>
+    </select>
+    <!--查询检查记录-->
+    <select id="queryCheckInfo" parameterClass="dto" resultClass="dto" remapResults="true">
+        SELECT
+        c.checker,
+        c.completed,
+        e.CODEDESC as completed_name,
+        c.course_id,
+        c.deptid,
+        d.DEPTNAME,
+        c.litigantrole,
+        ee.CODEDESC as litigantrole_name,
+        c.litigant,
+        c.checknorm,
+        eeee.CODEDESC as checknorm_name,
+        c.record_id,
+        c.record_id as formid,
+        c.check_type,
+        c.remark,
+        c.validity,
+        eee.CODEDESC as validity_name,
+        DATE_FORMAT(
+        c.check_time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS check_time,
+        u.USERNAME AS checker_name,
+        uu.USERNAME AS litigant_name,
+        cu.course_name,
+        c.verify_statu
+        FROM
+        course_check_record c
+        LEFT JOIN eauser u ON u.USERID = c.checker
+        LEFT JOIN eauser uu ON uu.USERID = c.litigant
+        LEFT JOIN courseinfo cu ON cu.course_id = c.course_id
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        left join eacode e on e.`CODE`=c.completed and e.FIELD='COM001'
+        left join eacode ee on ee.`CODE`=c.litigantrole and ee.FIELD='LitigantRole'
+        left join eacode eee on eee.`CODE`=c.validity and eee.FIELD='COM001'
+        left join eacode eeee on eee.`CODE`=c.checknorm and eeee.FIELD='CheckNorm'
+        <dynamic prepend="where">
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+
+            <isNotEmpty property="verify_statu" prepend="and">
+                c.verify_statu=#verify_statu#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        order by
+        c.validity asc,c.check_type desc,c.check_time desc
+    </select>
+    <!--查询检查记录总数-->
+    <select id="queryCheckInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        course_check_record c
+        <dynamic prepend="where">
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                c.verify_statu=#verify_statu#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!--获取手卫生检查记录标准-->
+    <select id="queryCheckStandardInfo" parameterClass="dto" resultClass="dto">
+        select c.*,e.codedesc from course_check_standard c
+        left join eacode e on c.check_result=e.code
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="formid">
+                c.formid=#formid#
+            </isNotEmpty>
+        </dynamic>
+        order by c.standard_code asc
+    </select>
+    <!--科目下拉数据-->
+    <select id="CourseTreeManage" parameterClass="dto" resultClass="dto">
+        SELECT
+        a.course_id AS id,
+        a.course_name AS text
+        FROM
+        courseinfo a
+        where a.delete_status='0' and
+        (a.course_id in (
+        select l.course_id from course_dept_link l where l.deptid=#deptid#
+        )
+        or a.Hospital_id='')
+    </select>
+    <!--获取部门信息-->
+    <select id="queryDeptInfoForList" parameterClass="dto" resultClass="dto">
+        SELECT
+        d.deptid as id,
+        d.deptname as text,
+        d.*
+        FROM
+        eadept d
+        WHERE
+        d.DEPTID like('$deptid$%')
+        and d.DEPTID!=#deptid#
+    </select>
+    <!--通过部门id查询医院信息-->
+    <select id="getHospitalInfoByDept" parameterClass="dto" resultClass="dto">
+        SELECT
+        *
+        FROM
+        hospital_baseinfo d
+        WHERE
+        d.DEPTID =#deptid#
+    </select>
+    <!--查询科目信息-->
+    <select id="queryCourseInfoForList" parameterClass="dto" resultClass="dto">
+        SELECT
+        *
+        FROM
+        courseinfo c
+        WHERE
+        c.Hospital_id =#hospital_id#
+    </select>
+    <!--获取检查记录修改历史-->
+    <select id="queryHistoryCheckInfo" parameterClass="dto" resultClass="dto" remapResults="true">
+        SELECT
+        *
+        FROM
+        course_checkrecord_his c
+        left join eauser u on u.userid=c.operater
+        where c.record_id=#record_id#
+        order by c.operate_time asc
+    </select>
+    <!--查询历史修改记录-->
+    <select id="queryHistoryCheckInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        course_checkrecord_his c
+        where c.record_id=#record_id#
+    </select>
+    <!--查询检查记录修改明细数据-->
+    <select id="queryHistoryCheckDetailInfo" parameterClass="dto" resultClass="dto">
+        SELECT
+        c.checker,
+        c.completed,
+        c.course_id,
+        c.deptid,
+        d.DEPTNAME,
+        c.litigantrole,
+        c.litigant,
+        c.checknorm,
+        c.validity,
+        c.detail_id,
+        c.check_type,
+        c.remark,
+        c.history_id as formid,
+        DATE_FORMAT(
+        c.check_time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS check_time,
+        u.USERNAME AS checker_name,
+        cu.course_name,
+        c.verify_statu,
+        h.operate_type,
+        uu.USERNAME AS litigant_name,
+        h.operate_time
+        FROM
+        course_checkrecord_hisDetail c
+        LEFT JOIN eauser u ON u.USERID = c.checker
+        LEFT JOIN eauser uu ON uu.USERID = c.litigant
+        LEFT JOIN courseinfo cu ON cu.course_id = c.course_id
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        where
+        r.verify_statu = 'VS00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                r.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        order by c.check_type desc,h.operate_time desc
+    </select>
+    <!--查询检查记录修改明细数据总数-->
+    <select id="queryHistoryCheckDetailInfoCount" parameterClass="dto" resultClass="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        course_checkrecord_hisDetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        where
+        r.verify_statu = 'VS00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                r.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!--获取检查记录的总体报表-->
+    <select id="GetCheckReportData" resultClass="dto" parameterClass="dto">
+        select outtemp.*,concat(outtemp.ycl,'%')as yclname ,
+        concat(outtemp.zql,'%')as zqlname,
+        concat(outtemp.zskh_zql,'%')as zskh_zqlname
+        from ( SELECT
+        e.DEPTNAME AS text,
+        zqltemp.*, ycltemp.ycl,
+        ycltemp.sws_yclcount,
+        ycltemp.sws_yclnotdocount,
+        zskhtemp.zskh_allcount,
+        zskhtemp.zskh_count,
+        zskhtemp.zskh_yzzqcount,
+        zskhtemp.zskh_yzcount,
+        zskhtemp.zskh_zzzqcount,
+        zskhtemp.zskh_zzcount,
+        zskhtemp.zskh_sxzqcount,
+        zskhtemp.zskh_sxcount,
+        ifnull(
+        ROUND( zskhtemp.zskh_sxzqcount/ zskhtemp.zskh_sxcount* 100,
+        2
+        ),
+        0) as zskh_sxzql,
+        ifnull(
+        ROUND( zskhtemp.zskh_zzzqcount/ zskhtemp.zskh_zzcount* 100,
+        2
+        ),
+        0) as zskh_zzzql,
+        ifnull(
+        ROUND( zskhtemp.zskh_yzzqcount/ zskhtemp.zskh_yzcount* 100,
+        2
+        ),
+        0) as zskh_yzzql,
+        ( zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount) as zskh_zqcount ,
+        ifnull(
+        ROUND(
+        (zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount) / zskhtemp.zskh_que_count * 100,
+        2
+        ),
+        0
+        ) AS zskh_zql,
+        (zskhtemp.zskh_que_count-(zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount)) as
+        zskh_bzqcount
+        FROM
+        eadept e
+        LEFT JOIN (
+        SELECT
+        zql_temp.*, ifnull(
+        ROUND(
+        zql_temp.sws_zqcount / zql_temp.sws_zqlcount * 100,
+        2
+        ),
+        0
+        ) AS zql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_sxzqcount / zql_temp.sws_sxcount * 100,
+        2
+        ),
+        0
+        ) AS sws_sxzql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_spzqcount / zql_temp.sws_spcount * 100,
+        2
+        ),
+        0
+        ) AS sws_spzql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_rczqcount / zql_temp.sws_rccount * 100,
+        2
+        ),
+        0
+        ) AS sws_rczql
+        FROM
+        (
+        SELECT
+        c.deptid AS deptid1,
+        ROUND(count(1) / 3 + count(1) % 3, 0) AS sws_count,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqlcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.completed = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.completed = 'COM00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_bzqcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rczqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rccount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ORDER BY
+        c.check_type DESC,
+        c.check_time DESC
+        ) AS zql_temp
+        ) AS zqltemp ON zqltemp.deptid1 = e.deptid
+        LEFT JOIN (
+        SELECT
+        ycl_temp.*, ifnull(
+        ROUND(
+        (
+        ycl_temp.sws_yclcount - ycl_temp.sws_yclnotdocount
+        ) / ycl_temp.sws_yclcount * 100,
+        2
+        ),
+        0
+        ) AS ycl
+        FROM
+        (
+        SELECT
+        c.deptid AS deptid2,
+        count(1) AS sws_yclcount,
+        sum(
+        CASE
+        WHEN c.checknorm = 'CN00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_yclnotdocount
+        FROM
+        course_check_record c
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ) AS ycl_temp
+        ) AS ycltemp ON ycltemp.deptid2 = e.deptid
+        LEFT JOIN (
+        SELECT
+        c.deptid AS deptid3,
+        ROUND(count(1) / 3 + count(1) % 3, 0) AS zskh_allcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101' and s.check_result!='COM00303' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS zskh_count,
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101'
+        AND s.check_result != 'COM00303' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_que_count,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxcount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00102'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ) AS zskhtemp ON zskhtemp.deptid3 = e.deptid
+        WHERE
+        ( deptid1 != ''
+        OR deptid2 != ''
+        OR deptid3 != '')
+        )as outtemp
+    </select>
+    <!-- 获取正确性图表数据-->
+    <select id="getZQXCheckReportData" parameterClass="dto" resultClass="dto">
+        SELECT
+        zql_temp.*, ifnull(
+        ROUND(
+        zql_temp.sws_zqcount / zql_temp.sws_zqlcount * 100,
+        2
+        ),
+        0
+        ) AS zql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_sxzqcount / zql_temp.sws_sxcount * 100,
+        2
+        ),
+        0
+        ) AS sws_sxzql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_spzqcount / zql_temp.sws_spcount * 100,
+        2
+        ),
+        0
+        ) AS sws_spzql,
+        ifnull(
+        ROUND(
+        zql_temp.sws_rczqcount / zql_temp.sws_rccount * 100,
+        2
+        ),
+        0
+        ) AS sws_rczql
+        FROM
+        (
+        SELECT
+        c.deptid AS value,
+        e.deptname as text,
+        ROUND(count(1) / 3 + count(1) % 3, 0) AS sws_count,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqlcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.completed = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.completed = 'COM00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_bzqcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rczqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rccount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        left join eadept e on e.deptid=c.deptid
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ORDER BY
+        c.check_type DESC,
+        c.check_time DESC
+        ) AS zql_temp
+    </select>
+    <!-- 获取依从性图表数据-->
+    <select id="getYCXCheckReportData" parameterClass="dto" resultClass="dto">
+        SELECT
+        ycl_temp.*, ifnull(
+        ROUND(
+        (
+        ycl_temp.sws_yclcount - ycl_temp.sws_yclnotdocount
+        ) / ycl_temp.sws_yclcount * 100,
+        2
+        ),
+        0
+        ) AS ycl
+        FROM
+        (
+        SELECT
+        c.deptid AS VALUE ,
+        e.deptname as text,
+        count(1) AS sws_yclcount,
+        sum(
+        CASE
+        WHEN c.checknorm = 'CN00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_yclnotdocount
+        FROM
+        course_check_record c
+        left join eadept e on e.deptid=c.deptid
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid ) AS ycl_temp
+    </select>
+    <!-- 获取知识考核图表数据-->
+    <select id="getZSKHCheckReportData" parameterClass="dto" resultClass="dto">
+        select zskhtemp.*,
+        ifnull(
+        ROUND( zskhtemp.zskh_sxzqcount/ zskhtemp.zskh_sxcount* 100,
+        2
+        ),
+        0) as zskh_sxzql,
+        ifnull(
+        ROUND( zskhtemp.zskh_zzzqcount/ zskhtemp.zskh_zzcount* 100,
+        2
+        ),
+        0) as zskh_zzzql,
+        ifnull(
+        ROUND( zskhtemp.zskh_yzzqcount/ zskhtemp.zskh_yzcount* 100,
+        2
+        ),
+        0) as zskh_yzzql,
+        ( zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount) as zskh_zqcount ,
+        ifnull(
+        ROUND(
+        (zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount) / zskhtemp.zskh_que_count* 100 ,
+        2
+        ),
+        0
+        ) AS zskh_zql,
+        (zskhtemp.zskh_que_count-(zskhtemp.zskh_yzzqcount+zskhtemp.zskh_zzzqcount+zskhtemp.zskh_sxzqcount)) as
+        zskh_bzqcount
+        from (
+        SELECT
+        c.deptid AS value,
+        e.deptname as text,
+        ROUND(count(1) / 3 + count(1) % 3, 0) AS zskh_allcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101' and s.check_result!='COM00303' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS zskh_count,
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101'
+        AND s.check_result != 'COM00303' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_que_count,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxcount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        left join eadept e on e.deptid=c.deptid
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00102'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ) as zskhtemp
+    </select>
+    <!-- 获取全院图表数据-->
+    <select id="getQuanCheckYuanReportData" parameterClass="dto" resultClass="dto">
+        SELECT
+        *, concat(ifnull(
+        ROUND(
+        zql_temp.sws_zqcount / zql_temp.sws_zqlcount * 100,
+        2
+        ),
+        0
+        ),'%') AS zql,
+       concat( ifnull(
+        ROUND(
+        zql_temp.sws_sxzqcount / zql_temp.sws_sxcount * 100,
+        2
+        ),
+        0
+        ) ,'%')AS sws_sxzql,
+        concat(ifnull(
+        ROUND(
+        zql_temp.sws_spzqcount / zql_temp.sws_spcount * 100,
+        2
+        ),
+        0
+        ),'%') AS sws_spzql,
+      concat(  ifnull(
+        ROUND(
+        zql_temp.sws_rczqcount / zql_temp.sws_rccount * 100,
+        2
+        ),
+        0
+        ),'%') AS sws_rczql
+        FROM
+        (
+        SELECT
+        ROUND(
+        sum(
+        CASE
+        WHEN c.completed = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS sws_zqlcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_sxcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_spcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00101'
+        AND s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rczqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00103' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_rccount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+           WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00101'
+          and   c.deptid like('$rootdeptid$%')
+        ) AS zql_temp,
+        (
+        SELECT
+        *, concat(ifnull(
+        ROUND(
+        (
+        ycl_temp.sws_yclcount - ycl_temp.sws_yclnotdocount
+        ) / ycl_temp.sws_yclcount * 100,
+        2
+        ),
+        0
+        ),'%') AS ycl
+        FROM
+        (
+        SELECT
+        count(1) AS sws_yclcount,
+        sum(
+        CASE
+        WHEN c.checknorm = 'CN00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_yclnotdocount
+        FROM
+        course_check_record c
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00103'
+          and   c.deptid like('$rootdeptid$%')
+        ) AS ycl_temp
+        ) AS ycltemp,
+        (
+        SELECT
+        zskhtemp.*,concat( ifnull(
+        ROUND(
+        zskhtemp.zskh_sxzqcount / zskhtemp.zskh_sxcount * 100,
+        2
+        ),
+        0
+        ) ,'%')AS zskh_sxzql,
+      concat(  ifnull(
+        ROUND(
+        zskhtemp.zskh_zzzqcount / zskhtemp.zskh_zzcount * 100,
+        2
+        ),
+        0
+        ),'%') AS zskh_zzzql,
+       concat( ifnull(
+        ROUND(
+        zskhtemp.zskh_yzzqcount / zskhtemp.zskh_yzcount * 100,
+        2
+        ),
+        0
+        ),'%') AS zskh_yzzql,
+        (
+        zskhtemp.zskh_yzzqcount + zskhtemp.zskh_zzzqcount + zskhtemp.zskh_sxzqcount
+        ) AS zskh_zqcount,
+     concat(   ifnull(
+        ROUND(
+        (
+        zskhtemp.zskh_yzzqcount + zskhtemp.zskh_zzzqcount + zskhtemp.zskh_sxzqcount
+        ) /  zskhtemp.zskh_que_count  * 100,
+        2
+        ),
+        0
+        ),'%') AS zskh_zql,
+        (
+        zskhtemp.zskh_que_count - (
+        zskhtemp.zskh_yzzqcount + zskhtemp.zskh_zzzqcount + zskhtemp.zskh_sxzqcount
+        )
+        ) AS zskh_bzqcount
+        FROM
+        (
+        SELECT
+        ROUND(count(1) / 3 + count(1) % 3, 0) AS zskh_allcount,
+        ROUND(
+        sum(
+        CASE
+        WHEN c.validity = 'COM00101'
+       and   s.check_result!='COM00303' THEN
+        1
+        ELSE
+        0
+        END
+        ) / 3,
+        0
+        ) AS zskh_count,
+        	sum(
+						CASE
+						WHEN c.validity = 'COM00101'
+						AND s.check_result != 'COM00303' THEN
+							1
+						ELSE
+							0
+						END
+					)  AS zskh_que_count,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00201' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_yzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00202' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zzcount,
+        sum(
+        CASE
+        WHEN s.check_result = 'COM00301'
+        AND s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxzqcount,
+        sum(
+        CASE
+        WHEN s.standard_code = 'CS00203' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_sxcount
+        FROM
+        course_check_record c
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type = 'CT00102'
+        and   c.deptid like('$rootdeptid$%')
+        ) AS zskhtemp
+        ) AS zskh_temp
+    </select>
+
+
+    <!--获取国内依从性数据-->
+    <select id="getGNYCXDataForExcel" resultClass="dto" parameterClass="dto">
+        select temp4.*, (temp4.check_count-temp4.undoing_count) as doing_count, concat(ifnull(round(
+        (temp4.check_count-temp4.undoing_count)/temp4.check_count*100,2 ),0), '%') as ycl from (select
+        t.course_name,t.DEPTNAME,t.gr_count,t.hs_count,t.jx_count,t.sh_count,t.sy_count,t.yj_count,t.ys_count,t.wy_count,tt.*,
+        sum( ys_count+ hs_count+ sh_count+ yj_count+ sy_count+ jx_count+ gr_count+wy_count) as check_count ,
+        sum( ys_w_count+ hs_w_count +sh_w_count +yj_w_count +sy_w_count+ jx_w_count+ gr_w_count+ wy_w_count) as
+        undoing_count
+        from (
+        select d.DEPTNAME, temp3.course_name,temp3.course_id,d.DEPTID,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count
+        from (
+        select c.deptid, co.course_name, c.course_id,c.litigantrole, count(1) as num
+        from course_check_record c
+        left join courseinfo co on co.course_id=c.course_id
+        where
+        c.verify_statu='VS00101'
+        and c.check_type='CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="GroupByDeptId">
+                group by c.deptid ,c.litigantrole,c.course_id
+            </isNotEmpty>
+            <isEmpty property="GroupByDeptId">
+                group by c.litigantrole,c.deptid, c.course_id
+            </isEmpty>
+        </dynamic>
+        order by c.check_time desc
+
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by temp3.deptid ,temp3.course_name
+        )as t
+        left join (
+        select temp3.course_id,d.DEPTID,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00101' then num ELSE 0 end) as ys_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00102' then num ELSE 0 end) as ys_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00103' then num ELSE 0 end) as ys_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00101' then num ELSE 0 end) as hs_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00102' then num ELSE 0 end) as hs_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00103' then num ELSE 0 end) as hs_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00101' then num ELSE 0 end) as sh_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00102' then num ELSE 0 end) as sh_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00103' then num ELSE 0 end) as sh_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00101' then num ELSE 0 end) as yj_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00102' then num ELSE 0 end) as yj_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00103' then num ELSE 0 end) as yj_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00101' then num ELSE 0 end) as sy_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00102' then num ELSE 0 end) as sy_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00103' then num ELSE 0 end) as sy_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00101' then num ELSE 0 end) as jx_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00102' then num ELSE 0 end) as jx_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00103' then num ELSE 0 end) as jx_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00101' then num ELSE 0 end) as gr_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00102' then num ELSE 0 end) as gr_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00103' then num ELSE 0 end) as gr_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00101' then num ELSE 0 end) as wy_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00102' then num ELSE 0 end) as wy_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00103' then num ELSE 0 end) as wy_x_count
+        from (
+        select c.deptid, co.course_name,c.checknorm, c.course_id,c.litigantrole, count(1) as num
+        from course_check_record c
+        left join courseinfo co on co.course_id=c.course_id
+        where
+        c.verify_statu='VS00101'
+        and c.check_type='CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="GroupByDeptId">
+                group by c.deptid ,c.litigantrole,c.course_id ,c.checknorm
+            </isNotEmpty>
+            <isEmpty property="GroupByDeptId">
+                group by c.litigantrole,c.deptid, c.course_id ,c.checknorm
+            </isEmpty>
+        </dynamic>
+        order by c.check_time desc
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME, temp3.course_name ) as tt on tt.DEPTID=t.DEPTID and tt.course_id=t.course_id
+        group by t.deptid, t.course_name) as temp4
+    </select>
+    <!--获取手卫生依从性汇总-->
+    <select id="getSWSYCXHZDataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        concat(ifnull(round(temp4.ys_wc_count/temp4.ys_need_count*100,2 ),0), '%') as ys_ycl ,
+        concat(ifnull(round(temp4.hs_wc_count/temp4.hs_need_count*100,2 ),0), '%') as hs_ycl,
+        concat(ifnull(round(temp4.ssj_wc_count/temp4.ssj_need_count*100,2 ),0), '%') as ssj_ycl,
+        concat(ifnull(round(temp4.yg_wc_count/temp4.yg_need_count*100,2 ),0), '%') as yg_ycl ,
+        concat(ifnull(round(temp4.wy_wc_count/temp4.wy_need_count*100,2 ),0), '%') as wy_ycl ,
+        (temp4.ys_wc_count+temp4.hs_wc_count+temp4.ssj_wc_count+temp4.yg_wc_count+temp4.wy_wc_count) as wc_count,
+        (temp4.ys_need_count+temp4.hs_need_count+temp4.ssj_need_count+temp4.yg_need_count+temp4.wy_need_count) as
+        need_count,
+        concat(ifnull(round((temp4.ys_wc_count+temp4.hs_wc_count+temp4.ssj_wc_count+temp4.yg_wc_count+temp4.wy_wc_count)/
+        (temp4.ys_need_count+temp4.hs_need_count+temp4.ssj_need_count+temp4.yg_need_count+temp4.wy_need_count)*100,2
+        ),0),
+        '%') as ycl
+        from (
+        select d.DEPTNAME,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_need_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_need_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00103','LR00104','LR00105') then num ELSE 0 end) as ssj_need_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00106','LR00107') then num ELSE 0 end) as yg_need_count ,
+        sum(CASE WHEN temp3.litigantrole in ( 'LR00108') then num ELSE 0 end) as wy_need_count ,
+
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm!='CN00101' then num ELSE 0 end) as ys_wc_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm!='CN00101' then num ELSE 0 end) as hs_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00103','LR00104','LR00105') and temp3.checknorm!='CN00101' then num ELSE
+        0 end) as ssj_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00106','LR00107') and temp3.checknorm!='CN00101' then num ELSE 0 end) as
+        yg_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ( 'LR00108') and temp3.checknorm!='CN00101' then num ELSE 0 end) as
+        wy_wc_count,
+        temp3.course_name
+        from (
+        select c.deptid, co.course_name,c.litigantrole, c.checknorm,c.completed,c.validity, count(1) as num
+        from course_check_record c
+        left join courseinfo co on co.course_id=c.course_id
+        where
+        c.verify_statu='VS00101'
+        and c.check_type='CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+
+
+            <isNotEmpty property="GroupByDeptId">
+                group by c.deptid ,c.litigantrole
+            </isNotEmpty>
+            <isEmpty property="GroupByDeptId">
+                group by c.litigantrole,c.deptid
+            </isEmpty>
+        </dynamic>
+        order by c.check_time desc
+
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by temp3.deptid
+        ) as temp4
+    </select>
+    <!--获取国内正确性-->
+    <select id="getGNZQXDataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        temp4.ys_count-temp4.ys_zq_count as ys_bzq_count,
+        temp4.hs_count-temp4.hs_zq_count as hs_bzq_count,
+        temp4.sh_count-temp4.sh_zq_count as sh_bzq_count,
+        temp4.yj_count-temp4.yj_zq_count as yj_bzq_count,
+        temp4.sy_count-temp4.sy_zq_count as sy_bzq_count,
+        temp4.jx_count-temp4.jx_zq_count as jx_bzq_count,
+        temp4.gr_count-temp4.gr_zq_count as gr_bzq_count,
+        temp4.wy_count-temp4.wy_zq_count as wy_bzq_count,
+        concat(ifnull(round(temp4.ys_zq_count/temp4.ys_count*100,2 ),0), '%') as ys_zql ,
+        concat(ifnull(round(temp4.hs_zq_count/temp4.hs_count*100,2 ),0), '%') as hs_zql,
+        concat(ifnull(round(temp4.sh_zq_count/temp4.sh_count*100,2 ),0), '%') as sh_zql,
+        concat(ifnull(round(temp4.yj_zq_count/temp4.yj_count*100,2 ),0), '%') as yj_zql,
+        concat(ifnull(round(temp4.sy_zq_count/temp4.sy_count*100,2 ),0), '%') as sy_zql,
+        concat(ifnull(round(temp4.jx_zq_count/temp4.jx_count*100,2 ),0), '%') as jx_zql,
+        concat(ifnull(round(temp4.gr_zq_count/temp4.gr_count*100,2 ),0), '%') as gr_zql,
+        concat(ifnull(round(temp4.wy_zq_count/temp4.wy_count*100,2 ),0), '%') as wy_zql,
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)
+        as
+        check_count,
+        (temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)
+        as zq_count,
+        concat(ifnull(round((temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)/
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)*100,2
+        ),0), '%') as zql
+        from (
+        select d.DEPTNAME,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count ,
+
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.completed='COM00101' then num ELSE 0 end) as ys_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.completed='COM00101' then num ELSE 0 end) as hs_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.completed='COM00101' then num ELSE 0 end) as sh_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.completed='COM00101' then num ELSE 0 end) as yj_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.completed='COM00101' then num ELSE 0 end) as sy_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.completed='COM00101' then num ELSE 0 end) as jx_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.completed='COM00101' then num ELSE 0 end) as gr_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.completed='COM00101' then num ELSE 0 end) as wy_zq_count,
+        temp3.standardname
+        from (
+        select c.deptid,s.standard_name as standardname, s.standard_code, c.litigantrole,c.completed,c.validity,
+        count(1) as num
+        from course_check_record c
+        left join course_check_standard s on s.formid=c.record_id
+        where
+        c.verify_statu='VS00101'
+        and c.check_type='CT00101'
+        and c.validity='COM00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="GroupByDeptId">
+                group by c.deptid ,s.standard_code,c.litigantrole
+            </isNotEmpty>
+            <isEmpty property="GroupByDeptId">
+                group by s.standard_code,c.deptid ,c.litigantrole
+            </isEmpty>
+        </dynamic>
+        order by c.check_time desc
+
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by temp3.deptid,temp3.standard_code
+        ) as temp4
+    </select>
+    <!--获取国内知识考核汇总-->
+    <select id="getGNZSKHHZDataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        temp4.ys_count-temp4.ys_zq_count as ys_bzq_count,
+        temp4.hs_count-temp4.hs_zq_count as hs_bzq_count,
+        temp4.sh_count-temp4.sh_zq_count as sh_bzq_count,
+        temp4.yj_count-temp4.yj_zq_count as yj_bzq_count,
+        temp4.sy_count-temp4.sy_zq_count as sy_bzq_count,
+        temp4.jx_count-temp4.jx_zq_count as jx_bzq_count,
+        temp4.gr_count-temp4.gr_zq_count as gr_bzq_count,
+        temp4.wy_count-temp4.wy_zq_count as wy_bzq_count,
+        concat(ifnull(round(temp4.ys_zq_count/temp4.ys_count*100,2 ),0), '%') as ys_zql ,
+        concat(ifnull(round(temp4.hs_zq_count/temp4.hs_count*100,2 ),0), '%') as hs_zql,
+        concat(ifnull(round(temp4.sh_zq_count/temp4.sh_count*100,2 ),0), '%') as sh_zql,
+        concat(ifnull(round(temp4.yj_zq_count/temp4.yj_count*100,2 ),0), '%') as yj_zql,
+        concat(ifnull(round(temp4.sy_zq_count/temp4.sy_count*100,2 ),0), '%') as sy_zql,
+        concat(ifnull(round(temp4.jx_zq_count/temp4.jx_count*100,2 ),0), '%') as jx_zql,
+        concat(ifnull(round(temp4.gr_zq_count/temp4.gr_count*100,2 ),0), '%') as gr_zql,
+        concat(ifnull(round(temp4.wy_zq_count/temp4.wy_count*100,2 ),0), '%') as wy_zql,
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)
+        as
+        check_count,
+        (temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)
+        as zq_count,
+        concat(ifnull(round((temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)/
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)*100,2
+        ),0), '%') as zql
+        from (
+        select d.DEPTNAME,temp3.course_name,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        ys_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        hs_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        sh_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        yj_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        sy_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        jx_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.check_result='COM00301' then num ELSE 0 end) as
+        gr_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.check_result='COM00301' then num ELSE 0 end) as wy_zq_count
+        from (
+        select c.deptid, c.litigantrole,co.standard_name as course_name, co.check_result,count(1) as num
+        from course_check_record c
+        left join course_check_standard co on co.formid=c.record_id
+        where c.check_type='CT00102'
+        and c.verify_statu='VS00101'
+        and c.validity='COM00101'
+        and co.check_result!='COM00303'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="GroupByDeptId">
+                group by c.deptid ,co.standard_code ,c.litigantrole
+            </isNotEmpty>
+            <isEmpty property="GroupByDeptId">
+                group by co.standard_code ,c.deptid ,c.litigantrole
+            </isEmpty>
+        </dynamic>
+        order by c.check_time desc
+
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME,temp3.deptid , temp3.course_name
+        ) as temp4
+    </select>
+    <!--获取手卫生调查表数据-->
+    <select id="getSWSDC_DataForExcel" resultClass="dto" parameterClass="dto">
+        SELECT
+        c.record_id,
+        c.check_type,
+        c.deptid,
+        d.DEPTNAME,
+        u.USERNAME AS litigantname,
+        e.CODEDESC AS role,
+        c.remark,
+        GROUP_CONCAT(
+        CASE
+        WHEN s.check_result = 'COM00102' || s.check_result = 'COM00302' THEN
+        concat(s.standard_name, ':否')
+        WHEN s.check_result = 'COM00101' THEN
+        concat(s.standard_name, ':是')
+        ELSE
+        concat(s.standard_name, ':无')
+        END
+        ) AS standard_value
+        FROM
+        course_check_record c
+        LEFT JOIN eacode e ON e.`CODE` = c.litigantrole
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        LEFT JOIN course_check_standard s ON s.formid = c.record_id
+        LEFT JOIN eauser u ON u.USERID = c.litigant
+        WHERE
+        c.verify_statu = 'VS00101'
+        AND c.check_type != 'CT00103'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                c.verify_statu=#verify_statu#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        GROUP BY
+        c.record_id
+    </select>
+
+
+    <!--获取国内依从性数据-->
+    <select id="getGNYCX_HIS_DataForExcel" resultClass="dto" parameterClass="dto">
+        select temp4.*, (temp4.check_count-temp4.undoing_count) as doing_count, concat(ifnull(round(
+        (temp4.check_count-temp4.undoing_count)/temp4.check_count*100,2 ),0), '%') as ycl from (select
+        t.course_name,t.DEPTNAME,t.gr_count,t.hs_count,t.jx_count,t.sh_count,t.sy_count,t.yj_count,t.ys_count,t.wy_count,tt.*,
+        sum( ys_count+ hs_count+ sh_count+ yj_count+ sy_count+ jx_count+ gr_count+wy_count) as check_count ,
+        sum( ys_w_count+ hs_w_count +sh_w_count +yj_w_count +sy_w_count+ jx_w_count+ gr_w_count+ wy_w_count) as
+        undoing_count
+        from (
+        select d.DEPTNAME, temp3.course_name,temp3.course_id,d.DEPTID,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count
+        from (
+        select c.deptid, co.course_name, c.course_id,c.litigantrole, count(1) as num
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        left join courseinfo co on co.course_id=c.course_id
+        where
+        r.verify_statu='VS00101'
+        and r.check_type='CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        group by c.deptid ,c.litigantrole,c.course_id
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME,temp3.deptid ,temp3.course_name
+        )as t
+        left join (
+        select temp3.course_id,d.DEPTID,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00101' then num ELSE 0 end) as ys_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00102' then num ELSE 0 end) as ys_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.checknorm='CN00103' then num ELSE 0 end) as ys_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00101' then num ELSE 0 end) as hs_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00102' then num ELSE 0 end) as hs_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.checknorm='CN00103' then num ELSE 0 end) as hs_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00101' then num ELSE 0 end) as sh_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00102' then num ELSE 0 end) as sh_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.checknorm='CN00103' then num ELSE 0 end) as sh_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00101' then num ELSE 0 end) as yj_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00102' then num ELSE 0 end) as yj_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.checknorm='CN00103' then num ELSE 0 end) as yj_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00101' then num ELSE 0 end) as sy_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00102' then num ELSE 0 end) as sy_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.checknorm='CN00103' then num ELSE 0 end) as sy_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00101' then num ELSE 0 end) as jx_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00102' then num ELSE 0 end) as jx_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.checknorm='CN00103' then num ELSE 0 end) as jx_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00101' then num ELSE 0 end) as gr_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00102' then num ELSE 0 end) as gr_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.checknorm='CN00103' then num ELSE 0 end) as gr_x_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00101' then num ELSE 0 end) as wy_w_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00102' then num ELSE 0 end) as wy_c_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.checknorm='CN00103' then num ELSE 0 end) as wy_x_count
+        from (
+        select c.deptid, co.course_name,c.checknorm, c.course_id,c.litigantrole, count(1) as num
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        left join courseinfo co on co.course_id=c.course_id
+        where
+        r.verify_statu='VS00101'
+        and r.check_type='CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        group by c.deptid ,c.litigantrole,c.course_id ,c.checknorm
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME, temp3.course_name ) as tt on tt.DEPTID=t.DEPTID and tt.course_id=t.course_id
+        group by t.deptid, t.course_name) as temp4
+    </select>
+    <!--获取国内正确性-->
+    <select id="getGNZQX_HIS_DataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        temp4.ys_count-temp4.ys_zq_count as ys_bzq_count,
+        temp4.hs_count-temp4.hs_zq_count as hs_bzq_count,
+        temp4.sh_count-temp4.sh_zq_count as sh_bzq_count,
+        temp4.yj_count-temp4.yj_zq_count as yj_bzq_count,
+        temp4.sy_count-temp4.sy_zq_count as sy_bzq_count,
+        temp4.jx_count-temp4.jx_zq_count as jx_bzq_count,
+        temp4.gr_count-temp4.gr_zq_count as gr_bzq_count,
+        temp4.wy_count-temp4.wy_zq_count as wy_bzq_count,
+        concat(ifnull(round(temp4.ys_zq_count/temp4.ys_zqlcount*100,2 ),0), '%') as ys_zql ,
+        concat(ifnull(round(temp4.hs_zq_count/temp4.hs_zqlcount*100,2 ),0), '%') as hs_zql,
+        concat(ifnull(round(temp4.sh_zq_count/temp4.sh_zqlcount*100,2 ),0), '%') as sh_zql,
+        concat(ifnull(round(temp4.yj_zq_count/temp4.yj_zqlcount*100,2 ),0), '%') as yj_zql,
+        concat(ifnull(round(temp4.sy_zq_count/temp4.sy_zqlcount*100,2 ),0), '%') as sy_zql,
+        concat(ifnull(round(temp4.jx_zq_count/temp4.jx_zqlcount*100,2 ),0), '%') as jx_zql,
+        concat(ifnull(round(temp4.gr_zq_count/temp4.gr_zqlcount*100,2 ),0), '%') as gr_zql,
+        concat(ifnull(round(temp4.wy_zq_count/temp4.wy_zqlcount*100,2 ),0), '%') as wy_zql,
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)
+        as
+        check_count,
+        (temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)
+        as zq_count,
+        concat(ifnull(round((temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)/
+        (temp4.ys_zqlcount+temp4.hs_zqlcount+temp4.sh_zqlcount+temp4.yj_zqlcount+temp4.sy_zqlcount+temp4.jx_zqlcount+temp4.gr_zqlcount+temp4.wy_zqlcount)*100,2
+        ),0), '%') as zql
+        from (
+        select d.DEPTNAME,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count ,
+
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.validity='COM00101' then num ELSE 0 end) as ys_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.validity='COM00101' then num ELSE 0 end) as hs_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.validity='COM00101' then num ELSE 0 end) as sh_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.validity='COM00101' then num ELSE 0 end) as yj_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.validity='COM00101' then num ELSE 0 end) as sy_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.validity='COM00101' then num ELSE 0 end) as jx_zqlcount,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.validity='COM00101' then num ELSE 0 end) as gr_zqlcount ,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.validity='COM00101' then num ELSE 0 end) as wy_zqlcount ,
+
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.completed='COM00101' then num ELSE 0 end) as ys_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.completed='COM00101' then num ELSE 0 end) as hs_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.completed='COM00101' then num ELSE 0 end) as sh_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.completed='COM00101' then num ELSE 0 end) as yj_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.completed='COM00101' then num ELSE 0 end) as sy_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.completed='COM00101' then num ELSE 0 end) as jx_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.completed='COM00101' then num ELSE 0 end) as gr_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.completed='COM00101' then num ELSE 0 end) as wy_zq_count
+        from (
+        select c.deptid, c.litigantrole,c.completed,c.validity, count(1) as num
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        where
+        r.verify_statu='VS00101'
+        and r.check_type='CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        group by c.deptid ,c.litigantrole
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME,temp3.deptid
+        ) as temp4
+    </select>
+    <!--获取国内知识考核汇总-->
+    <select id="getGNZSKHHZ_HIS_DataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        temp4.ys_count-temp4.ys_zq_count as ys_bzq_count,
+        temp4.hs_count-temp4.hs_zq_count as hs_bzq_count,
+        temp4.sh_count-temp4.sh_zq_count as sh_bzq_count,
+        temp4.yj_count-temp4.yj_zq_count as yj_bzq_count,
+        temp4.sy_count-temp4.sy_zq_count as sy_bzq_count,
+        temp4.jx_count-temp4.jx_zq_count as jx_bzq_count,
+        temp4.gr_count-temp4.gr_zq_count as gr_bzq_count,
+        temp4.wy_count-temp4.wy_zq_count as wy_bzq_count,
+        concat(ifnull(round(temp4.ys_zq_count/temp4.ys_count*100,2 ),0), '%') as ys_zql ,
+        concat(ifnull(round(temp4.hs_zq_count/temp4.hs_count*100,2 ),0), '%') as hs_zql,
+        concat(ifnull(round(temp4.sh_zq_count/temp4.sh_count*100,2 ),0), '%') as sh_zql,
+        concat(ifnull(round(temp4.yj_zq_count/temp4.yj_count*100,2 ),0), '%') as yj_zql,
+        concat(ifnull(round(temp4.sy_zq_count/temp4.sy_count*100,2 ),0), '%') as sy_zql,
+        concat(ifnull(round(temp4.jx_zq_count/temp4.jx_count*100,2 ),0), '%') as jx_zql,
+        concat(ifnull(round(temp4.gr_zq_count/temp4.gr_count*100,2 ),0), '%') as gr_zql,
+        concat(ifnull(round(temp4.wy_zq_count/temp4.wy_count*100,2 ),0), '%') as wy_zql,
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)
+        as
+        check_count,
+        (temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)
+        as zq_count,
+        concat(ifnull(round((temp4.ys_zq_count+temp4.hs_zq_count+temp4.sh_zq_count+temp4.yj_zq_count+temp4.sy_zq_count+temp4.jx_zq_count+temp4.gr_zq_count+temp4.wy_zq_count)/
+        (temp4.ys_count+temp4.hs_count+temp4.sh_count+temp4.yj_count+temp4.sy_count+temp4.jx_count+temp4.gr_count+temp4.wy_count)*100,2
+        ),0), '%') as zql
+        from (
+        select d.DEPTNAME,temp3.course_name,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' then num ELSE 0 end) as sh_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' then num ELSE 0 end) as yj_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' then num ELSE 0 end) as sy_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' then num ELSE 0 end) as jx_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' then num ELSE 0 end) as gr_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00108' then num ELSE 0 end) as wy_count ,
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.completed='COM00101' then num ELSE 0 end) as ys_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.completed='COM00101' then num ELSE 0 end) as hs_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00103' and temp3.completed='COM00101' then num ELSE 0 end) as sh_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00104' and temp3.completed='COM00101' then num ELSE 0 end) as yj_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00105' and temp3.completed='COM00101' then num ELSE 0 end) as sy_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00106' and temp3.completed='COM00101' then num ELSE 0 end) as jx_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00107' and temp3.completed='COM00101' then num ELSE 0 end) as gr_zq_count,
+        sum(CASE WHEN temp3.litigantrole='LR00108' and temp3.completed='COM00101' then num ELSE 0 end) as wy_zq_count
+        from (
+        select c.deptid, c.litigantrole,co.standard_name as course_name,c.completed,c.validity, count(1) as num
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        left join course_check_standard co on co.formid=c.detail_id
+        where r.check_type='CT00102'
+        and r.verify_statu='VS00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        group by c.deptid ,c.course_id ,c.litigantrole
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by d.DEPTNAME,temp3.deptid , temp3.course_name
+        ) as temp4
+    </select>
+    <!--获取手卫生依从性汇总-->
+    <select id="getSWSYCXHZ_HIS_DataForExcel" parameterClass="dto" resultClass="dto">
+        select temp4.*,
+        concat(ifnull(round(temp4.ys_wc_count/temp4.ys_need_count*100,2 ),0), '%') as ys_ycl ,
+        concat(ifnull(round(temp4.hs_wc_count/temp4.hs_need_count*100,2 ),0), '%') as hs_ycl,
+        concat(ifnull(round(temp4.ssj_wc_count/temp4.ssj_need_count*100,2 ),0), '%') as ssj_ycl,
+        concat(ifnull(round(temp4.yg_wc_count/temp4.yg_need_count*100,2 ),0), '%') as yg_ycl ,
+        concat(ifnull(round(temp4.wy_wc_count/temp4.wy_need_count*100,2 ),0), '%') as wy_ycl ,
+        (temp4.ys_wc_count+temp4.hs_wc_count+temp4.ssj_wc_count+temp4.yg_wc_count+temp4.wy_wc_count) as wc_count,
+        (temp4.ys_need_count+temp4.hs_need_count+temp4.ssj_need_count+temp4.yg_need_count+temp4.wy_need_count) as
+        need_count,
+        concat(ifnull(round((temp4.ys_wc_count+temp4.hs_wc_count+temp4.ssj_wc_count+temp4.yg_wc_count+temp4.wy_wc_count)/
+        (temp4.ys_need_count+temp4.hs_need_count+temp4.ssj_need_count+temp4.yg_need_count+temp4.wy_need_count)*100,2
+        ),0),
+        '%') as ycl
+        from (
+        select d.DEPTNAME,
+        sum(CASE WHEN temp3.litigantrole='LR00101' then num ELSE 0 end) as ys_need_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' then num ELSE 0 end) as hs_need_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00103','LR00104','LR00105') then num ELSE 0 end) as ssj_need_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00106','LR00107') then num ELSE 0 end) as yg_need_count ,
+        sum(CASE WHEN temp3.litigantrole in ( 'LR00108') then num ELSE 0 end) as wy_need_count ,
+
+        sum(CASE WHEN temp3.litigantrole='LR00101' and temp3.completed='COM00101' then num ELSE 0 end) as ys_wc_count,
+        sum(CASE WHEN temp3.litigantrole='LR00102' and temp3.completed='COM00101' then num ELSE 0 end) as hs_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00103','LR00104','LR00105') and temp3.completed='COM00101' then num ELSE
+        0 end) as ssj_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ('LR00106','LR00107') and temp3.completed='COM00101' then num ELSE 0 end) as
+        yg_wc_count,
+        sum(CASE WHEN temp3.litigantrole in ( 'LR00108') and temp3.completed='COM00101' then num ELSE 0 end) as
+        wy_wc_count
+        from (
+        select c.deptid, c.litigantrole, c.completed,c.validity, count(1) as num
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        where
+        r.verify_statu='VS00101'
+        and r.check_type='CT00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        group by c.deptid , c.litigantrole
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) as temp3
+        left join eadept d on d.DEPTID=temp3.deptid
+        group by temp3.deptid
+        ) as temp4
+    </select>
+    <!--获取手卫生调查表数据-->
+    <select id="getSWSDC_HIS_DataForExcel" resultClass="dto" parameterClass="dto">
+        SELECT
+        temp.*,temp1.sws_count,temp1.sws_yc_count,temp1.sws_zq_count,temp1.zskh_count,temp1.zskh_zq_count,temp1.sws_zqlcount
+        FROM
+        (
+        SELECT
+        c.detail_id,
+        c.check_type,
+        c.deptid,
+        d.DEPTNAME,
+        c.litigant,
+        e.CODEDESC AS role,
+        ci.course_name,
+        c.remark,
+        ee.CODEDESC AS checknorm,
+        GROUP_CONCAT(
+        CASE
+        WHEN s.check_result = 'COM00102' THEN
+        concat(s.standard_name, ':否;')
+        ELSE
+        concat(s.standard_name, ':是;')
+        END
+        ) AS standard_value
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        LEFT JOIN eacode e ON e.`CODE` = c.litigantrole
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        LEFT JOIN courseinfo ci ON ci.course_id = c.course_id
+        LEFT JOIN eacode ee ON ee. CODE = c.checknorm
+        LEFT JOIN course_check_standard s ON s.formid = c.detail_id
+        WHERE
+        r.verify_statu = 'VS00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        GROUP BY
+        c.detail_id
+        <dynamic>
+            <isNotEmpty property="conditionsql">
+                $conditionsql$
+            </isNotEmpty>
+            <isEmpty property="conditionsql">
+                order by c.check_type desc,c.check_time desc
+            </isEmpty>
+        </dynamic>
+        ) AS temp
+        LEFT JOIN (
+        SELECT
+        c.deptid,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_count,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00101' and c.validity='COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_zqlcount,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00101'
+        AND c.completed = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_zq_count,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00101'
+        AND c.checknorm IN ('CN00102', 'CN00103') THEN
+        1
+        ELSE
+        0
+        END
+        ) AS sws_yc_count,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00102' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_count,
+        sum(
+        CASE
+        WHEN c.check_type = 'CT00102'
+        AND c.completed = 'COM00101' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS zskh_zq_count
+        from course_checkrecord_hisdetail c
+        left join course_checkrecord_his h on h.history_id=c.history_id
+        left join course_check_record r on r.record_id=h.record_id
+        WHERE
+        r.verify_statu = 'VS00101'
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                r.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                r.deptid like('$deptid$%')
+            </isNotEmpty>
+
+            <isNotEmpty property="litigantrole" prepend="and">
+                r.litigantrole=#litigantrole#
+            </isNotEmpty>
+
+            <isNotEmpty property="validity" prepend="and">
+                r.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                r.litigant=#litigant#
+            </isNotEmpty>
+            <isNotEmpty property="checknorm" prepend="and">
+                r.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                r.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                r.completed=#completed#
+            </isNotEmpty>
+
+            <isNotEmpty property="check_type" prepend="and">
+                r.check_type=#check_type#
+            </isNotEmpty>
+            <isNotEmpty property="verify_statu" prepend="and">
+                r.verify_statu=#verify_statu#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                r.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                r.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="detail_id" prepend="and">
+                h.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty property="operater" prepend="and">
+                h.operater=#operater#
+            </isNotEmpty>
+            <isNotEmpty property="history_id" prepend="and">
+                h.history_id=#history_id#
+            </isNotEmpty>
+            <isNotEmpty property="operate_type" prepend="and">
+                h.operate_type=#operate_type#
+            </isNotEmpty>
+            <isNotEmpty property="start_operate_time" prepend="and">
+                h.operate_time <![CDATA[ >= ]]> str_to_date(#start_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_operate_time" prepend="and">
+                h.operate_time <![CDATA[ <= ]]> str_to_date(#end_operate_time#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        GROUP BY
+        c.deptid
+        ) AS temp1 ON temp1.deptid = temp.deptid
+    </select>
+<!--批量审核-->
+    <select id="getRunningTaskForCheckRecord" parameterClass="dto" resultClass="dto">
+        select c.checker,
+        c.completed,
+        e.CODEDESC as completed_name,
+        c.course_id,
+        c.deptid,
+        d.DEPTNAME,
+        c.litigantrole,
+        ee.CODEDESC as litigantrole_name,
+        c.litigant,
+        c.checknorm,
+        eeee.CODEDESC as checknorm_name,
+        c.record_id,
+        c.record_id as formid,
+        c.check_type,
+        c.remark,
+        c.validity,
+        eee.CODEDESC as validity_name,
+        DATE_FORMAT(
+        c.check_time,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS check_time,
+        u.USERNAME AS checker_name,
+        uu.USERNAME AS litigant_name,
+        cu.course_name,
+        c.verify_statu ,
+        hp.proc_inst_id_,
+        p.key_ as processKey,
+        s.task_def_key_,
+        p.id_ as processId,
+        s.id_ AS taskId,
+        s.assignee_ as assignee,
+        s.task_def_key_ as activityId,
+        hp.business_key_ as businessKey
+        from act_ru_task s left join act_hi_procinst t on s.PROC_INST_ID_=t.PROC_INST_ID_
+        left join course_check_record c on t.BUSINESS_KEY_=c.record_id
+        LEFT JOIN eauser u ON u.USERID = c.checker
+        LEFT JOIN eauser uu ON uu.USERID = c.litigant
+        LEFT JOIN courseinfo cu ON cu.course_id = c.course_id
+        LEFT JOIN eadept d ON d.DEPTID = c.deptid
+        left join eacode e on e.`CODE`=c.completed and e.FIELD='COM001'
+        left join eacode ee on ee.`CODE`=c.litigantrole and ee.FIELD='LitigantRole'
+        left join eacode eee on eee.`CODE`=c.validity and eee.FIELD='COM001'
+        left join eacode eeee on eee.`CODE`=c.checknorm and eeee.FIELD='CheckNorm'
+        LEFT JOIN act_re_procdef p ON s.proc_def_id_ = p.id_
+        LEFT JOIN act_hi_procinst hp ON hp.proc_inst_id_ = s.proc_inst_id_
+        LEFT JOIN ACT_RU_EXECUTION re ON re.proc_inst_id_ = s.proc_inst_id_
+        where c.record_id !='' and re.suspension_state_ = 1
+        <dynamic>
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+
+            <isNotEmpty property="verify_statu" prepend="and">
+                c.verify_statu=#verify_statu#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        order by
+        c.validity asc,c.check_type desc,c.check_time desc
+    </select>
+    <select id="getRunningTaskForCheckRecordCount" parameterClass="dto" resultClass="java.lang.Integer">
+        select  count(1)
+        from act_ru_task s left join act_hi_procinst t on s.PROC_INST_ID_=t.PROC_INST_ID_
+        left join course_check_record c on t.BUSINESS_KEY_=c.record_id
+        LEFT JOIN ACT_RU_EXECUTION re ON re.proc_inst_id_ = t.proc_inst_id_
+        where c.record_id !=''  and re.suspension_state_ = 1
+        <dynamic  >
+            <isNotEmpty property="userid" prepend="and">
+                c.checker=#userid#
+            </isNotEmpty>
+            <isNotEmpty property="deptid" prepend="and">
+                c.deptid =#deptid#
+            </isNotEmpty>
+            <isNotEmpty property="rootdeptid" prepend="and">
+                c.deptid like('$rootdeptid$%')
+            </isNotEmpty>
+            <isNotEmpty property="litigantrole" prepend="and">
+                c.litigantrole=#litigantrole#
+            </isNotEmpty>
+            <isNotEmpty property="validity" prepend="and">
+                c.validity=#validity#
+            </isNotEmpty>
+            <isNotEmpty property="litigant" prepend="and">
+                c.litigant=#litigant#
+            </isNotEmpty>
+
+            <isNotEmpty property="checknorm" prepend="and">
+                c.checknorm=#checknorm#
+            </isNotEmpty>
+            <isNotEmpty property="course_id" prepend="and">
+                c.course_id=#course_id#
+            </isNotEmpty>
+            <isNotEmpty property="completed" prepend="and">
+                c.completed=#completed#
+            </isNotEmpty>
+            <isNotEmpty property="check_type" prepend="and">
+                c.check_type=#check_type#
+            </isNotEmpty>
+
+            <isNotEmpty property="verify_statu" prepend="and">
+                c.verify_statu=#verify_statu#
+            </isNotEmpty>
+            <isNotEmpty property="record_id" prepend="and">
+                c.record_id=#record_id#
+            </isNotEmpty>
+
+            <isNotEmpty property="start_date" prepend="and">
+                c.check_time <![CDATA[ >= ]]> str_to_date(#start_date#,'%Y-%m-%d')
+            </isNotEmpty>
+            <isNotEmpty property="end_date" prepend="and">
+                c.check_time <![CDATA[ <= ]]> str_to_date(#end_date#,'%Y-%m-%d')
+            </isNotEmpty>
+        </dynamic>
+        order by
+        c.validity asc,c.check_type desc,c.check_time desc
+    </select>
+</sqlMap>

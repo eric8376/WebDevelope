@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 任务管理平台 20130519 CF -->
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【quartz任务管理】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<sqlMap namespace="taskMgr">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+    <!--【一般任务】  -->
+    <!-- 添加一条新任务 -->
+    <insert id="insertT_SB_TSERVER_CURRENT_QUE_ST">
+        insert into T_SB_TSERVER_CURRENT_QUE_ST(serial,begin_datetime,repeat_count,repeat_interval,class_name,explain)
+        values(#serial#,#begin_datetime#,#repeat_count#,#repeat_interval#,#class_name#,#explain#)
+    </insert>
+
+    <!-- 删除一条新任务 -->
+    <delete id="deleteT_SB_TSERVER_CURRENT_QUE_ST">
+        delete from T_SB_TSERVER_CURRENT_QUE_ST
+        where serial=#serial#
+    </delete>
+
+    <!-- 更新一条任务 -->
+    <update id="updateT_SB_TSERVER_CURRENT_QUE_ST">
+        update T_SB_TSERVER_CURRENT_QUE_ST
+        set
+        begin_datetime=#begin_datetime#,
+        repeat_count=#repeat_count#,
+        repeat_interval=#repeat_interval#,
+        class_name=#class_name#,
+        explain=#explain#
+        where serial=#serial#
+    </update>
+
+    <!-- 查询当前所有一般任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_ST" resultClass="dto">
+        select date_format(begin_datetime, '%Y-%m-%d %H:%i:%S') as begin_datetime,a.* from T_SB_TSERVER_CURRENT_QUE_ST a
+        order by a.begin_datetime desc
+    </select>
+    <!-- 从当前队列查询某个一般任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_ST1" resultClass="dto">
+        select date_format(a.begin_datetime, '%Y-%m-%d %H:%i:%S') as begin_datetime,a.* from T_SB_TSERVER_CURRENT_QUE_ST
+        a
+        where a.serial=#serial#
+    </select>
+
+
+    <!-- 添加一条新高级任务 -->
+    <insert id="insertT_SB_TSERVER_CURRENT_QUE_CT">
+        insert into T_SB_TSERVER_CURRENT_QUE_CT(serial,cron_exp,class_name,explain)
+        values(#serial#,#cron_exp#,#class_name#,#explain#)
+    </insert>
+
+    <!-- 删除一条新高级任务 -->
+    <delete id="deleteT_SB_TSERVER_CURRENT_QUE_CT">
+        delete from T_SB_TSERVER_CURRENT_QUE_CT
+        where serial=#serial#
+    </delete>
+
+    <!-- 更新一条高级任务 -->
+    <update id="updateT_SB_TSERVER_CURRENT_QUE_CT">
+        update T_SB_TSERVER_CURRENT_QUE_CT
+        set
+        cron_exp=#cron_exp#,
+        class_nam=#class_nam#,
+        explain=#explain#
+        where serial=#serial#
+    </update>
+
+    <!-- 查询当前所有高级任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_CT" resultClass="dto">
+        select date_format(create_date, '%Y-%m-%d %H:%i:%S') as create_date,a.* from T_SB_TSERVER_CURRENT_QUE_CT a
+        order by a.create_date desc
+    </select>
+
+    <!-- 从当前队列查询某个高级任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_CT1" resultClass="dto">
+        select date_format(create_date, '%Y-%m-%d %H:%i:%S') as create_date,a.* from T_SB_TSERVER_CURRENT_QUE_CT a
+        where a.serial=#serial#
+    </select>
+
+
+    <!-- 根据参数值查询某些一般任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_ST2" resultClass="dto">
+        select serial from T_SB_TSERVER_CURRENT_QUE_ST
+        where serial in(
+        select serial from T_SB_TSERVER_QUE_PARAMS
+        where p_key=#key# and
+        p_value=#value#
+        )
+    </select>
+
+    <!-- 根据参数值查询某些一般任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_ST3" resultClass="dto">
+        select serial from T_SB_TSERVER_CURRENT_QUE_ST
+        where serial in(
+        select serial from T_SB_TSERVER_QUE_PARAMS
+        where p_key=#key# and
+        p_value=#value#
+        ) and serial in(
+        select serial from T_SB_TSERVER_QUE_PARAMS
+        where p_key=#key2# and
+        p_value=#value2#
+        )
+    </select>
+
+    <!-- 根据参数值查询某些高级任务 -->
+    <select id="queryT_SB_TSERVER_CURRENT_QUE_CT2" resultClass="dto">
+        select serial from T_SB_TSERVER_CURRENT_QUE_CT
+        where serial in(
+        select serial from T_SB_TSERVER_QUE_PARAMS
+        where p_key=#key# and
+        p_value=#value#
+        )
+    </select>
+
+    <!-- 获取最大的队列编号 -->
+    <select id="maxT_SB_TSERVER_CURRENT_QUE_ST" resultClass="java.lang.String">
+        select max(serial) from T_SB_TSERVER_CURRENT_QUE_ST
+    </select>
+
+
+    <!-- 【参数表】 -->
+    <!-- 添加一条任务的参数 -->
+    <insert id="insertT_SB_TSERVER_QUE_PARAMS">
+        insert into T_SB_TSERVER_QUE_PARAMS(p_no,serial,p_key,p_value)
+        values(#p_no#,#serial#,#p_key#,#p_value#)
+    </insert>
+
+    <!-- 获取某任务的参数 -->
+    <select id="queryT_SB_TSERVER_QUE_PARAMS" resultClass="dto">
+        select * from T_SB_TSERVER_QUE_PARAMS
+        where serial=#serial#
+    </select>
+    <!-- 获取当前最大编号 -->
+    <select id="maxT_SB_TSERVER_QUE_PARAMS" resultClass="java.lang.String">
+        select max(p_no) from T_SB_TSERVER_QUE_PARAMS
+    </select>
+
+
+    <!-- 【历史队列】 -->
+    <!-- 添加一条历史记录 -->
+    <insert id="insertT_SB_TSERVER_HISTORY_QUE">
+        insert into
+        T_SB_TSERVER_HISTORY_QUE(serial,begin_datetime,class_name,end_type,end_time,explain,param1,param2,param3,param4)
+        values(#serial#,#begin_datetime#,#class_name#,#end_type#,#end_time#,#explain#,#param1#,#param2#,#param3#,#param4#)
+    </insert>
+
+    <!-- 查询所有历史记录 -->
+    <select id="queryT_SB_TSERVER_HISTORY_QUE" resultClass="dto">
+        select date_format(a.begin_datetime, '%Y-%m-%d %H:%i:%S') as
+        begin_datetime,serial,class_name,end_type,end_time,explain,param1,param2,param3,param4
+        from T_SB_TSERVER_HISTORY_QUE a
+        <dynamic prepend="where">
+            <isNotEmpty prepend="" property="searchKey">
+                a.explain like '%$searchKey$%' or a.class_name like '%$searchKey$%'
+            </isNotEmpty>
+        </dynamic>
+        order by a.begin_datetime desc
+    </select>
+    <!-- 查询所有历史记录【总数】 -->
+    <select id="countT_SB_TSERVER_HISTORY_QUE" resultClass="java.lang.Integer">
+        select count(*) from T_SB_TSERVER_HISTORY_QUE
+        <dynamic prepend="where">
+            <isNotEmpty prepend="" property="searchKey">
+                serial like '%$searchKey$%' or explain like '%$searchKey$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!-- 获取最大的历史编号 -->
+    <select id="maxT_SB_TSERVER_HISTORY_QUE" resultClass="java.lang.String">
+        select max(serial) from T_SB_TSERVER_HISTORY_QUE
+    </select>
+    <!-- 根据模版编号查询模版 -->
+    <select id="queryMessageTplByTplNo" resultClass="dto">
+        select * from t_sb_message_tpl tpl where tpl.tpl_no=#tpl_no#
+    </select>
+</sqlMap>

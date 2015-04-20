@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【系统交互类dao访问】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<!-- 系统短信管理 -->
+<sqlMap namespace="sysComunicate">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+    <!-- 加入发短信记录 -->
+    <insert id="insertT_SB_MESSAGE">
+        insert into T_SB_MESSAGE
+        values(#mes_no#,#type#,#send_type#,#send_user#,#send_date#,#send_account#,#rec_user#,#rec_phone#,#message#,#res_flag#)
+    </insert>
+
+    <!-- 查询所有发送短信记录 -->
+    <select id="queryT_SB_MESSAGE" resultClass="dto">
+        select * from sy_message_send_info
+        where msg_type='1' and (send_peo like '%$searchKey$%' or
+        receive_peo like '%$searchKey$%' or
+        msg_info like '%$searchKey$%')
+        order by send_time desc
+    </select>
+    <!-- 查询所有发送短信记录【总数】 -->
+    <select id="countT_SB_MESSAGE" resultClass="java.lang.Integer">
+        select count(*) from sy_message_send_info
+        where msg_type='1' and (send_peo like '%$searchKey$%' or
+        receive_peo like '%$searchKey$%' or
+        msg_info like '%$searchKey$%')
+        order by send_time desc
+    </select>
+
+
+    <!-- 加入发RTX记录 -->
+    <insert id="insertT_SB_RTX_NOTIFY">
+        insert into T_SB_RTX_NOTIFY
+        values(#notify_no#,#type#,#send_user#,#send_date#,#rec_users#,#receiver#,#title#,#msg#,#res_flag#)
+    </insert>
+
+    <!-- 查询所有发送RTX记录 -->
+    <select id="queryT_SB_RTX_NOTIFY" resultClass="dto">
+        select date_format(send_date, '%Y-%m-%d %H:%i:%S') as
+        send_date,type,notify_no,send_user,rec_users,receiver,title,msg,res_flag from T_SB_RTX_NOTIFY
+        where title like '%$searchKey$%' or
+        msg like '%$searchKey$%' or
+        receiver like '%$searchKey$%' or
+        res_flag like '%$searchKey$%'
+        order by send_date desc
+    </select>
+    <!-- 查询所有发送RTX记录 【总数】-->
+    <select id="countT_SB_RTX_NOTIFY" resultClass="java.lang.Integer">
+        select count(title) from T_SB_RTX_NOTIFY
+        where title like '%$searchKey$%' or
+        msg like '%$searchKey$%' or
+        receiver like '%$searchKey$%' or
+        res_flag like '%$searchKey$%'
+    </select>
+
+</sqlMap>

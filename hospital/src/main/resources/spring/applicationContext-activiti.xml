@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+        http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.2.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.2.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.2.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+        >
+
+
+    <!-- Activiti begin -->
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="databaseSchemaUpdate" value="false"/>
+        <property name="jobExecutorActivate" value="false"/>
+        <property name="history" value="full"/>
+        <property name="activityFontName" value="宋体"/>
+        <property name="labelFontName" value="宋体"/>
+        <!--   <property name="postBpmnParseHandlers">
+               <list>
+                   <bean class="org.nxstudio.service.workflow.common.service.impl.CustomUserTaskBpmnParseHandler" />
+               </list>
+           </property>-->
+    </bean>
+
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"/>
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
+    <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
+    <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
+    <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
+    <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
+    <!-- Activiti end -->
+
+
+    <aop:config>
+        <aop:aspect ref="RTXInform">
+            <aop:pointcut id="pointcut" expression="execution(public * org.nxstudio.service.workflow.common.service.impl.ActivitiServiceImpl.doProcessAdvance(..) throws Exception)
+            or execution(public * org.nxstudio.service.workflow.common.service.impl.ActivitiServiceImpl.doBackProcess(..) throws Exception)
+            or execution(public * org.nxstudio.service.workflow.common.service.impl.ActivitiServiceImpl.doProcessTransferAssignee(..))"/>
+            <!--<aop:before pointcut-ref="pointcut" method="before"/>
+            <aop:after-returning pointcut-ref="pointcut" method="afterReturn" />
+            <aop:after pointcut-ref="pointcut" method="after" />-->
+            <aop:around pointcut-ref="pointcut" method="TaskArriveWarn"/>
+        </aop:aspect>
+    </aop:config>
+
+
+    <aop:config>
+        <aop:aspect ref="TaskSekectIntercept">
+            <aop:pointcut id="taskpointcut"
+                          expression="execution(public * org.nxstudio.service.workflow.common.service.impl.ActivitiServiceImpl.findNextTask(..) throws Exception)"/>
+            <aop:around pointcut-ref="taskpointcut" method="TaskNameAscertain"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

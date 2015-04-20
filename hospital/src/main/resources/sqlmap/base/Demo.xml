@@ -1,0 +1,1372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 演示与教程手工映射SQL语句 -->
+<sqlMap namespace="Demo">
+    <typeAlias alias="dto" type="org.nxstudio.core.model.impl.BaseDto"/>
+    <typeAlias alias="catalogVO" type="org.nxstudio.demo.vo.CatalogVO"/>
+    <typeAlias alias="userVo" type="org.nxstudio.core.vo.UserVo"/>
+
+    <!-- 查询FlashReport元数据  -->
+    <select id="getFcfDataList" parameterClass="map" resultClass="dto">
+        SELECT name as name, value as value, color as color, alpha as alpha,
+        issliced as isSliced
+        FROM EA_DEMO_FCF where product = #product#
+        <dynamic>
+            <isNotEmpty prepend="and" property="fcfid">
+                fcfid <![CDATA[ <= ]]> #fcfid#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询FlashReport元数据合计  -->
+    <select id="getFcfSumDataList" parameterClass="map" resultClass="dto">
+        SELECT name, sum(value) as value
+        FROM EA_DEMO_FCF where product in ('1','2')
+        group by name
+    </select>
+
+    <!-- 查询测试数据  -->
+    <select id="getTestData" parameterClass="map" resultClass="dto">
+        SELECT a.sxh, a.xh, DECODE (a.zflb, 11, '门诊', 34, '住院') AS zflb,
+        a.grbm,
+        b.xm AS xm, (SELECT sfdlmc
+        FROM bg01sfxmdl
+        WHERE sfdlbm =
+        a.sfdlbm) AS sfdlmc, a.sfxmmc, a.sl,
+        a.sjjg,a.fyze,a.cd,a.gg,a.sfsj,a.sfy
+        FROM by09zyfymx a, by10cyjsb b
+        WHERE a.sxh = b.sxh and a.yybm = '00000021' and a.sfsj <![CDATA[ <= ]]>
+        str_to_date('2009-03-20','%Y-%m-%d') and a.sfsj <![CDATA[ >= ]]>
+        str_to_date('2009-03-13','%Y-%m-%d')
+    </select>
+
+    <!-- 查询测试数据  -->
+    <select id="getTestData1" parameterClass="map" resultClass="dto">
+        SELECT a.sxh, a.dwmc, a.grbm, a.xm, decode(a.xb, 1, '男', 2, '女' ,
+        '人妖') as xb, a.xnl, a.fyze, a.qzfbf AS zfje,
+        (a.fyze - a.qzfbf) AS
+        ybbx, a.jbsj AS jssj, a.sfy as jbr, (select yymc from
+        bg05ddyyda where
+        yybm = a.yybm) as yymc
+        FROM by10cyjsb a where yybm = '00000021'
+    </select>
+
+    <!-- 查询测试数据  -->
+    <select id="getTestData2" parameterClass="map" resultClass="dto">
+        SELECT a.sfdlbm, a.xmmc, a.xmrj, a.gg, a.dw, a.zfbl9 AS zfbl, a.jx,
+        a.cd,
+        a.qyzt AS qybz, a.ggsj, a.yybm
+        FROM bg02ldfwxm a where yybm =
+        '03010001'
+    </select>
+
+    <!-- 插入一条结算数据 -->
+    <insert id="insertEz_byjsbDomain" parameterClass="dto">
+        INSERT INTO
+        EA_DEMO_BYJSB (
+        sxh, dwmc, grbm, xm, xb, xnl, fyze, zfje, ybbx, jssj, yymc,
+        jbr)
+        VALUES (#sxh#, #dwmc#, #grbm#, #xm#, #xb#, #xnl#, #fyze#, #zfje#,
+        #ybbx#, #jssj#, #yymc#, #jbr#)
+    </insert>
+
+    <!-- 插入一条收费项目 -->
+    <insert id="insertEz_sfxmDomain" parameterClass="dto">
+        INSERT INTO EA_DEMO_SFXM
+        (xmid, sfdlbm, xmmc,xmrj, gg, dw,zfbl, jx, cd,qybz, yybm,ggsj)
+        VALUES
+        (#xmid#, #sfdlbm#, #xmmc#,#xmrj#, #gg#, #dw#,#zfbl#, #jx#,#cd#,
+        #qybz#, #yybm#, #ggsj# )
+    </insert>
+
+    <!-- 查询医院收费目录 -->
+    <select id="queryCatalogsForPrint" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        xmid, xmmc, xmrj,
+        gg, dw, zfbl,
+        jx, cd, qybz,
+        yybm, ggsj, sfdlbm
+        FROM EA_DEMO_SFXM a WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY xmid desc
+    </select>
+
+    <select id="queryCatalogsForPrintForPageCount" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM EA_DEMO_SFXM a WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询医院收费目录-->
+    <select id="queryCatalogsForPrintLimitRows" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        xmid, xmmc, xmrj,
+        gg, dw, zfbl,
+        jx, cd, qybz,
+        yybm, ggsj, sfdlbm
+        FROM EA_DEMO_SFXM a WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询病人结算信息 -->
+    <select id="queryBalanceInfo" parameterClass="map" resultClass="dto">
+        SELECT sxh, dwmc, grbm, xm, xb, xnl, fyze, zfje, ybbx, jssj, yymc, jbr
+        FROM EA_DEMO_BYJSB a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sxh">
+                a.sxh = #sxh#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xm">
+                a.xm like '%$xm$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询病人结算信息 -->
+    <select id="countBalanceInfo" parameterClass="map" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM EA_DEMO_BYJSB a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sxh">
+                a.sxh = #sxh#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xm">
+                a.xm like '%$xm$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询病人结算汇总信息 -->
+    <select id="sumBalanceInfo" parameterClass="map" resultClass="dto">
+        SELECT COUNT(sxh) AS sxh, SUM(fyze) AS fyze, SUM(ybbx) AS ybbx, SUM(zfje) AS zfje
+        FROM ea_demo_byjsb a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sxh">
+                a.sxh = #sxh#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xm">
+                a.xm like '%$xm$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询中国行政区划数据  -->
+    <select id="getChinaDataArea" parameterClass="map" resultClass="dto">
+        SELECT areacode as value, areaname as text
+        FROM ea_demo_chinaarea
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="areacode">
+                areacode like '$areacode$'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="unareacode">
+                areacode != #unareacode#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="areacodelength">
+                length(areacode) = $areacodelength$
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="DataAreatest" parameterClass="map" resultClass="dto">
+        SELECT areacode ,areaname
+        FROM chinaarea
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="areacode">
+                areacode like '$areacode$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="areacodelength">
+                length(areacode) = $areacodelength$
+            </isNotEmpty>
+            <!-- 		<isNotEmpty prepend="and" property="areaname">
+                        areaname like '$areaname$%'
+                    </isNotEmpty> -->
+            <!--			<isNotEmpty prepend="and" property="classifytype_id">
+                            classifytype_id = #classifytype_id#
+                        </isNotEmpty>-->
+        </dynamic>
+    </select>
+
+    <select id="Dataclassify" parameterClass="map" resultClass="dto">
+        SELECT classify_id ,classifytype_id,code,classify_name,p_classify_id
+        FROM t_base_classify
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="classify_id">
+                classify_id = #classify_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="classifytype_id">
+                classifytype_id = #classifytype_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="code">
+                code = #code#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="classify_name">
+                classify_name = #classify_name#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="p_classify_id">
+                p_classify_id = #p_classify_id#
+            </isNotEmpty>
+            <!-- 		<isNotEmpty prepend="and" property="areaname">
+                        areaname like '$areaname$%'
+                    </isNotEmpty> -->
+            <!--			<isNotEmpty prepend="and" property="classifytype_id">
+                            classifytype_id = #classifytype_id#
+                        </isNotEmpty>-->
+        </dynamic>
+    </select>
+    <insert id="insertAareDate" parameterClass="dto">
+        INSERT INTO t_base_classify
+        (classify_id, classifytype_id, classify_name,code, islock,delete_status,p_classify_id)
+        VALUES
+        (#classify_id#, #classifytype_id#, #classify_name#,#code#,#islock#,#delete_status#,#p_classify_id#)
+    </insert>
+    <!-- 参数管理-查询参数列表 -->
+    <select id="getChinaDataArea4Paging" parameterClass="map"
+            resultClass="dto">
+        SELECT areacode as value,
+        areaname as text
+        FROM ea_demo_chinaarea a
+        WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="areacode">
+                a.areacode = #areacode#
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY areacode desc
+    </select>
+
+    <select id="getChinaDataArea4PagingForPageCount" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM ea_demo_chinaarea a WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="areacode">
+                a.areacode = #areacode#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询医院收费目录(表格演示) -->
+    <select id="queryCatalogsForGridDemo" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        xmid, xmmc, xmrj,
+        gg, dw, zfbl,
+        jx, cd, qybz,
+        yybm, ggsj, sfdlbm
+        FROM EA_DEMO_SFXM a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xmid">
+                a.xmid = #xmid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sfdlbm">
+                a.sfdlbm = #sfdlbm#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="jx">
+                a.jx = #jx#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cd">
+                a.cd like '%$cd$%'
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY xmid desc
+    </select>
+
+    <select id="countCatalogsForGridDemo" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM EA_DEMO_SFXM a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xmid">
+                a.xmid = #xmid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sfdlbm">
+                a.sfdlbm = #sfdlbm#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="jx">
+                a.jx = #jx#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cd">
+                a.cd like '%$cd$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询第一级树节点 -->
+    <select id="queryAreas4Tree4FirstLevel" parameterClass="map"
+            resultClass="dto">
+        SELECT areacode as id, areaname as text
+        FROM
+        ea_demo_chinaarea a where length(areacode) = 2
+    </select>
+
+    <!-- 查询树节点 -->
+    <select id="queryAreas4Tree" parameterClass="map" resultClass="dto">
+        SELECT areacode as id, areaname as text
+        FROM ea_demo_chinaarea a WHERE
+        a.areacode like '$areacode$%' and
+        length(areacode) = $length$
+    </select>
+
+    <!-- 查询表格树数据 -->
+    <select id="queryDeptItemsByDto4TreeGridDemo" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        deptid as id, deptname as text, parentid,sortno,customid,leaf
+        FROM EADEPT
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="deptid">
+                deptid = #deptid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="parentid">
+                parentid = #parentid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="deptname">
+                deptname like
+                '%$deptname$%'
+            </isNotEmpty>
+        </dynamic>
+        order by sortno
+    </select>
+
+    <!-- 查询病人结算信息 -->
+    <select id="queryBalanceInfo2" parameterClass="map" resultClass="dto" remapResults="true">
+        SELECT sxh, dwmc, grbm, xm, xb, xnl, fyze, zfje, ybbx, jssj, yymc, jbr
+        FROM EA_DEMO_BYJSB a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sxh">
+                a.sxh = #sxh#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="grbm">
+                a.grbm = #grbm#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="dwmc">
+                a.dwmc like '%$dwmc$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xm">
+                a.xm like '%$xm$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xnl1">
+                a.xnl <![CDATA[ >= ]]> #xnl1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xnl2">
+                a.xnl <![CDATA[ <= ]]> #xnl2#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询病人结算信息 -->
+    <select id="countBalanceInfo2" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM EA_DEMO_BYJSB a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sxh">
+                a.sxh = #sxh#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="grbm">
+                a.grbm = #grbm#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="dwmc">
+                a.dwmc like '%$dwmc$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xm">
+                a.xm like '%$xm$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xnl1">
+                a.xnl <![CDATA[ >= ]]> #xnl1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xnl2">
+                a.xnl <![CDATA[ <= ]]> #xnl2#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 查询医院收费目录综合实例 -->
+    <select id="queryCatalogs2" parameterClass="map" resultClass="dto">
+        SELECT
+        xmid, xmmc, xmrj,
+        gg, dw, zfbl,
+        jx, cd, qybz,
+        yybm, ggsj, sfdlbm
+        FROM EA_DEMO_SFXM a WHERE 1 = 1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="xmid">
+                a.xmid = #xmid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="xmmc">
+                a.xmmc like '%$xmmc$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <update id="updatesfxm" parameterClass="map">
+        UPDATE EA_DEMO_SFXM
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="sfdlbm">
+                sfdlbm = #sfdlbm#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="ggsj">
+                ggsj = #ggsj#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="yybm">
+                yybm = #yybm#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="qybz">
+                qybz = #qybz#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="cd">
+                cd = #cd#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="jx">
+                jx = #jx#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="zfbl">
+                zfbl = #zfbl#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="dw">
+                dw = #dw#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="gg">
+                gg = #gg#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="xmmc">
+                xmmc = #xmmc#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="xmrj">
+                xmrj = #xmrj#
+            </isNotEmpty>
+        </dynamic>
+        WHERE 1=1 and xmid = #xmid#
+    </update>
+
+    <delete id="deleteSfxm" parameterClass="map">
+        DELETE FROM EA_DEMO_SFXM WHERE xmid = #xmid#
+    </delete>
+
+    <update id="updateByjsb" parameterClass="map">
+        UPDATE EA_DEMO_BYJSB SET fyze = #fyze# WHERE sxh = #sxh#
+    </update>
+
+    <!-- 查询医院收费目录(打印):综合范例 -->
+    <select id="queryCatalogsForPrintLimitRows4DemoWithMysql" parameterClass="map" resultClass="catalogVO">
+        SELECT
+        xmid, xmmc, xmrj, gg, dw, zfbl, jx, cd, qybz, yybm, ggsj, sfdlbm
+        FROM EA_DEMO_SFXM a
+        WHERE 1=1 limit 50
+    </select>
+
+    <!-- 查询文件列表信息 -->
+    <select id="queryFiles" parameterClass="map" resultClass="dto">
+        SELECT fileid, title, path,filesize,remark
+        FROM ea_demo_upload WHERE 1=1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                title like '%$title$%'
+            </isNotEmpty>
+        </dynamic>
+        order by fileid desc
+    </select>
+
+    <!-- 统计文件列表 -->
+    <select id="countFiles" parameterClass="map" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM ea_demo_upload WHERE 1=1
+        <dynamic>
+            <isNotEmpty prepend="AND" property="title">
+                title like '%$title$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 插入一文件上传数据 -->
+    <insert id="insertEa_demo_uploadPo" parameterClass="dto">
+        INSERT INTO
+        Ea_demo_upload (fileid, title, path,filesize,remark)
+        VALUES (#fileid#, #title#, #path#,#filesize#,#remark#)
+    </insert>
+
+    <!-- 根据文件ID获取一个文件 -->
+    <select id="queryFileByFileID" parameterClass="java.lang.String" resultClass="dto">
+        SELECT fileid, title, path,filesize,remark
+        FROM ea_demo_upload WHERE fileid = #fileid#
+    </select>
+
+    <!-- 根据文件ID删除一个文件 -->
+    <delete id="delFileByFileID" parameterClass="java.lang.String">
+        DELETE FROM ea_demo_upload WHERE fileid = #fileid#
+    </delete>
+
+    <!-- 定义出入参对象映射 -->
+    <parameterMap id="prcdto" class="map">
+        <parameter property="myname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <!-- 入参 -->
+        <parameter property="number1" jdbcType="DOUBLE" javaType="java.math.BigDecimal" mode="IN"/>
+        <!-- 入参 -->
+        <parameter property="number2" jdbcType="DOUBLE" javaType="java.math.BigDecimal" mode="IN"/>
+        <!-- 入参 -->
+        <parameter property="sum" jdbcType="DOUBLE" javaType="java.math.BigDecimal" mode="OUT"/>
+        <!-- 出参 -->
+        <parameter property="result" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+        <!-- 出参 -->
+        <parameter property="appCode" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+        <!-- 执行代码 -->
+        <parameter property="errMsg" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+        <!-- 出错信息 -->
+    </parameterMap>
+    <!-- 演示调用存储过程:如果你将存储过程是通过oracle的package的方式来组织,则使用packagename.prcname的方式来调用 -->
+    <procedure id="g4_prc_demo" parameterMap="prcdto">{call g4_prc_demo(?,?,?,?,?,?,?)}</procedure>
+
+    <!-- 测试动态分组列 -->
+    <select id="testDynamicGroupField" parameterClass="map" resultClass="dto">
+        SELECT sum(fyze)
+        FROM ea_demo_byjsb
+        group by $xb$
+    </select>
+    <select id="testDynamicGroupField1" parameterClass="map" resultClass="dto">
+        SELECT SUM(fyze) FROM ea_demo_byjsb GROUP BY xb
+    </select>
+
+    <!-- 查询用户数据 -->
+    <select id="queryUserInfo4Doc" parameterClass="map" resultClass="userVo">
+        SELECT userid, username, usertype FROM eauser
+    </select>
+
+    <!-- 查询学生信息(表格演示) -->
+    <select id="queryStudentForDemo" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        sid, sno, sname,
+        sclass, sbirthday
+        FROM JAVADEMO a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sid">
+                a.sid=#sid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sno">
+                a.sno = #sno#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sname">
+                a.sname like '%$sname$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sclass">
+                a.sclass = #sclass#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sbirthday">
+                a.sbirthday=#sbirthday#
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY sid desc
+    </select>
+
+    <select id="countStudentForDemo" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM JAVADEMO a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="sid">
+                a.sid=#sid#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sno">
+                a.sno = #sno#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sname">
+                a.sname like '%$sname$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sclass">
+                a.sclass = #sclass#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="sbirthday">
+                a.sbirthday=#sbirthday#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <!-- 插入一条学生-->
+    <insert id="insertEz_StudentDomain" parameterClass="dto">
+        INSERT INTO JAVADEMO
+        (sid, sno, sname,sclass, sbirthday)
+        VALUES
+        (#sid#, #sno#, #sname#,#sclass#,#sbirthday# )
+    </insert>
+
+    <update id="updatestudent" parameterClass="map">
+        UPDATE JAVADEMO
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="sno">
+                sno = #sno#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="sname">
+                sname = #sname#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="sclass">
+                sclass = #sclass#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="sbirthday">
+                sbirthday = #sbirthday#
+            </isNotEmpty>
+
+        </dynamic>
+        WHERE 1=1 and sid = #sid#
+    </update>
+
+    <!-- ###########################业务字典和业务字典描述表同步####################### -->
+    <delete id="deleteStudent" parameterClass="map">
+        DELETE FROM JAVADEMO WHERE sid = #sid#
+    </delete>
+    <!--查询业务字典数据 -->
+    <select id="queryT_Ad_Eacode" resultClass="dto">
+        select distinct t.field,t.fieldname from t_ad_eacode t group by t.field,t.fieldname
+    </select>
+    <!--删除业务字典描述表数据  -->
+    <delete id="delT_Ad_EacodeDesc">
+        delete from t_ad_eacode_desc
+    </delete>
+    <!--删除业务字典描述表数据  -->
+    <insert id="insertT_Ad_EacodeDesc" parameterClass="map">
+        insert into t_ad_eacode_desc(did,field,fieldname,code_size) values (#did#,#field#,#fieldname#,2)
+    </insert>
+    <!-- ###########################业务字典值长度和业务字典描述表code_size同步####################### -->
+    <!-- 校验字典描述表和业务字典表的数据是否一致 -->
+    <select id="verifiDesc2T_Ad_Eacode" resultClass="dto">
+        select t.field,t.fieldname from t_ad_eacode_desc t where t.field not in (select td.field from t_ad_eacode td)
+    </select>
+    <!-- 校验业务字典表和字典描述表的数据是否一致 -->
+    <select id="verifiT_Ad_Eacode2Desc" resultClass="dto">
+        select distinct t.field from t_ad_eacode t where t.field not in (select td.field from t_ad_eacode_desc td)
+    </select>
+
+    <!-- 校验业务字典表和成品件属性表的数据是否一致 -->
+    <select id="verifiT_Ad_Eacode2CmpAtt" resultClass="dto">
+        <!-- select distinct t.field,t.attribute_name from t_ad_attribute t where t.attribute_id in (select tpa.attribute_id from t_ad_product_attribute tpa) and  t.field not in(select distinct ea.field from t_ad_eacode ea) -->
+        select temp.fieldgroup,
+        temp.codedesc,
+        temp.value,
+        temp.attribute_name,
+        temp.field
+        from (select distinct (t.codeid ||
+        (select a.field
+        from t_ad_attribute a
+        where a.attribute_id = t.attribute_id)) as fieldgroup,
+        t.codedesc,
+        t.product_id,
+        t.codeid as value,
+        (select a.attribute_name
+        from t_ad_attribute a
+        where a.attribute_id = t.attribute_id) as attribute_name,
+        (select a.field
+        from t_ad_attribute a
+        where a.attribute_id = t.attribute_id) as field
+        from t_ad_product_attribute t) temp
+        where temp.fieldgroup not in
+        (select distinct (e.code || e.field) as fieldgroup from t_ad_eacode e)
+        and (select ad.delete_status
+        from ad_design ad
+        where ad.design_id =
+        (select itp.design_id
+        from t_ad_product itp
+        where itp.product_id = temp.product_id)) = 0
+        group by temp.fieldgroup,
+        temp.codedesc,
+        temp.value,
+        temp.attribute_name,
+        temp.field
+        order by temp.field, temp.value, temp.codedesc
+
+    </select>
+    <!-- 校验业务字典表和标准件属性表的数据是否一致 -->
+    <select id="verifiT_Ad_Eacode2StaAtt" resultClass="dto">
+        select *
+        from (select (v.value ||
+        (select a.field
+        from t_ad_attribute a
+        where a.attribute_id = l.attribute_id)) as fieldgroup,
+        (select ia.attribute_name
+        from t_ad_attribute ia
+        where ia.attribute_id = l.attribute_id) as attribute_name,
+        v.value,
+        (select a.field
+        from t_ad_attribute a
+        where a.attribute_id = l.attribute_id) as field
+        from t_ad_design_attribute_link l, ad_attribute_value v
+        where l.da_link_id = v.link_id
+        and (select ad.delete_status
+        from ad_design ad
+        where ad.design_id = l.design_id) = 0
+        group by l.attribute_id, v.value
+        order by l.attribute_id) temp
+        where temp.fieldgroup not in
+        (select (e.code || e.field) as fieldgroup from t_ad_eacode e)
+        order by temp.field
+
+    </select>
+
+    <!--查询业务字典描述表数据 -->
+    <select id="queryT_Ad_EacodeDesc" resultClass="dto">
+        select t.field,t.fieldname, t.code_size from t_ad_eacode_desc t
+    </select>
+    <!--通过field查询业务字典数据 -->
+    <select id="queryT_Ad_EacodeByfield" resultClass="dto">
+        select t.codeid, t.code from t_ad_eacode t where t.field=#field#
+    </select>
+    <!-- 通过did同步字典表的值的长度 -->
+    <update id="doSynCode_size" parameterClass="map">
+        UPDATE t_ad_eacode t set t.code=#code# where t.codeid=#codeid#
+    </update>
+    <!-- ###########################更新属性表的sequence字段####################### -->
+    <!--查询属性表的所有属性id -->
+    <select id="getAttIds" resultClass="dto">
+        select t.attribute_id from t_ad_attribute t
+    </select>
+    <!-- 通过属性id更新该属性id的sequence字段 -->
+    <update id="updateAttSeq" parameterClass="map">
+        UPDATE t_ad_attribute t set t.sequence=#sequence# where t.attribute_id=#attribute_id#
+    </update>
+    <!-- ###########################更新属性值表的value字段####################### -->
+    <!-- 查出所有描述表的field和code_size -->
+    <select id="getFieldsAndCodeSizes" resultClass="dto">
+        select t.field,t.code_size from t_ad_eacode_desc t
+    </select>
+    <!--通过field去查询属性表获取attribute_id -->
+    <select id="getAttribute_ids" parameterClass="map" resultClass="dto">
+        select t.attribute_id from t_ad_attribute t where t.field=#field#
+    </select>
+    <!--通过attribute_id去查询标准设计件属性连接表获取da_link_id
+        <select id="getDa_link_ids" parameterClass="map" resultClass="dto">
+    select t.da_link_id from t_ad_design_attribute_link t where t.attribute_id=#attribute_id#
+    </select>-->
+    <!--通过da_link_id去查询标准设计件属性值表，获取值，判断值长度-->
+    <select id="getStaDesignvalues" parameterClass="map" resultClass="dto">
+        select t.value,t.id from ad_attribute_value t where t.link_id in (select t.da_link_id from
+        t_ad_design_attribute_link t where t.attribute_id=#attribute_id#)
+        <!-- select t.value ,t.link_id from ad_attribute_value t where t.link_id=#da_link_id# -->
+    </select>
+    <!--通过attribute_id去查询成品设计件属性值表，获取值，判断值长度-->
+    <select id="getCmpDesignvalues" parameterClass="map" resultClass="dto">
+        select t.codeid ,t.att_value_id from t_ad_product_attribute t where t.attribute_id=#attribute_id#
+    </select>
+    <!-- 更新标准设计件属性值表的value字段 -->
+    <update id="updateStaAttvalues" parameterClass="map">
+        update ad_attribute_value t set t.value=#value# where t.id=#id#
+    </update>
+    <!-- 更新成品设计件属性值表的codeid字段 -->
+    <update id="updateCmpDesignvalues" parameterClass="map">
+        update t_ad_product_attribute t set t.codeid=#codeid# where t.att_value_id=#att_value_id#
+    </update>
+    <!-- 根据成品件ID查询相关属性值的CODE -->
+    <select id="getCodeByProductId" parameterClass="map" resultClass="dto">
+        select pa.* from t_ad_product_attribute pa left join t_ad_attribute att on pa.attribute_id=att.attribute_id
+        where pa.product_id=#product_id#
+        order by att.sequence asc
+    </select>
+    <select id="getClassify" resultClass="dto">
+        select * from t_base_classify c where c.classifytype_id in (select t.classifytype_id from t_base_classifytype t
+        where t.type='10002343')
+    </select>
+    <select id="getDesign" resultClass="dto">
+        select * from ad_design d
+    </select>
+    <select id="getProduct" resultClass="dto">
+        select * from t_ad_product p order by p.product_id asc
+    </select>
+    <select id="getProductCount" parameterClass="map" resultClass="java.lang.Integer">
+        select count(0) from t_ad_product
+    </select>
+    <update id="updateProduct" parameterClass="map">
+        update t_ad_product set product_no=#product_no#,product_fullno=#product_fullno# where product_id=#product_id#
+    </update>
+    <!-- 查询供应商的信息(表格演示) -->
+    <select id="querysupCom" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        supcom_id,supcomname,phone1,phone2,phone3,phone4,relpeason1,relpeason2,account1,account2,
+        supbeginprice,paystyle,supcomaddress,hevgoods,paogoods
+        FROM SUPCOM a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="supcom_id">
+                a.supcom_id=#supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supcomname">
+                a.supcomname like '%$supcomname$%'
+
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone1">
+                a.phone1=#phone1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone2">
+                a.phone2= #phone2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone3">
+                a.phone3= #phone3#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone4">
+                a.phone4= #phone4#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="relpeason1">
+                a.relpeason1= #relpeason1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="relpeason2">
+                a.relpeason2= #relpeason2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="account1">
+                a.account1= #account1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="account2">
+                a.account2= #account2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supbeginprice">
+                a.supbeginprice= #supbeginprice#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paystyle">
+                a.paystyle= #paystyle#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supcomaddress">
+                a.supcomaddress like '%$supcomaddress$%'
+            </isNotEmpty>
+
+            <isNotEmpty prepend="AND" property="supcomactive">
+                a.supcomactive= #supcomactive#
+            </isNotEmpty>
+
+            <isNotEmpty prepend="AND" property="hevgoods">
+                a.hevgoods= #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paogoods">
+                a.paogoods= #paogoods#
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY supcom_id desc
+    </select>
+    <!-- 查询供应商的信息的总记录数 -->
+    <select id="querysupComSum" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM SUPCOM a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="supcom_id">
+                a.supcom_id=#supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supcomname">
+                a.supcomname like '%$supcomname$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone1">
+                a.phone1=#phone1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone2">
+                a.phone2= #phone2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone3">
+                a.phone3= #phone3#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="phone4">
+                a.phone4= #phone4#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="relpeason1">
+                a.relpeason1= #relpeason1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="relpeason2">
+                a.relpeason2= #relpeason2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="account1">
+                a.account1= #account1#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="account2">
+                a.account2= #account2#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supbeginprice">
+                a.supbeginprice= #supbeginprice#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paystyle">
+                a.paystyle= #paystyle#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supcomaddress">
+                a.supcomaddress like '%$supcomaddress$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="supcomactive">
+                a.supcomactive= #supcomactive#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="hevgoods">
+                a.hevgoods= #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paogoods">
+                a.paogoods= #paogoods#
+            </isNotEmpty>
+
+        </dynamic>
+
+    </select>
+
+    <!-- 插入一条供应商的信息-->
+    <insert id="addsupCom" parameterClass="dto">
+        INSERT INTO SUPCOM
+        (supcom_id, supcomname,
+        phone1,phone2,phone3,phone4,relpeason1,relpeason2,account1,account2,supbeginprice,paystyle,supcomaddress,supcomactive,hevgoods,paogoods)
+        VALUES
+        (#supcom_id#, #supcomname#,
+        #phone1#,#phone2#,#phone3#,#phone4#,#relpeason1#,#relpeason2#,#account1#,#account2#,#supbeginprice#,#paystyle#,#supcomaddress#,#supcomactive#,#hevgoods#,#paogoods#)
+    </insert>
+    <!-- 修改一条供应商的信息  -->
+    <update id="updatesupCom" parameterClass="map">
+        UPDATE SUPCOM a
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="supcom_id">
+                a.supcom_id=#supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supcomname">
+                a.supcomname = #supcomname#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="phone1">
+                a.phone1=#phone1#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="phone2">
+                a.phone2= #phone2#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="phone3">
+                a.phone3= #phone3#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="phone4">
+                a.phone4= #phone4#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="relpeason1">
+                a.relpeason1= #relpeason1#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="relpeason2">
+                a.relpeason2= #relpeason2#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="account1">
+                a.account1= #account1#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="account2">
+                a.account2= #account2#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supbeginprice">
+                a.supbeginprice= #supbeginprice#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="paystyle">
+                a.paystyle= #paystyle#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supcomaddress">
+                a.supcomaddress= #supcomaddress#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supcomactive">
+                a.supcomactive= #supcomactive#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="hevgoods">
+                a.hevgoods= #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="paogoods">
+                a.paogoods= #paogoods#
+            </isNotEmpty>
+        </dynamic>
+        WHERE 1=1 and supcom_id = #supcom_id#
+    </update>
+
+    <!-- 删除一条供应商的信息 -->
+    <delete id="deletesupCom" parameterClass="map">
+        UPDATE SUPCOM a
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="supcom_id">
+                a.supcom_id=#supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supcomactive">
+                a.supcomactive= #supcomactive#
+            </isNotEmpty>
+
+        </dynamic>
+        WHERE 1=1 and supcom_id = #supcom_id#
+    </delete>
+    <!-- 删除供应商的详细信息 -->
+    <update id="deletesupComForDetail" parameterClass="map">
+        UPDATE trandetail a set a.detailactive=0 WHERE supcom_id = #supcom_id#
+    </update>
+
+
+    <!--查询地点 -->
+    <select id="getLocal" parameterClass="map" resultClass="dto">
+        SELECT areacode as value, areaname as text
+        FROM ea_demo_chinaarea
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="areacode">
+                areacode like '$areacode$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="areacodelength">
+                length(areacode) = $areacodelength$
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+
+    <!-- 查询明细表的信息(表格演示) -->
+    <select id="querydetail" parameterClass="map"
+            resultClass="dto">
+        SELECT
+        yndeliver,
+        detail_id,(select e. codedesc from t_ad_eacode e where e.field='diqu' and e.code =a.begin_local) as
+        begin_local,arrivel_local,daycount,begin_price,supcom_id,localcode,hevgoods,paogoods,detailactive,packagecry,packagehev,avgdeliver,avgaccept,mincry,minhev
+        FROM TRANDETAIL a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="detail_id">
+                a.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="begin_local">
+                a.begin_local = #lbegin_local#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="selarrivel_local">
+                a.arrivel_local like '$selarrivel_local$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="daycount">
+                a.daycount= #daycount#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="begin_price">
+                a.begin_price= #begin_price#
+            </isNotEmpty>
+
+            <isNotEmpty prepend="AND" property="supcom_id">
+                a.supcom_id= #supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="localcode">
+                a.localcode like '$localcode$%'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="codelength">
+                length(localcode) = $codelength$
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="hevgoods">
+                a.hevgoods= #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paogoods">
+                a.paogoods= #paogoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="detailactive">
+                a.detailactive= #detailactive#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="packagecry">
+                a.packagecry= #packagecry#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="packagehev">
+                a.packagehev= #packagehev#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="avgdeliver">
+                a.avgdeliver= #avgdeliver#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="avgaccept">
+                a.avgaccept= #avgaccept#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="mincry">
+                a.mincry= #mincry#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="minhev">
+                a.minhev= #minhev#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="yndeliver">
+                a.yndeliver= #yndeliver#
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY detail_id desc
+    </select>
+    <!-- 查询明细表的信息的总记录数 -->
+    <select id="querydetailSum" parameterClass="map"
+            resultClass="java.lang.Integer">
+        SELECT count(*) as count
+        FROM TRANDETAIL a
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="detail_id">
+                a.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="begin_local">
+                a.begin_local = #begin_local#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="selarrivel_local">
+                a.arrivel_local=#selarrivel_local#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="daycount">
+                a.daycount= #daycount#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="begin_price">
+                a.begin_price= #begin_price#
+            </isNotEmpty>
+
+            <isNotEmpty prepend="AND" property="supcom_id">
+                a.supcom_id= #supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="hevgoods">
+                a.hevgoods= #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paogoods">
+                a.paogoods= #paogoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="detailactive">
+                a.detailactive= #detailactive#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="packagecry">
+                a.packagecry= #packagecry#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="packagehev">
+                a.packagehev= #packagehev#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="avgdeliver">
+                a.avgdeliver= #avgdeliver#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="avgaccept">
+                a.avgaccept= #avgaccept#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="mincry">
+                a.mincry= #mincry#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="minhev">
+                a.minhev= #minhev#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="yndeliver">
+                a.yndeliver= #yndeliver#
+            </isNotEmpty>
+        </dynamic>
+
+    </select>
+    <!-- 插入一条明细信息-->
+    <insert id="adddetail" parameterClass="dto">
+        INSERT INTO TRANDETAIL
+        (detail_id,begin_local,arrivel_local,daycount,begin_price,supcom_id,localcode,hevgoods,paogoods,detailactive,packagecry,packagehev,avgdeliver,avgaccept,mincry,minhev,yndeliver)
+        VALUES
+        (#detail_id#,#begin_local#,#arrivel_local#,#daycount#,#begin_price#,#supcom_id#,#localcode#,#hevgoods#,#paogoods#,#detailactive#,#packagecry#,#packagehev#,#avgdeliver#,#avgaccept#,#mincry#,#minhev#,#yndeliver#)
+    </insert>
+    <!-- 修改一条明细信息  -->
+    <update id="updatedetail" parameterClass="map">
+        UPDATE TRANDETAIL
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="detail_id">
+                detail_id = #detail_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="begin_local">
+                begin_local = #begin_local#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="arrivel_local">
+                arrivel_local = #arrivel_local#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="daycount">
+                daycount = #daycount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="begin_price">
+                begin_price = #begin_price#
+            </isNotEmpty>
+
+            <isNotEmpty prepend="," property="supcom_id">
+                supcom_id = #supcom_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="localcode">
+                localcode = #localcode#
+            </isNotEmpty>
+
+            <isNotEmpty prepend="," property="hevgoods">
+                hevgoods = #hevgoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="paogoods">
+                paogoods = #paogoods#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="detailactive">
+                detailactive = #detailactive#
+            </isNotEmpty>
+
+            <!-- <isNotEmpty prepend="," property="packagecry"> -->
+            ,packagecry= #packagecry#
+
+            <!-- </isNotEmpty> -->
+            <!-- 	<isNotEmpty prepend="," property="packagehev"> -->
+            ,packagehev= #packagehev#
+            <!-- </isNotEmpty> -->
+            <!-- <isNotEmpty prepend="," property="avgdeliver"> -->
+            ,avgdeliver= #avgdeliver#
+            <!-- 	</isNotEmpty> -->
+            <!-- 	<isNotEmpty prepend="," property="avgaccept"> -->
+            ,avgaccept= #avgaccept#
+            <!-- </isNotEmpty>-->
+            <isNotEmpty prepend="," property="mincry">
+                mincry= #mincry#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="minhev">
+                minhev= #minhev#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="yndeliver">
+                yndeliver= #yndeliver#
+            </isNotEmpty>
+        </dynamic>
+        WHERE 1=1 and detail_id = #detail_id#
+    </update>
+
+    <!-- 删除一条明细信息  -->
+    <delete id="deletedetail" parameterClass="map">
+        UPDATE TRANDETAIL a
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="detail_id">
+                a.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="detailactive">
+                a.detailactive=#detailactive#
+            </isNotEmpty>
+
+        </dynamic>
+        WHERE 1=1 and a.detail_id = #detail_id#
+    </delete>
+    <delete id="secorddetail" parameterClass="map">
+        UPDATE TRANDETAIL a
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="detail_id">
+                a.detail_id=#detail_id#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="detailactive">
+                a.detailactive=#detailactive#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="supcom_id">
+                a.supcom_id=#supcom_id#
+            </isNotEmpty>
+        </dynamic>
+        WHERE 1=1 and a.supcom_id = #supcom_id#
+    </delete>
+    <!-- 查询字典 当中的地区字段 -->
+    <select id="getcode" parameterClass="map" resultClass="dto">
+        SELECT code as value, codedesc as text
+        FROM t_ad_eacode where field='diqu'
+
+    </select>
+    <!-- 查询字典 当中的是否字段 -->
+    <select id="getyesno" parameterClass="map" resultClass="dto">
+        SELECT code as value, codedesc as text
+        FROM t_ad_eacode where field='men'
+
+    </select>
+
+    <select id="order" parameterClass="map" resultClass="dto">
+
+        select d.design_no as kxbh,
+        p.product_no as cpbh,
+        l.num as num,
+        l.price as price,
+        (l.num * l.price) as total
+        from t_ad_drawing_product_link l
+        left join t_ad_product p on l.product_id = p.product_id
+        left join ad_design d on p.design_id = d.design_id
+        where l.drawing_id='10003629'
+
+    </select>
+    <select id="ordersum" parameterClass="map" resultClass="java.lang.Integer">
+
+        SELECT count(*) as count
+        from t_ad_drawing_product_link l
+        left join t_ad_product p on l.product_id = p.product_id
+        left join ad_design d on p.design_id = d.design_id
+        where l.drawing_id='10003629'
+
+    </select>
+
+
+    <insert id="insertt_ad_design_attribute_link" parameterClass="map">
+        insert into t_ad_design_attribute_link values (#da_link_id#,#attribute_id#,#design_id#)
+    </insert>
+
+    <insert id="insertad_attribute_value" parameterClass="map">
+        insert into ad_attribute_value values (#id#,#da_link_id#,#value#)
+    </insert>
+
+    <delete id="deletet_ad_design_attribute_link" parameterClass="map">
+        delete t_ad_design_attribute_link dal where dal.design_id=#design_id# and dal.attribute_id=#attribute_id#
+    </delete>
+
+    <select id="find_t_ad_design_attribute_link_bydesignId" resultClass="dto">
+        select * from t_ad_design_attribute_link dal where dal.design_id=#design_id# and dal.attribute_id=#attribute_id#
+    </select>
+
+    <delete id="deletead_attribute_value" parameterClass="map">
+        delete ad_attribute_value av where av.link_id=#da_link_id#
+    </delete>
+
+    <select id="findProductByDesignId" parameterClass="map" resultClass="dto">
+        select * from t_ad_product p where p.design_id=#design_id#
+    </select>
+    <select id="findProductAttributeByProductId" parameterClass="map" resultClass="dto">
+        select * from t_ad_product_attribute pa,t_ad_attribute att where pa.attribute_id=att.attribute_id and
+        pa.product_id=#product_id# order by att.sequence asc
+    </select>
+
+    <update id="updateProductByProductId" parameterClass="map">
+        update t_ad_product p set p.product_fullno=#product_fullno#,p.product_no=#product_no# where
+        p.product_id=#product_id#
+    </update>
+
+
+    <insert id="insertt_ad_product_attribute" parameterClass="map">
+        insert into t_ad_product_attribute pa values (#att_value_id#,#product_id#,#attribute_id#,#codedesc#,#codeid#)
+    </insert>
+
+    <select id="findclsandattmapping" parameterClass="map" resultClass="dto">
+        select * from t_ad_clsandattmapping m where m.mappingno=#mapping_no#
+    </select>
+
+    <select id="finddesignnomapping" parameterClass="map" resultClass="dto">
+        select * from t_ad_designnomapping m where m.mappingno=#mapping_no#
+    </select>
+
+
+    <!-- 客户编号清洗 begin -->
+
+    <select id="findAllCustomerInfo" resultClass="dto">
+        select * from t_so_customerinfo c order by c.customernumber asc
+    </select>
+
+    <select id="findStoreByCustomerNumber">
+        select * from t_so_store s where s.customernumber=#customernumber#
+    </select>
+
+    <select id="findInsideByStoreNo" parameterClass="map" resultClass="dto">
+        select * from t_so_inside i where i.storeid=#storeid#
+    </select>
+
+    <select id="findResponsibleByCustomerNumber" parameterClass="map" resultClass="dto">
+        select * from t_so_inside i where i.customernumber=#customernumber#
+    </select>
+
+    <select id="findLimitsByCustomerNumber" parameterClass="map" resultClass="dto">
+        select * from T_SO_limits i where i.customernumber=#customernumber#
+    </select>
+
+    <select id="findInfoallByCustomerNumber" parameterClass="map" resultClass="dto">
+        select * from t_so_infoall ia where ia.customernumber=#customernumber#
+    </select>
+
+    <select id="findBrandByCustomerNumber" parameterClass="map" resultClass="dto">
+        select * from t_so_Brand ia where ia.customernumber=#customernumber#
+    </select>
+
+    <select id="findNoByAreaNo" parameterClass="map" resultClass="dto">
+        select * from T_SO_AREANOMAPPING m where m.arear=#arear#
+    </select>
+
+    <update id="updateNoMapping" parameterClass="map">
+        update t_so_areanomapping a set a.numberto=#numberto# where a.arear=#arear#
+    </update>
+    <insert id="savetempaudit" parameterClass="dto">
+        INSERT INTO
+        temp_auditlog ( log_id ,
+        req_context
+        )
+        VALUES (NEXTVAL('AUDITLOGSEQUENCES') , #req_context# )
+    </insert>
+    <!-- 客户编号清洗 end -->
+</sqlMap>

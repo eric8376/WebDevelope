@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+    <tlib-version>1.2</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>JSPTag Library</short-name>
+    <uri></uri>
+
+    <tag>
+        <name>arm.Viewport</name>
+        <tag-class>org.nxstudio.core.tag.ArmViewportTag</tag-class>
+        <body-content>JSP</body-content>
+       <!-- <info>ARM.Viewport标签</info>-->
+        <attribute>
+            <name>northTitle</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>westTitle</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>arm.RoleGrantMenuTree</name>
+        <tag-class>org.nxstudio.core.tag.ArmRoleGrantMenuTreeTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ARM.RoleGrantMenuTree标签</info>-->
+        <attribute>
+            <name>key</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>authorizelevel</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>arm.SelectUserTree</name>
+        <tag-class>org.nxstudio.core.tag.ArmSelectUserTreeTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ARM.SelectUserTree标签</info>-->
+    </tag>
+
+    <tag>
+        <name>arm.SelectRoleTree</name>
+        <tag-class>org.nxstudio.core.tag.ArmSelectRoleTreeTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ARM.SelectRoleTree标签</info>-->
+    </tag>
+
+    <tag>
+        <name>arm.SelectMenuTree</name>
+        <tag-class>org.nxstudio.core.tag.ArmSelectMenuTreeTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ARM.SelectMenuTree标签</info>-->
+    </tag>
+
+    <tag>
+        <name>ext.uiGrant</name>
+        <tag-class>org.nxstudio.core.tag.ext.UiGrantTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ext.uiGrant标签</info>-->
+    </tag>
+
+    <tag>
+        <name>html</name>
+        <tag-class>org.nxstudio.core.tag.html.HtmlTag</tag-class>
+        <body-content>JSP</body-content>
+       <!-- <info>HTML标签</info>-->
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>extDisabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>jqueryEnabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>showLoading</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>uxEnabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>fcfEnabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>doctypeEnable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>exportParams</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>exportUserinfo</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>isSubPage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>urlSecurity2</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>exportExceptionWindow</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>body</name>
+        <tag-class>org.nxstudio.core.tag.html.BodyTag</tag-class>
+        <body-content>JSP</body-content>
+       <!-- <info>Body标签</info>-->
+        <attribute>
+            <name>onload</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cls</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>any</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>import</name>
+        <tag-class>org.nxstudio.core.tag.html.ImportTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>Import标签</info>-->
+        <attribute>
+            <name>src</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>div</name>
+        <tag-class>org.nxstudio.core.tag.html.DivTag</tag-class>
+        <body-content>JSP</body-content>
+       <!-- <info>Div标签</info>-->
+        <attribute>
+            <name>key</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cls</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>any</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>script</name>
+        <tag-class>org.nxstudio.core.tag.html.ScriptTag</tag-class>
+        <body-content>JSP</body-content>
+       <!-- <info>Script标签</info>-->
+    </tag>
+
+    <tag>
+        <name>out</name>
+        <tag-class>org.nxstudio.core.tag.html.OutTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>out标签</info>-->
+        <attribute>
+            <name>key</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>flashReport</name>
+        <tag-class>org.nxstudio.core.tag.fcf.FlashReportTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>FlashReport标签</info>-->
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>dataVar</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>visible</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>align</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>width</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>height</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ext.myux</name>
+        <tag-class>org.nxstudio.core.tag.ext.MyUxTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ext.myux标签</info>-->
+        <attribute>
+            <name>uxType</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ext.codeStore</name>
+        <tag-class>org.nxstudio.core.tag.ext.CodeStoreTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ext.codeStore标签</info>-->
+        <attribute>
+            <name>fields</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>showCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ext.codeRender</name>
+        <tag-class>org.nxstudio.core.tag.ext.CodeRenderTag</tag-class>
+        <body-content>empty</body-content>
+       <!-- <info>ext.codeRender标签</info>-->
+        <attribute>
+            <name>fields</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+</taglib>

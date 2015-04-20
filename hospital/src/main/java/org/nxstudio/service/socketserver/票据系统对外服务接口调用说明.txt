@@ -1,0 +1,57 @@
+接口支持通信方式：
+	1. Socket通信
+	2. WebService通信（建议使用该方式通信）
+
+Socket报文格式：
+	1到6位是交易码
+	第7位开始是xml格式的字符串
+	
+WebService报文格式：
+	第一个参数是交易码
+	第二个参数是xml格式的字符串
+
+Socket报文示例：
+	D001  <?xml version="1.0" encoding="UTF-8"?><Result><Bean><cust_account>6225087698761980</cust_account></Bean><Page><pageSize>100</pageSize><currentPage>1</currentPage></Page></Result>
+
+报文编码格式：
+	UTF-8
+
+Socket调用示例代码：
+		String str = "D001  <?xml version=\"1.0\" encoding=\"UTF-8\"?><Result><Bean><cust_account>6225087698761980</cust_account></Bean><Page><pageSize>100</pageSize><currentPage>1</currentPage></Page></Result>";
+		Socket s = new Socket("127.0.0.1", 8282);
+		OutputStream os = s.getOutputStream();
+		//向服务端发送内容
+		os.write(str.getBytes("UTF-8"));
+		os.flush();
+		
+		//取回服务端返回的内容
+		InputStream is = s.getInputStream();
+		BufferedReader isr = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+		String line = null;
+		while((line=isr.readLine()) != null){
+			System.out.println(line);
+		}
+		
+		//释放资源
+		isr.close();
+		is.close();
+		s.close();
+
+
+WebService调用示例代码：
+		用wsdl文件生成WebBankServiceServiceStub和WebBankServiceServiceCallbackHandler类
+		
+		WebBankServiceServiceStub stub = new WebBankServiceServiceStub();
+		ProcessE pe = new ProcessE();
+		com.leadmind.bbsp.WebBankServiceServiceStub.Process param1 = new com.leadmind.bbsp.WebBankServiceServiceStub.Process();
+		param1.setArg0("D001"); //对应网银接口文档的交易码
+		param1.setArg1("<?xml version=\"1.0\" encoding=\"UTF-8\"?><result><cust_account>419240123457310</cust_account></result>");//根据输入报文的格式构造，构造方法参见BBSP网银标准服务接口文档的最后一章
+		pe.setProcess(param1); 
+		
+		ProcessResponseE pre = stub.process(pe);
+		
+		//读取返回结果，返回结果参见BBSP网银标准服务接口文档的最后一章
+		String retXmlStr = pre.getProcessResponse().get_return();
+		
+		System.out.println(retXmlStr);
+

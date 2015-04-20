@@ -1,0 +1,39 @@
+输入报文：
+<?xml version="1.0" encoding="UTF-8"?>
+<Result>
+	<Bean>
+		<cust_no/>
+		<cust_account>8956743980153985710</cust_account>
+		<remitter/>
+		<payee/>
+		<draweeBank/>
+		<dueDt/>
+	</Bean>
+	<!-- 如果是查询要加Page标签 -->
+	<Page>
+		<pageSize>10</pageSize>
+		<currentPage>1</currentPage>
+	</Page>
+</Result>
+
+输出报文：
+<?xml version="1.0" encoding="UTF-8"?>
+<Result>
+	<totalRows>100</totalRows> <!--如果是非查询类交易此输出值无效-->
+	<totalPages>5</totalPages> <!--如果是非查询类交易此输出值无效-->
+	<errCode>AAAAAAA</errCode> <!--如果errCode=BBBBBBB，则表示出错，errMsg有错误信息；如果errCode=AAAAAAA，则表示正常，errMsg为空-->
+	<errMsg></errMsg>
+	<!--  非查询类交易无以下list标签 -->
+	<list>
+		<cust_account>8956743980153985710</ cust_account>
+		<rgct_id>22</rgct_id>
+		<billNo>198372890921220090619000000003</billNo>
+		<billType>2</billType>
+	</list>
+	<list>
+		<cust_account>8956743980153985710</ cust_account>
+		<rgct_id>23</rgct_id>
+		<billNo>198372890921220090619000000004</billNo>
+		<billType>1</billType>
+	</list>
+</Result>

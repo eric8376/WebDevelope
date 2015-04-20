@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+     * 编程环境 IDEA.
+     * 编写者: 王少伟
+     * 主题:【quartz任务bean配置】
+     * 时间: 2013-06-10 下午4:36
+    -->
+
+    <!--自动初始化quartz任务-->
+    <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.threadPool.threadCount">3</prop>
+            </props>
+        </property>
+        <property name="autoStartup" value="false"/>
+    </bean>
+
+    <!--    配置TServer-->
+    <!--<bean id="tServer" init-method="start" lazy-init="false" class="org.nxstudio.modules.systemassist.service.impl.TServer">-->
+    <!--<property name="service" ref="taskService1"/>-->
+    <!--<property name="scheduler" ref="quartzScheduler"/>-->
+    <!--</bean>-->
+
+</beans>

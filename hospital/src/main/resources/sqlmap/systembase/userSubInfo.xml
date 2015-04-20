@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!--
+* 编程环境 IDEA.
+* 编写者: 王少伟
+* 主题:【用户子信息表】
+* 时间: 2013-06-10 下午4:36
+-->
+
+<sqlMap namespace="userSubInfo">
+    <typeAlias alias="dto"
+               type="org.nxstudio.core.model.impl.BaseDto"/>
+
+    <!-- 插入一条用户信息 -->
+    <insert id="insertT_SB_USERSUBINFO" parameterClass="dto">
+        INSERT INTO
+        T_SB_USERSUBINFO (
+        user_id, user_birth, user_id_address,
+        user_now_address, user_tel_in,
+        user_tel_out, user_phone, user_mail_in,
+        user_mail_out,user_cz,user_post,user_head_img,user_vcode,user_rtx_in)
+        VALUES
+        (#user_id#,
+        str_to_date(#user_birth#,'%Y-%m-%d')
+        #user_id_address#,
+        #user_now_address#,
+        #user_tel_in#, #user_tel_out#,
+        #user_phone#,
+        #user_mail_in#,
+        #user_mail_out#,#user_cz#,#user_post#,#user_head_img#,#user_vcode#,#user_rtx_in#)
+    </insert>
+
+    <!-- 更新一条用户信息 -->
+    <update id="updateT_SB_USERSUBINFO" parameterClass="map">
+        UPDATE
+        T_SB_USERSUBINFO
+        set user_birth=str_to_date(#user_birth#,'%Y-%m-%d')
+        user_id_address=#user_id_address#,
+        user_now_address=#user_now_address#,
+        user_tel_in=#user_tel_in#,
+        user_tel_out=#user_tel_out#,
+
+        user_phone=#user_phone#,
+        user_mail_in=#user_mail_in#,
+        user_mail_out=#user_mail_out#,
+        user_cz=#user_cz#,
+        user_post=#user_post#,
+        user_vcode=#user_vcode#,
+        user_head_img=#user_head_img#,
+        user_rtx_in=#user_rtx_in#
+
+        WHERE user_id=#user_id#
+    </update>
+
+    <!-- 查询一条用户信息（根据id) -->
+    <select id="selectT_SB_USERSUBINFO" resultClass="dto">
+        select a.*,b.username as user_name,c.deptname as dept_name from
+        T_SB_USERSUBINFO a,eauser b,eadept c
+        where a.user_id=#user_id# and
+        a.user_id=b.userid and
+        b.deptid=c.deptid
+    </select>
+
+    <!-- 查询一条用户子信息（根据id) -->
+    <select id="selectT_SB_USERSUBINFO2" resultClass="dto">
+        select * from T_SB_USERSUBINFO
+        where user_id=#userid#
+    </select>
+
+
+    <!--查询所有的工作代理信息-->
+    <select id="queryjobProxy" parameterClass="map" resultClass="dto" remapResults="true">
+        select p.job_proxy_id,
+        u.username as user_bproxyername,
+        uu.username as user_proxyername,
+        p.job_proxy_state,
+        date_format(p.job_proxy_starttime, '%Y-%m-%d %H:%i:%S') as job_proxy_starttime,
+        date_format(p.job_proxy_endtime, '%Y-%m-%d %H:%i:%S')as job_proxy_endtime
+        from t_base_job_proxy p
+        left join eauser u on u.account = p.user_bproxyer
+        left join eauser uu on uu.account = p.user_proxyer
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="searchkey">
+                u.username like '%$searchkey$%' or uu.username like '%$searchkey$%'
+            </isNotEmpty>
+        </dynamic>
+        order by p.job_proxy_endtime desc , p.job_proxy_starttime desc
+    </select>
+
+    <!--判断申请代理人是否处于代理中-->
+    <select id="queryjobProxystatebysame" resultClass="java.lang.Integer">
+        select count(*) from t_base_job_proxy t where t.USER_BPROXYER=#userbproxyer#
+        and t.JOB_PROXY_STATE=1
+    </select>
+
+    <!--判断被代理人是否处于代理中-->
+    <select id="queryjobProxystatebydissame" resultClass="java.lang.Integer">
+        select count(*) from t_base_job_proxy t where t.USER_BPROXYER=#userproxyer# and t.JOB_PROXY_STATE=1
+    </select>
+
+    <!--查询所有的工作代理信息-->
+    <select id="queryjobProxycount" resultClass="java.lang.Integer">
+        select count(1)
+        from t_base_job_proxy p
+        left join eauser u on u.account = p.user_bproxyer
+        left join eauser uu on uu.account = p.user_proxyer
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="searchkey">
+                u.username like '%$searchkey$%' or uu.username like '%$searchkey$%'
+            </isNotEmpty>
+        </dynamic>
+    </select>
+    <!-- 删除一条工作代理信息 -->
+    <delete id="deleteTBASEJOBPROXY" parameterClass="map">
+        delete from T_BASE_JOB_PROXY
+        where JOB_PROXY_ID in ($jobproxyids$)
+    </delete>
+
+
+    <!-- 修改一条工作代理信息 -->
+    <update id="updateTBASEJOBPROXY" parameterClass="map">
+        UPDATE
+        T_BASE_JOB_PROXY
+        set
+        JOB_PROXY_STATE=0,
+
+        JOB_PROXY_ENDTIME=str_to_date(#jobproxyendtime#,'%Y-%m-%d %H:%i:%S')
+
+        WHERE JOB_PROXY_ID in ($jobproxyids$)
+    </update>
+
+    <!-- 插入一条工作代理信息 -->
+    <insert id="insertTBASEJOBPROXY" parameterClass="dto">
+        INSERT INTO
+        T_BASE_JOB_PROXY ( JOB_PROXY_ID,USER_BPROXYER,USER_PROXYER ,JOB_PROXY_STATE ,JOB_PROXY_STARTTIME
+        ,JOB_PROXY_ENDTIME )
+        VALUES
+        (
+        NEXTVAL('CODEIDSEQUENCES'),
+        #userbproxyer#,
+        #userproxyer#,
+        #jobproxystate#, str_to_date(#jobproxystarttime#,'%Y-%m-%d %H:%i:%S'),
+        #jobproxyendtime#
+        )
+    </insert>
+
+
+</sqlMap>

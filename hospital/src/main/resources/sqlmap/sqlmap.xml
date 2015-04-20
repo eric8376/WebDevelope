@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <settings useStatementNamespaces="true"/>
+    <!-- 基础系统-->
+    <sqlMap resource="sqlmap/base/Organization.xml"/>
+    <sqlMap resource="sqlmap/base/Resource.xml"/>
+    <sqlMap resource="sqlmap/base/User.xml"/>
+    <sqlMap resource="sqlmap/base/Role.xml"/>
+    <sqlMap resource="sqlmap/base/Param.xml"/>
+    <sqlMap resource="sqlmap/base/IdGenerator.xml"/>
+    <sqlMap resource="sqlmap/base/ArmTagSupport.xml"/>
+    <sqlMap resource="sqlmap/base/Monitor.xml"/>
+    <sqlMap resource="sqlmap/base/Part.xml"/>
+    <sqlMap resource="sqlmap/workflow/workFlow.xml"/>
+    <sqlMap resource="sqlmap/base/Demo.xml"/>
+
+
+    <!-- 20130506 systembase  CF -->
+    <sqlMap resource="/sqlmap/systembase/userSubInfo.xml"/>
+    <!-- 用户个人信息 20130506 CF-->
+    <sqlMap resource="/sqlmap/systembase/EAOrg.xml"/>
+    <!-- 系统组织 20130513 CF-->
+    <sqlMap resource="/sqlmap/systembase/taskMgr.xml"/>
+    <!-- 任务管理平台 20130519 CF-->
+    <sqlMap resource="/sqlmap/systembase/flowUrge.xml"/>
+    <!-- 任务催促管理 20130520 CF-->
+    <sqlMap resource="/sqlmap/systembase/CMAppendix.xml"/>
+    <!-- 公共附件上传管理 20130525 CF-->
+    <sqlMap resource="/sqlmap/systembase/sysComunicate.xml"/>
+    <!-- 系统交互类管理 20130528 CF-->
+    <sqlMap resource="/sqlmap/systembase/SysBaseManage.xml"/>
+    <!-- 用户关系管理-->
+    <sqlMap resource="/sqlmap/HospitalManage/HospitalManage.xml"/>
+    <sqlMap resource="/sqlmap/PhoneClient/PhoneClient.xml"/>
+</sqlMapConfig>

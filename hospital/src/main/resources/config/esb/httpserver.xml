@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<httpServer context="/Hospital">
+    <handler>
+        <handler-class>com.rwy.httpService.PhoneClient</handler-class>
+        <url-pattern>/PhoneClient</url-pattern>
+    </handler>
+
+
+</httpServer>

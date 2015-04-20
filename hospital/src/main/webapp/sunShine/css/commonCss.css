@@ -1,0 +1,32 @@
+/*默认边距*/
+.x-panel {
+    margin: 3px;
+}
+
+/*动画缩小最大化目标 样式*/
+#animate_target_div {
+    background: transparent;
+    z-index: -99;
+    width: 258px;
+    height: 158px;
+    position: absolute;
+}
+
+/*普通标题*/
+.normal_title {
+    font-weight: normal;
+    font-size: 12px;
+}
+
+/*设置字体*/
+div {
+    font-family: '宋体';
+    font-size: 12px;
+}
+
+/*设置字体*/
+.x-btn .x-btn-center .x-btn-inner {
+    text-align: center;
+    font-family: '宋体';
+    font-size: 12px;
+}

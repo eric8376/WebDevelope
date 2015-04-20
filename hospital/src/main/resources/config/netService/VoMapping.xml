@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VoMappings>
+    <Vo>
+        <head>TD000001</head>
+        <map>com.rwy.trade.wicket.vo.TicketCheckup.TicketCheckupVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000002</head>
+        <map>com.rwy.trade.wicket.vo.TicketWicket.TicketWicketVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000003</head>
+        <map>com.rwy.trade.business.vo.SerialQuery.SerialQueryVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000004</head>
+        <map>com.rwy.trade.business.vo.HistoryWicketQuery.HistoryWicketQueryVo</map>
+    </Vo>
+    <!--    <Vo>
+            <head>TD000005</head>
+            <map>com.rwy.trade.order.vo.PeripheralTicket.PeripheralTicketVo</map>
+        </Vo>-->
+    <Vo>
+        <head>NS999999</head>
+        <map>com.rwy.netService.common.domain.BackMessageVO</map>
+    </Vo>
+    <Vo>
+        <head>TD000006</head>
+        <map>com.rwy.trade.order.vo.TicketSubsystemVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000007</head>
+        <map>com.rwy.trade.order.vo.TicketSubsystemVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000008</head>
+        <map>com.rwy.trade.SmsSendAgain.vo.SmsSendAgainVo</map>
+    </Vo>
+    <Vo>
+        <head>TD000005</head>
+        <map>com.rwy.trade.order.vo.PeripheralTicket.PeripheralTicketVoV2</map>
+    </Vo>
+    <Vo>
+        <head>TD000021</head>
+        <map>com.rwy.trade.queryorder.vo.OrderInfoVo</map>
+    </Vo>
+
+    <Vo>
+        <head>TD000022</head>
+        <map>com.rwy.trade.queryorder.vo.OrderInfoVo</map>
+    </Vo>
+    <Vo>
+        <head>RT000001</head>
+        <map>com.rwy.trade.refund.vo.TicketRefund.OtherRefundVo.TicketRefundVo</map>
+    </Vo>
+
+
+    <Vo>
+        <head>RT000002</head>
+        <map>com.rwy.trade.refund.vo.TicketRefund.SubRefundVo.TicketSubRefundVo</map>
+    </Vo>
+
+    <Vo>
+        <head>PS000001</head>
+        <map>com.rwy.produceManage.synProduce.vo.SynProduceInfoVo</map>
+    </Vo>
+    <Vo>
+        <head>PS000002</head>
+        <map>com.rwy.produceManage.synProduce.vo.SynProduceToOtherSysVo</map>
+    </Vo>
+    <Vo>
+        <head>PS000003</head>
+        <map>com.rwy.produceManage.synProduce.vo.SynProduceResourceInfoVo</map>
+    </Vo>
+    <Vo>
+        <head>TS000001</head>
+        <map>com.rwy.ticketSummarizeManagement.vo.TicketSummarizeVo</map>
+    </Vo>
+
+    <Vo>
+        <head>UV000001</head>
+        <map>com.rwy.trade.modifyOrder.vo.ModifyVoToOther.TicketModifyVo</map>
+    </Vo>
+
+    <Vo>
+        <head>UV000002</head>
+        <map>com.rwy.trade.modifyOrder.vo.ModifyVoToSub.TicketModifySubVo</map>
+    </Vo>
+
+
+    <Vo>
+        <head>TS000002</head>
+        <map>com.rwy.ticketSummarizeManagement.vo.TicketSummarize2OtherSysVo</map>
+    </Vo>
+</VoMappings>
