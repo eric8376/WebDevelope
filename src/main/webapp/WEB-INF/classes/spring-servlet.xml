@@ -25,15 +25,48 @@
 			<value>classpath:spring-views.xml</value>
 		</property>
 	</bean >
-	
+	<!-- JSP视图解析器 -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order">
+			<value>2</value>
+		</property>
 		<property name="prefix">
-			<value>/WEB-INF/jsp/</value>
+			<value>/template/jsp/</value>
 		</property>
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
+	</bean>
+	
+	<!-- velocity视图解析器 -->
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+		<property name="order">
+			<value>1</value>
+		</property>
+		<property name="cache" value="false" />
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".html" />
+		<property name="contentType">
+			<value>text/html;charset=UTF-8</value>
+		</property>
+		<property name="dateToolAttribute">
+			<value>dateTool</value>
+		</property>
+		<property name="numberToolAttribute">
+			<value>numberTool</value>
+		</property>
+		<property name="toolboxConfigLocation">
+			<value>/WEB-INF/classes/toolbox.xml</value>
+		</property>
+		<property name="layoutUrl" value="layout/layout.html" />
+	</bean>
+	<!-- velocity环境配置 -->
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<!-- velocity配置文件路径 -->
+		<property name="configLocation" value="classpath:velocity.properties" />
+		<!-- velocity模板路径 -->
+		<property name="resourceLoaderPath" value="/template/vm/" />
 	</bean>
 	<!-- 文件上传 --> 
 	<bean id="multipartResolver"

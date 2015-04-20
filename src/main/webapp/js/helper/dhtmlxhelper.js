@@ -191,12 +191,13 @@ function initGrid(grid,define){
 	});
 	grid.enableContextMenu(menu);
 	grid.init();
-	if(define.height){
-		$("#gridbox").height(define.height);
-	}else{
-	$("#gridbox").height(480);
-	}
-
+	//if(define.height){
+	//	$("#gridbox").height(define.height);
+	//}else{
+	//$("#gridbox").height(480);
+	//}
+	$("#gridbox").height($(window).height()-65);
+	alert('ss');
 	return grid;
 }
 function addGridComboOptions(combo,datas){

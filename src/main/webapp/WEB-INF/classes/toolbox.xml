@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+	<tool forceRelative="true" includeRequestParams="true">
+		<key>link</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.view.tools.LinkTool</class>
+	</tool>
+	<tool>
+		<key>math</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.MathTool</class>
+	</tool>
+	<tool>
+		<key>loop</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.generic.LoopTool</class>
+	</tool>
+	<tool>
+		<key>display</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.DisplayTool</class>
+	</tool>
+	<tool>
+		<key>esc</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.EscapeTool</class>
+	</tool>
+	<tool>
+		<key>html</key>
+		<scope>application</scope>
+		<class>com.chinaj.scf.utils.HtmlVelocityTool</class>
+	</tool>
+	<tool>
+		<key>number</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.NumberTool</class>
+		<parameter name="format" value="#0.0" />
+	</tool>
+	<tool>
+		<key>cookie</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.view.CookieTool</class>
+	</tool>
+	<tool>
+	   <key>date</key>
+	   <scope>application</scope>
+	   <class>org.apache.velocity.tools.generic.DateTool</class>
+	</tool>
+</toolbox>
