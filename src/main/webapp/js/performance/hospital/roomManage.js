@@ -46,11 +46,15 @@ function doOnLoad() {
 		 if(parent.loginedUserInfo.jb!=0){
 			  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"'";
 		  } 
+	}else if(roomType=="ejzb"){
+		viewName="t_per_ejzb";
+		 if(parent.loginedUserInfo.jb!=0){
+			  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"'";
+		  } 
 	}
 	 
 	 
 	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
-		
 	var grid_define={
 		columns:
 			[{title:"编号",width:0,type:"ro"},
@@ -66,7 +70,7 @@ initToolBar(grid);
 }
 function initToolBar(grid){
 toolbar=grid.toolBar;
-toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 toolbar.addButton('addRoom',1,"添加","iconWrite2.gif",null);
 
 

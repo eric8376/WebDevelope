@@ -66,7 +66,7 @@ initToolBar(grid);
 }
 function initToolBar(grid){
 toolbar=grid.toolBar;
-toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 toolbar.addButton('addRoom',1,"添加","iconWrite2.gif",null);
 
 

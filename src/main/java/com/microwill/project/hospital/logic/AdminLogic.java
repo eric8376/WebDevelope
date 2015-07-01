@@ -56,6 +56,8 @@ public class AdminLogic extends UserTypeLogic {
 		priviageMap.put("/project/query/", true);
 		priviageMap.put("/hj/query/", true);
 		priviageMap.put("/zb/query/", true);
+		priviageMap.put("/ejzb/query/", true);
+		
 		//button
 		//link
 		

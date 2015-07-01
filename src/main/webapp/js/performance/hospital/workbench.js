@@ -21,7 +21,8 @@ var treeDefine={id:0,
           	  item:[
 				       {id:"/project/query/", text:"项目管理",href:"manage.spr?action=projectManage&mapType=xm"},
                      {id:"/hj/query/", text:"关键环节管理",href:"manage.spr?action=projectManage&mapType=hj"},
-                     {id:"/zb/query/", text:"一级指标管理",href:"manage.spr?action=roomManage&roomType=zb"}
+                     {id:"/zb/query/", text:"一级指标管理",href:"manage.spr?action=projectManage&mapType=zb"},
+                     {id:"/ejzb/query/", text:"二级指标管理",href:"manage.spr?action=roomManage&roomType=ejzb"}
 					                  ]},
 ]
 };

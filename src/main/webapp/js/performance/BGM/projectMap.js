@@ -71,7 +71,7 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 	toolbar.addButton('saveMap',1,"保存","iconWrite2.gif",null);
 	toolbar.addButton('return',1,"返回","iconWrite2.gif",null);
 	

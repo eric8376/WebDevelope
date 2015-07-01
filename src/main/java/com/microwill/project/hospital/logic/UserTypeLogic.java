@@ -49,6 +49,7 @@ public  abstract class UserTypeLogic {
 		priviageMap.put("/project/query/", false);
 		priviageMap.put("/hj/query/", false);
 		priviageMap.put("/zb/query/", false);
+		priviageMap.put("/ejzb/query/", false);
 		//button
 		//link
 		

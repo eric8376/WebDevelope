@@ -11,7 +11,7 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 //	toolbar.addButton('addUser',1,"新增病患","iconWrite2.gif",null);
 //	toolbar.addButton('updateUser',2,"修改病患","iconWrite2.gif",null);
 //	toolbar.addButton('deleteUser',3,"删除病患","iconWrite2.gif",null);

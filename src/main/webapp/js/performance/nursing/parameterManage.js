@@ -44,7 +44,7 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 	toolbar.addButton('addParameter',1,"新增参数","iconWrite2.gif",null);
 	toolbar.addButton('updateParameter',1,"修改参数","iconWrite2.gif",null);
 	

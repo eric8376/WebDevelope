@@ -40,7 +40,14 @@ function doOnLoad() {
 					 {title:"选择",width:100,type:"ch"},
 					 {title:"初始选择",width:0,type:"ro"}];
 	    	 viewName="hospital.t_per_zb";
-	    }else if(mapType=='bm'){
+	    }else if(mapType=='zb'){
+	    	columns=[{title:"编号",width:0,type:"ro"},
+					 {title:"二级指标",width:200,type:"ro"},
+					 {title:"选择",width:100,type:"ch"},
+					 {title:"初始选择",width:0,type:"ro"}];
+	    	 viewName="hospital.t_per_ejzb";
+	    }
+	    else if(mapType=='bm'){
 	    	columns=[{title:"编号",width:0,type:"ro"},
 					 {title:"管理部门",width:200,type:"ro"},
 					 {title:"选择",width:100,type:"ch"},
@@ -71,7 +78,7 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 	toolbar.addButton('saveMap',1,"保存","iconWrite2.gif",null);
 	toolbar.addButton('return',1,"返回","iconWrite2.gif",null);
 	

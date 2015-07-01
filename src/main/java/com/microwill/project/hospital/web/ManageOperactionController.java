@@ -32,8 +32,8 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String ADD_USER_SQL = "insert into t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
 	private static String UPDATE_USER_SQL="update t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
 	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
-	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id) values(?,?,?,?,?,?,?,?,?,?,?,?)";
-	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=? where record_id=?";
+	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id,ejzb_id,post,jiance) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=?,ejzb_id=?,post=?,jiance=? where record_id=?";
 	private static String DELETE_RECORD_SQL = "delete from t_per_record where record_id=?";
 	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id) values(?,?,?,?,?,?,?)";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
@@ -141,6 +141,9 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String kaohe = request.getParameter("kaohe");
 		String beizhu = request.getParameter("beizhu");
 		String zb_id = request.getParameter("zb");
+		String ejzb_id = request.getParameter("ejzb");
+		String post = request.getParameter("post");
+		String jiance = request.getParameter("jiance");
 		String hj_id = request.getParameter("hj");
 		String record_id = getUUID();
 		int result = 0;
@@ -148,7 +151,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 			result = jdbcTemplate.update(
 					ADD_RECORD_SQL,
 					new Object[] { record_id,ks_id,xm_id, owner, checktime, results,
-							dianping, kaohe,beizhu,getHospIdFromSession(request),zb_id ,hj_id});
+							dianping, kaohe,beizhu,getHospIdFromSession(request),zb_id ,hj_id,ejzb_id,post,jiance});
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -177,12 +180,15 @@ public class ManageOperactionController extends BaseMultiActionController {
 		String record_id = request.getParameter("recordId");
 		String zb_id = request.getParameter("zb");
 		String hj_id = request.getParameter("hj");
+		String ejzb_id = request.getParameter("ejzb");
+		String post = request.getParameter("post");
+		String jiance = request.getParameter("jiance");
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(
 					UPDATE_RECORD_SQL,
 					new Object[] { ks_id,xm_id, owner, checktime, results,
-							dianping, kaohe,beizhu,zb_id,hj_id,record_id });
+							dianping, kaohe,beizhu,zb_id,hj_id,ejzb_id,post,jiance,record_id });
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

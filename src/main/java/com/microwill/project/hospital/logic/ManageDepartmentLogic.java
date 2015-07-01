@@ -79,6 +79,7 @@ public class ManageDepartmentLogic extends UserTypeLogic {
 			priviageMap.put("/project/query/", true);
 			priviageMap.put("/hj/query/", true);
 			priviageMap.put("/zb/query/", true);
+			priviageMap.put("/ejzb/query/", true);
 		} else if (getRoleType().equals(RoleType.BMSTAFF)) {
 			priviageMap.put("/record/add/", true);
 			priviageMap.put("/record/search/", true);

@@ -197,7 +197,6 @@ function initGrid(grid,define){
 	//$("#gridbox").height(480);
 	//}
 	$("#gridbox").height($(window).height()-65);
-	alert('ss');
 	return grid;
 }
 function addGridComboOptions(combo,datas){

@@ -101,7 +101,7 @@ function doOnLoad() {
 }
 function initToolBar(grid){
 	toolbar=grid.toolBar;
-	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/csh_bluefolders/");
+	toolbar.setIconsPath(parent.contextPath+"/js/dhtmlx/imgs/custom/");
 	toolbar.addButton('addProject',1,"新增","iconWrite2.gif",null);
 	
 	
