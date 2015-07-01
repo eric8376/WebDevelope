@@ -31,6 +31,7 @@ function doOnLoad() {
 		{type:"combo", name:"xm", label:"项目:",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
+		{type:"combo", name:"ejzb", label:"二级指标",options:null},
 		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}
 	   
                 ]
@@ -53,6 +54,7 @@ function doOnLoad() {
     myForm.getCombo("xm").setComboValue("");
     loadSonByParent("xm","hj");
     loadSonByParent("hj","zb");
+    loadSonByParent("zb","ejzb");
    
    
         
@@ -62,6 +64,9 @@ function onChangeHandle(name){
 		loadSonByParent("xm","hj");
 	}else if(name=='hj'){
 		loadSonByParent("hj","zb");
+		
+	}else if(name=='zb'){
+		loadSonByParent("zb","ejzb");
 		
 	}
 }
@@ -91,7 +96,8 @@ function doSearch(){
 		var ks=myForm.getItemValue("ks");
 		var hj=myForm.getItemValue("hj");
 		var zb=myForm.getItemValue("zb");
-		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm+'&hj='+hj+'&zb='+zb);
+		var ejzb=myForm.getItemValue("ejzb");
+		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm+'&hj='+hj+'&zb='+zb+'&ejzb='+ejzb);
 
 }
 

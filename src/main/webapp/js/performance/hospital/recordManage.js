@@ -8,6 +8,7 @@ function doOnLoad() {
 	var ks=getParam('ks');
 	var xm=getParam('xm');
 	var zb=getParam('zb');
+	var ejzb=getParam('ejzb');
 	var hj=getParam('hj');
     conditionSql="";
 	if(owner==null){owner='';}
@@ -15,6 +16,7 @@ function doOnLoad() {
 	if(xm==null){xm='';}
 	if(hj==null){hj='';}
 	if(zb==null){zb='';}
+	if(ejzb==null){ejzb='';}
 	if(owner!=null&&owner!=''){
 		conditionSql+=" and user_name='"+owner+"' ";
 	}
@@ -29,6 +31,9 @@ function doOnLoad() {
 	}
 	if(zb!=null&&zb!=''&&zb!='ALL'){
 		conditionSql+=" and zb_id='"+zb+"' ";
+	}
+	if(ejzb!=null&&ejzb!=''&&ejzb!='ALL'){
+		conditionSql+=" and ejzb_id='"+ejzb+"' ";
 	}
 	if(kssj!=null&&kssj!='')
 	{
