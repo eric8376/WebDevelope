@@ -18,7 +18,7 @@ public  class AuthorizeQueryStrategy {
 	private String conditionSql;
 	private String pageSql;
 	private String querySql = "select record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,t1.user_name,check_time,result,dianping,kaohe,jiance,beizhu from t_per_record t1 where 1=1 ";
-	private String summarySql="select sum(kaohe+0.00) from t_per_record t1 where 1=1 ";
+	private String summarySql="select sum(kaohe+0.00) as summaryNum,sum(jiance)/count(1)*100 as summaryRate from t_per_record t1 where 1=1 ";
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;
 	private UserTypeLogic userTypeLogic;
@@ -68,13 +68,14 @@ public  class AuthorizeQueryStrategy {
 		String countSql = "select count(1) "
 				+ sql.substring(index, sql.length());
 		int totalCount = jdbcTemplate.queryForInt(countSql);
-		Float summaryNum= jdbcTemplate.queryForObject(summarySql+getHospSql()+getScopeSql() + getConditionSql(),Float.class);
+		Map<String,Object> summaryMap= jdbcTemplate.queryForMap(summarySql+getHospSql()+getScopeSql() + getConditionSql());
 		List list = jdbcTemplate.queryForList(
 				sql + getPageSql());
 		System.out.println(sql + getPageSql());
-		String returnSummaryNum=(summaryNum==null)?"0":summaryNum.toString();
+		String returnSummaryNum=(summaryMap.get("summaryNum")==null)?"0":summaryMap.get("summaryNum").toString();
+		String returnSummaryRate=(summaryMap.get("summaryRate")==null)?"0":summaryMap.get("summaryRate").toString();
 		String jsonTxt = "{'list':" + JSONExecuteHelp.parseJSONText(list)
-				+ ",totalCount:" + totalCount + ",summaryNum:"+returnSummaryNum+"}";
+				+ ",totalCount:" + totalCount + ",summaryNum:"+returnSummaryNum+",summaryRate:"+returnSummaryRate+"}";
 		return jsonTxt;
 	}
 	public String queryAnalysis(String condition,String keyIndex) throws Exception {

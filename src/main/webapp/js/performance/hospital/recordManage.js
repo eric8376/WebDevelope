@@ -9,6 +9,7 @@ function doOnLoad() {
 	var xm=getParam('xm');
 	var zb=getParam('zb');
 	var ejzb=getParam('ejzb');
+	var post=getParam('post');
 	var hj=getParam('hj');
     conditionSql="";
 	if(owner==null){owner='';}
@@ -17,6 +18,7 @@ function doOnLoad() {
 	if(hj==null){hj='';}
 	if(zb==null){zb='';}
 	if(ejzb==null){ejzb='';}
+	if(post==null){post='';}
 	if(owner!=null&&owner!=''){
 		conditionSql+=" and user_name='"+owner+"' ";
 	}
@@ -34,6 +36,9 @@ function doOnLoad() {
 	}
 	if(ejzb!=null&&ejzb!=''&&ejzb!='ALL'){
 		conditionSql+=" and ejzb_id='"+ejzb+"' ";
+	}
+	if(post!=null&&post!=''&&post!='ALL'){
+		conditionSql+=" and post='"+post+"' ";
 	}
 	if(kssj!=null&&kssj!='')
 	{
@@ -118,7 +123,7 @@ function initToolBar(grid){
         	var recordId = grid.cellByIndex(index, 0).getValue();
         	parent.loadPage('manage.spr?action=addRecord&operation=update&recordId='+recordId);
         }else if(id=="caculate"){
-        	alert("统计结果："+grid.data.summaryNum+"分");
+        	alert("统计考核分："+grid.data.summaryNum+"分<br>统计检测率："+grid.data.summaryRate+"%");
         }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
         }else if(id=="import"){

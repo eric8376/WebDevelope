@@ -27,6 +27,7 @@ function doOnLoad() {
 		{type:"calendar", name: 'kssj', label:'开始时间:',readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"calendar", name:"jssj", label:"结束时间:",readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"combo", name:"owner", label:"人名:",options:rt3.list,filtering:true},
+		{type:"combo", name: 'post', label:'人员类别:',options:parent.getEjzb(true)},
 		{type:"combo", name:"ks", label:"科室",options:list2},
 		{type:"combo", name:"xm", label:"项目:",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
@@ -97,7 +98,8 @@ function doSearch(){
 		var hj=myForm.getItemValue("hj");
 		var zb=myForm.getItemValue("zb");
 		var ejzb=myForm.getItemValue("ejzb");
-		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm+'&hj='+hj+'&zb='+zb+'&ejzb='+ejzb);
+		var post=myForm.getItemValue("post");
+		parent.loadPage('manage.spr?action=recordManage&kssj='+kssj+'&jssj='+jssj+'&owner='+owner+'&ks='+ks+'&xm='+xm+'&hj='+hj+'&zb='+zb+'&ejzb='+ejzb+'&post='+post);
 
 }
 
