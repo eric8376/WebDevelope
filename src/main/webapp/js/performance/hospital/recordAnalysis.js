@@ -16,6 +16,7 @@ function doAnalysis(){
 	var xm=myForm.getItemValue("xm");
 	var ks=myForm.getItemValue("ks");
 	var zb=myForm.getItemValue("zb");
+	var ejzb=myForm.getItemValue("ejzb");
 	var hj=myForm.getItemValue("hj");
 	var kssj=myForm.getCalendar("beginTime").getFormatedDate("%Y-%m-%d");
 	var jssj=myForm.getCalendar("endTime").getFormatedDate("%Y-%m-%d");
@@ -27,6 +28,9 @@ function doAnalysis(){
 	}
 	if(!isEmpty(hj)&&zb!="ALL"){
 		condition+=" and hj_id='"+hj+"' ";
+	}
+	if(!isEmpty(ejzb)&&ejzb!="ALL"){
+		condition+=" and ejzb_id='"+ejzb+"' ";
 	}
 	if(!isEmpty(zb)&&zb!="ALL"){
 		condition+=" and zb_id='"+zb+"' ";
@@ -170,6 +174,7 @@ function loadSearchForm(){
 	 {type:"combo", name:"ks", label:"科室",options:list2},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
+		{type:"combo", name:"ejzb", label:"二级指标",options:null},
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析指标",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
@@ -200,6 +205,8 @@ myForm.attachEvent("onChange", function(name) {
 	}else if(name=='hj'){
 		loadSonByParent("hj","zb");
 		
+	}else if(name='zb'){
+		loadSonByParent("zb","ejzb");
 	}
 });
 document.onkeydown=function(e){
@@ -211,6 +218,7 @@ myForm.getCombo("user_name").setComboValue("");
 myForm.getCombo("xm").setComboValue("");
 loadSonByParent("xm","hj");
 loadSonByParent("hj","zb");
+loadSonByParent("zb","ejzb");
 }
 function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);
