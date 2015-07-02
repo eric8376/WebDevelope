@@ -363,4 +363,12 @@ function isEmpty(str){
 	return str==""||str==undefined||str==null;
 }
 
+function listObjectToMap(list,id,text){
+	var map={};
+	for(var i=0;i<list.length;i++){
+		map[list[i][id]]=list[i][text];
+	}
+	return map;
+}
+
 

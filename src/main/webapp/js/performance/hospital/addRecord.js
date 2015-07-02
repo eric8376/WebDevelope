@@ -27,18 +27,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 				{type:"combo", name: 'zb', label:'一级指标:',readonly:1,options:null},
 				{type:"combo", name: 'ejzb', label:'二级指标:',readonly:1,options:null},
 				{type:"input", name:"owner", label:"当事人:",required: false},
-				{type:"combo", name: 'post', label:'人员类别:',options:[
-					                                   				{value: "0", text: "检验师"},
-					                                   				{value: "1", text: "药学人员"},
-					                                   				{value: "2", text: "放射师"},
-					                                   				{value: "3", text: "实习护士"},
-					                                   				{value: "4", text: "实习医生"},
-					                                   				{value: "5", text: "医生"},
-					                                   				{value: "6", text: "护士"},
-					                                   				{value: "7", text: "进修医生"},
-					                                   				{value: "8", text: "规培医生"},
-					                                				{value: "9", text: "工勤人员"}
-					                                		]},
+				{type:"combo", name: 'post', label:'人员类别:',options:parent.getEjzb(false)},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d",  tooltip:"请输入检查时间",required: true,note: {
 				     text: "请在这里输入时间，时间是必填项."
 		             

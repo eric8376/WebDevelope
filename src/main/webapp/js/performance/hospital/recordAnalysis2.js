@@ -15,7 +15,9 @@ function doAnalysis(){
 	var user_name=myForm.getItemValue("user_name");
 	var xm=myForm.getItemValue("xm");
 	var ks=myForm.getItemValue("ks");
+	var post=myForm.getItemValue("post");
 	var zb=myForm.getItemValue("zb");
+	var ejzb=myForm.getItemValue("ejzb");
 	var hj=myForm.getItemValue("hj");
 	var kssj=myForm.getCalendar("beginTime").getFormatedDate("%Y-%m-%d");
 	var jssj=myForm.getCalendar("endTime").getFormatedDate("%Y-%m-%d");
@@ -28,11 +30,17 @@ function doAnalysis(){
 	if(!isEmpty(hj)&&zb!="ALL"){
 		condition+=" and hj_id='"+hj+"' ";
 	}
+	if(!isEmpty(ejzb)&&ejzb!="ALL"){
+		condition+=" and ejzb_id='"+ejzb+"' ";
+	}
 	if(!isEmpty(zb)&&zb!="ALL"){
 		condition+=" and zb_id='"+zb+"' ";
 	}
 	if(!isEmpty(ks)&&ks!="ALL"){
 		condition+=" and ks_id='"+ks+"' ";
+	}
+	if(!isEmpty(post)&&post!="ALL"){
+		condition+=" and post='"+post+"' ";
 	}
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
@@ -183,15 +191,16 @@ function loadSearchForm(){
     {type:"calendar", name:"beginTime", label:"开始时间:",readonly:0,dateFormat: "%Y-%m-%d"},
 	{type:"calendar", name:"endTime", label:"结束时间:",readonly:0,dateFormat: "%Y-%m-%d"},
     {type:"combo", name:"user_name", label:"相关人员:",options:list1,filtering:true},
-	{type:"combo", name:"xm", label:"项目",options:list3},
-	
+    {type:"combo", name:"post", label:"人员类别:",options:parent.getEjzb(true),filtering:true},
+    {type:"combo", name:"ks", label:"科室",options:list2},
 	 {type:"button", name:"search", value:"生成图形"},
 	 {type: "newcolumn", offset:50},
 	 {type: "label", label: ""},
 	 {type: "label", label: ""},
-	 {type:"combo", name:"ks", label:"科室",options:list2},
+	  {type:"combo", name:"xm", label:"项目",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
+		{type:"combo", name:"ejzb", label:"二级指标",options:null},
 //	{type: "newcolumn", offset:50},
 //    {type: "label", label: "分析指标",position:"label-left"},
 //    {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
@@ -221,6 +230,8 @@ myForm.attachEvent("onChange", function(name) {
 	}else if(name=='hj'){
 		loadSonByParent("hj","zb");
 		
+	}else if(name='zb'){
+		loadSonByParent("zb","ejzb");
 	}
 });
 document.onkeydown=function(e){
@@ -232,6 +243,7 @@ myForm.getCombo("user_name").setComboValue("");
 myForm.getCombo("xm").setComboValue("");
 loadSonByParent("xm","hj");
 loadSonByParent("hj","zb");
+loadSonByParent("zb","ejzb");
 }
 function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);

@@ -15,6 +15,7 @@ function doAnalysis(){
 	var user_name=myForm.getItemValue("user_name");
 	var xm=myForm.getItemValue("xm");
 	var ks=myForm.getItemValue("ks");
+	var post=myForm.getItemValue("post");
 	var zb=myForm.getItemValue("zb");
 	var ejzb=myForm.getItemValue("ejzb");
 	var hj=myForm.getItemValue("hj");
@@ -38,6 +39,9 @@ function doAnalysis(){
 	if(!isEmpty(ks)&&ks!="ALL"){
 		condition+=" and ks_id='"+ks+"' ";
 	}
+	if(!isEmpty(post)&&post!="ALL"){
+		condition+=" and post='"+post+"' ";
+	}
 	else if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
@@ -50,7 +54,7 @@ function doAnalysis(){
 	
 	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&condition="+condition+"&keyIndex="+keyIndex);
 	var res=eval("("+loader.xmlDoc.responseText+")");
-	data=res.list;
+	data=parent.filter(res.list,keyIndex);
 	if(chartType=="pie"){
 	createPieChart();
 	}else if(chartType=="bar"){
@@ -165,22 +169,24 @@ function loadSearchForm(){
     {type:"calendar", name:"beginTime", label:"开始时间:",readonly:0,dateFormat: "%Y-%m-%d"},
 	{type:"calendar", name:"endTime", label:"结束时间:",readonly:0,dateFormat: "%Y-%m-%d"},
     {type:"combo", name:"user_name", label:"相关人员:",options:list1,filtering:true},
-	{type:"combo", name:"xm", label:"项目",options:list3},
-	
+    {type:"combo", name:"post", label:"人员类别:",options:parent.getEjzb(true),filtering:true},
+    {type:"combo", name:"ks", label:"科室",options:list2},
 	 {type:"button", name:"search", value:"生成图形"},
 	 {type: "newcolumn", offset:50},
 	 {type: "label", label: ""},
 	 {type: "label", label: ""},
-	 {type:"combo", name:"ks", label:"科室",options:list2},
+	 {type:"combo", name:"xm", label:"项目",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
 		{type:"combo", name:"ejzb", label:"二级指标",options:null},
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析指标",position:"label-left"},
-    {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
+    {type: "radio", name: "keyIndex", value: "post", label: "人员类别"},
     {type: "radio", name: "keyIndex", value: "ks", label: "科室"},
+    {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
     {type: "radio", name: "keyIndex", value: "hj", label: "关键环节"},
     {type: "radio", name: "keyIndex", value: "zb", label: "一级指标"},
+    {type: "radio", name: "keyIndex", value: "ejzb", label: "二级指标"},
     {type: "newcolumn", offset:50},
   {type: "label", label: "图表类型",position:"label-left"},
   {type: "radio", name: "chartType", value: "bar", label: "垂直柱状图",checked: "1"},
