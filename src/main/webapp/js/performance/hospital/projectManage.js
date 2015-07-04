@@ -38,6 +38,8 @@ function addProject(){
 			dictType="groupId=2&groupCode=xm";
 		}else if(mapType=='hj'){
 			dictType="groupId=4&groupCode=hj";
+		}else if(mapType=='zb'){
+			dictType="groupId=5&groupCode=zb";
 		}
 		dhtmlxAjax.post("manageOperation.spr?action=addDictItem",dictType+"&dictText="+dictText,function(respon){
 			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
