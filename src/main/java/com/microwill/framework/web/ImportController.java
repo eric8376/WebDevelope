@@ -100,7 +100,7 @@ public class ImportController extends BaseMultiActionController {
 
 	private void handler(List objList,HttpServletRequest request) {
 		String hosp_id=HospitalHelper.getHospIdFromSession(request);
-		String sql="insert into t_per_record(record_id,xm_id,hj_id,zb_id,ks_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,?,?,'"+hosp_id+"')";
+		String sql="insert into t_per_record(record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,user_name,check_time,result,dianping,jiance,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,?,?,?,?,?,'"+hosp_id+"')";
 		jdbcTemplate.batchUpdate(sql, objList);
 		sql="update t_per_record t2, t_dict_table t1 set t2.ks_id=t1.dict_id where t1.dict_text=t2.ks_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ks';";
 		jdbcTemplate.update(sql);
@@ -110,7 +110,10 @@ public class ImportController extends BaseMultiActionController {
 		jdbcTemplate.update(sql);
 		sql="update t_per_record t2, t_dict_table t1 set t2.zb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='zb';";
 		jdbcTemplate.update(sql);
-		
+		sql="update t_per_record t2, t_dict_table t1 set t2.ejzb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ejzb';";
+		jdbcTemplate.update(sql);
+		sql="UPDATE t_per_record SET post= (CASE WHEN post='检验师' THEN 0 WHEN post='药学人员' THEN 1 WHEN post='放射师' THEN 2 WHEN post='实习护士' THEN 3 WHEN post='实习医生' THEN 4 WHEN post='医生' THEN 5 WHEN post='护士' THEN 6 WHEN post='进修医生' THEN 7 WHEN post='规培医生' THEN 8 WHEN post='工勤人员' THEN 9 ELSE post END);";
+		jdbcTemplate.update(sql);
 	}
 
 	@RequestMapping(params = "action=showUploadFrom")
