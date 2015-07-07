@@ -9,7 +9,7 @@ function doOnLoad() {
 	loadSearchForm();
 	
 }
-function doAnalysis(){
+function doAnalysis(newWindows){
 	
 	var condition="";
 	var user_name=myForm.getItemValue("user_name");
@@ -52,8 +52,12 @@ function doAnalysis(){
 	if(!isEmpty(jssj)){
 		condition+=" and check_time<='"+jssj+"'";
 	}
-	
-	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&type=time&condition="+condition+"&keyIndex="+keyIndex+"&valueIndex="+valueIndex);
+	var allcondition="&type=time&condition="+condition+"&keyIndex="+keyIndex+"&valueIndex="+valueIndex+"&chartType="+chartType;
+	if(newWindows)
+	{
+		window.open("p.spr?page=chartview"+allcondition);
+	}
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",allcondition);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=res.list;
 	if(chartType=="pie"){
@@ -227,7 +231,7 @@ function loadSearchForm(){
 myForm = new dhtmlXForm("form_container", formData);
 myForm.attachEvent("onButtonClick", function(name) {
 	if(name =='search'){
-		doAnalysis();
+		doAnalysis(true);
 	}
 });
 myForm.attachEvent("onChange", function(name) {
@@ -242,7 +246,7 @@ myForm.attachEvent("onChange", function(name) {
 });
 document.onkeydown=function(e){
 	if(e.keyCode=='13'){
-	doAnalysis();
+	doAnalysis(true);
 	}
 };
 myForm.getCombo("user_name").setComboValue("");
