@@ -74,7 +74,7 @@ function doOnLoad() {
 				 {title:"检查事项/结果",width:350,type:"ro",align:"left"},
 				 {title:"点评",width:100,type:"ro"},
 				 {title:"考核分",width:100,type:"ro"},
-				 {title:"检测值",width:100,type:"ro"},
+				 {title:"监测值",width:100,type:"ro"},
 				 {title:"备注",width:100,type:"ro"}
 				],
 			key:"record_id",
@@ -123,7 +123,7 @@ function initToolBar(grid){
         	var recordId = grid.cellByIndex(index, 0).getValue();
         	parent.loadPage('manage.spr?action=addRecord&operation=update&recordId='+recordId);
         }else if(id=="caculate"){
-        	alert("统计考核分："+grid.data.summaryNum+"分<br>统计检测率："+grid.data.summaryRate+"%");
+        	alert("统计考核分："+grid.data.summaryNum+"分<br>统计监测率："+grid.data.summaryRate+"%");
         }else if(id=="backtosearch"){
         	parent.loadPage('manage.spr?action=searchRecord');
         }else if(id=="import"){

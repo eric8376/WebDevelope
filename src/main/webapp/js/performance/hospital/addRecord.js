@@ -38,7 +38,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 				{type:"input", name:"dianping", label:"点评:",rows: 4,inputWidth :440},
 				{type:"input", name:"beizhu", label:"备注:",rows: 4,inputWidth :440},
 				{type:"input", name:"kaohe", label:"考核分:",inputWidth :150},
-				{type:"input", name:"jiance", label:"检测值:",inputWidth :150},
+				{type:"input", name:"jiance", label:"监测值:",inputWidth :150},
 				{type:"button", name:"save", value:"确认保存",offsetLeft:300,offsetTop :30}
                         ]
 			myForm = new dhtmlXForm("form_container", formData);
