@@ -235,7 +235,11 @@ function getEjzb(isAll)
    				{value: "6", text: "护士"},
    				{value: "7", text: "进修医生"},
    				{value: "8", text: "规培医生"},
-				{value: "9", text: "工勤人员"}
+				{value: "9", text: "工勤人员"},
+				{value: "10", text: "患者"},
+				{value: "11", text: "患者家属"},
+				{value: "12", text: "就医者"},
+				{value: "13", text: "其他人员"}
 		];
 if(isAll){
 	ejzb.unshift({value:'ALL',text:"全部"})

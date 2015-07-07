@@ -1,6 +1,6 @@
 dhtmlxEvent(window,"load", doOnLoad);
 
-var chart,myForm,data,keyIndex,chartType;
+var chart,myForm,data,keyIndex,chartType,valueIndex;
 
 function doOnLoad() {
 	chart =  new dhtmlXChart({
@@ -22,6 +22,7 @@ function doAnalysis(){
 	var kssj=myForm.getCalendar("beginTime").getFormatedDate("%Y-%m-%d");
 	var jssj=myForm.getCalendar("endTime").getFormatedDate("%Y-%m-%d");
 	keyIndex=myForm.getItemValue("keyIndex");
+	valueIndex=myForm.getItemValue("valueIndex");
 	chartType=myForm.getItemValue("chartType");
 	
 	if(!isEmpty(user_name)&&user_name!="ALL"){
@@ -52,7 +53,7 @@ function doAnalysis(){
 		condition+=" and check_time<='"+jssj+"'";
 	}
 	
-	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&condition="+condition+"&keyIndex="+keyIndex);
+	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis","&condition="+condition+"&keyIndex="+keyIndex+"&valueIndex="+valueIndex);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=parent.filter(res.list,keyIndex);
 	if(chartType=="pie"){
@@ -180,13 +181,18 @@ function loadSearchForm(){
 		{type:"combo", name:"zb", label:"一级指标",options:null},
 		{type:"combo", name:"ejzb", label:"二级指标",options:null},
 	{type: "newcolumn", offset:50},
-    {type: "label", label: "分析指标",position:"label-left"},
+    {type: "label", label: "分析类型",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "post", label: "人员类别"},
     {type: "radio", name: "keyIndex", value: "ks", label: "科室"},
     {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},
     {type: "radio", name: "keyIndex", value: "hj", label: "关键环节"},
     {type: "radio", name: "keyIndex", value: "zb", label: "一级指标"},
     {type: "radio", name: "keyIndex", value: "ejzb", label: "二级指标"},
+    {type: "newcolumn", offset:50},
+    {type: "label", label: "统计数值",position:"label-left"},
+    {type: "radio", name: "valueIndex", value: "ROUND(sum(kaohe),1)", label: "考核分",checked: "1"},
+    {type: "radio", name: "valueIndex", value: "count(1)", label: "检测分"},
+    {type: "radio", name: "valueIndex", value: "sum(jiance)", label: "检测值"},
     {type: "newcolumn", offset:50},
   {type: "label", label: "图表类型",position:"label-left"},
   {type: "radio", name: "chartType", value: "bar", label: "垂直柱状图",checked: "1"},

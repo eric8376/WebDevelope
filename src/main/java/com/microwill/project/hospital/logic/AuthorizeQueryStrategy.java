@@ -78,8 +78,8 @@ public  class AuthorizeQueryStrategy {
 				+ ",totalCount:" + totalCount + ",summaryNum:"+returnSummaryNum+",summaryRate:"+returnSummaryRate+"}";
 		return jsonTxt;
 	}
-	public String queryAnalysis(String condition,String keyIndex) throws Exception {
-		String sql ="select "+keyIndex+" as keyindex,ROUND(sum(kaohe+0.00),1) as number "
+	public String queryAnalysis(String condition,String keyIndex,String valueIndex) throws Exception {
+		String sql ="select "+keyIndex+" as keyindex, "+valueIndex+" as number "
 				+ "from hospital.t_per_vrecord where 1=1 "
 				+ ""+condition+""+getScopeSql()+"group by "+keyIndex+ " ";
 		List list = jdbcTemplate.queryForList(
@@ -89,10 +89,10 @@ public  class AuthorizeQueryStrategy {
 				"}";
 		return jsonTxt;
 	}
-	public String queryAnalysis2(String condition,String keyIndex) throws Exception {
-		String sql ="select left(check_time,7) as keyindex,ROUND(sum(kaohe+0.00),1) as number "
+	public String queryAnalysis2(String condition,String keyIndex,String valueIndex) throws Exception {
+		String sql ="select left(check_time,7) as keyindex, "+valueIndex+"  as number "
 				+ "from hospital.t_per_vrecord where 1=1 "
-				+ ""+condition+""+getScopeSql()+"group by left(check_time,7) ";
+				+ ""+condition+""+getScopeSql()+" group by left(check_time,7) ";
 		List list = jdbcTemplate.queryForList(
 				sql);
 		System.out.println(sql);
