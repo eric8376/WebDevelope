@@ -223,7 +223,7 @@ function doPriviage(tree){
 	
 }
 /**/
-function getEjzb(isAll)
+function getEjzb(isAll,isColumn)
 {
 	var ejzb=[
 				{value: "0", text: "检验师"},
@@ -243,6 +243,12 @@ function getEjzb(isAll)
 		];
 if(isAll){
 	ejzb.unshift({value:'ALL',text:"全部"})
+}
+if(isColumn){
+for(var i=0;i<ejzb.length;i++){
+	ejzb[i].key=ejzb[i].value;
+	ejzb[i].value=ejzb[i].text;
+}
 }
 return ejzb;
 }
