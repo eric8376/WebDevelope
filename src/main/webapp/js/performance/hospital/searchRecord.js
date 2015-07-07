@@ -20,20 +20,22 @@ function doOnLoad() {
 		{
 		    type: "settings",
 		    position: "label-left",
-		    labelWidth: 240,
-		    inputWidth: 300
+		    labelWidth: 100,
+		    inputWidth: 150
 		},          
-    
+		{type: "block", width: 800, list:[
 		{type:"calendar", name: 'kssj', label:'开始时间:',readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"calendar", name:"jssj", label:"结束时间:",readonly:1,dateFormat: "%Y-%m-%d"},
 		{type:"combo", name:"owner", label:"人名:",options:rt3.list,filtering:true},
 		{type:"combo", name: 'post', label:'人员类别:',options:parent.getEjzb(true)},
 		{type:"combo", name:"ks", label:"科室",options:list2},
+		{type:"button", name:"search", value:"开始搜索",offsetLeft:200,offsetTop :30},
+		 {type: "newcolumn", offset:50},
 		{type:"combo", name:"xm", label:"项目:",options:list3},
 		{type:"combo", name:"hj", label:"关键环节",options:null},
 		{type:"combo", name:"zb", label:"一级指标",options:null},
-		{type:"combo", name:"ejzb", label:"二级指标",options:null},
-		{type:"button", name:"search", value:"开始搜索",offsetLeft:300,offsetTop :30}
+		{type:"combo", name:"ejzb", label:"二级指标",options:null}
+		]}
 	   
                 ]
 	myForm = new dhtmlXForm("form_container", formData);

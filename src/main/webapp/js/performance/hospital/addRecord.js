@@ -16,34 +16,38 @@ dhtmlxEvent(window,"load", doOnLoad);
 				{
 				    type: "settings",
 				    position: "label-left",
-				    labelWidth: 240,
-				    inputWidth: 200
+				    labelWidth: 100,
+				    inputWidth: 150
 				},
-                
+				{type: "block", width: 800, list:[
                 {type:"hidden", name:"recordId"},                                                                        
                 {type:"combo", name:"ks", label:"当事科室:",options:rt2.list,readonly:1},
 				{type:"combo", name: 'xm', label:'项目名称:',readonly:1,options:toComboData(parent.getXMList(),"dict_id","dict_text")},
 				{type:"combo", name: 'hj', label:'关键环节:',readonly:1,options:null},
 				{type:"combo", name: 'zb', label:'一级指标:',readonly:1,options:null},
+
+				{type: "newcolumn", offset:50},
 				{type:"combo", name: 'ejzb', label:'二级指标:',readonly:1,options:null},
 				{type:"input", name:"owner", label:"当事人:",required: false},
 				{type:"combo", name: 'post', label:'人员类别:',options:parent.getEjzb(false)},
 				{type:"calendar", name:"checktime", label:"检查时间:",dateFormat: "%Y-%m-%d",  tooltip:"请输入检查时间",required: true,note: {
 				     text: "请在这里输入时间，时间是必填项."
-		             
-			 }
-},
-				
-				{type:"input", name:"results", label:"检查事项/结果:",rows:4,inputWidth :440},
-				{type:"input", name:"dianping", label:"点评:",rows: 4,inputWidth :440},
-				{type:"input", name:"beizhu", label:"备注:",rows: 4,inputWidth :440},
+					}
+				}
+				]},
+				{type: "block", width: 800, list:[
+				{type:"input", name:"results", label:"检查事项/结果:",rows:4,inputWidth :450},
+				{type:"input", name:"dianping", label:"点评:",rows: 4,inputWidth :450},
+				{type:"input", name:"beizhu", label:"备注:",rows: 4,inputWidth :450},
 				{type:"input", name:"kaohe", label:"考核分:",inputWidth :150},
 				{type:"input", name:"jiance", label:"监测值:",inputWidth :150},
 				{type:"button", name:"save", value:"确认保存",offsetLeft:300,offsetTop :30}
+				]},
+                        
                         ]
 			myForm = new dhtmlXForm("form_container", formData);
 			//myForm.setSkin('dhx_terrace');
-		    myForm.setFontSize("15px");
+		    //myForm.setFontSize("15px");
 		    //赋值+联动
 		        if(operation=="update"){
 		        	 var recordId=getParam('recordId');

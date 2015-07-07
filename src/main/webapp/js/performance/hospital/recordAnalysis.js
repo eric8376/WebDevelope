@@ -165,7 +165,7 @@ function loadSearchForm(){
 	    labelWidth: 60,
 	    inputWidth: 110
 	},          
-    { type: "fieldset", name: "data1", label: "分析条件", inputWidth: "auto", list:[
+    { type: "fieldset", name: "data1", label: "分析条件", width : 900, list:[
     {type: "label", label: "数据范围",position:"label-left"}, 
     {type:"calendar", name:"beginTime", label:"开始时间:",readonly:0,dateFormat: "%Y-%m-%d"},
 	{type:"calendar", name:"endTime", label:"结束时间:",readonly:0,dateFormat: "%Y-%m-%d"},

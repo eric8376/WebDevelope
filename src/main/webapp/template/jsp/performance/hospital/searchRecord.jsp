@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 </head>
 <body>
-	<div id="form_container" style="width:450px;height:600px;" align="center"></div>
+	<div id="form_container" style="width:800px;" align="center"></div>
 
  
 </body>
