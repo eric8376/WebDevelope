@@ -236,7 +236,7 @@ myForm.attachEvent("onChange", function(name) {
 	}else if(name=='hj'){
 		loadSonByParent("hj","zb");
 		
-	}else if(name='zb'){
+	}else if(name=='zb'){
 		loadSonByParent("zb","ejzb");
 	}
 });

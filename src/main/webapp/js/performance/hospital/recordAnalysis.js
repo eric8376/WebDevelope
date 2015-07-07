@@ -169,17 +169,17 @@ function loadSearchForm(){
     {type: "label", label: "数据范围",position:"label-left"}, 
     {type:"calendar", name:"beginTime", label:"开始时间:",readonly:0,dateFormat: "%Y-%m-%d"},
 	{type:"calendar", name:"endTime", label:"结束时间:",readonly:0,dateFormat: "%Y-%m-%d"},
-    {type:"combo", name:"user_name", label:"相关人员:",options:list1,filtering:true},
-    {type:"combo", name:"post", label:"人员类别:",options:parent.getEjzb(true),filtering:true},
-    {type:"combo", name:"ks", label:"科室",options:list2},
+    {type:"combo", name:"user_name", label:"相关人员:",options:list1,readonly:1},
+    {type:"combo", name:"post", label:"人员类别:",options:parent.getEjzb(true),readonly:1},
+    {type:"combo", name:"ks", label:"科室",options:list2,readonly:1},
 	 {type:"button", name:"search", value:"生成图形"},
 	 {type: "newcolumn", offset:50},
 	 {type: "label", label: ""},
 	 {type: "label", label: ""},
-	 {type:"combo", name:"xm", label:"项目",options:list3},
-		{type:"combo", name:"hj", label:"关键环节",options:null},
-		{type:"combo", name:"zb", label:"一级指标",options:null},
-		{type:"combo", name:"ejzb", label:"二级指标",options:null},
+	 {type:"combo", name:"xm", label:"项目",options:list3,readonly:1},
+		{type:"combo", name:"hj", label:"关键环节",options:null,readonly:1},
+		{type:"combo", name:"zb", label:"一级指标",options:null,readonly:1},
+		{type:"combo", name:"ejzb", label:"二级指标",options:null,readonly:1},
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析类型",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "post", label: "人员类别"},
@@ -217,9 +217,10 @@ myForm.attachEvent("onChange", function(name) {
 	}else if(name=='hj'){
 		loadSonByParent("hj","zb");
 		
-	}else if(name='zb'){
+	}else if(name=='zb'){
 		loadSonByParent("zb","ejzb");
 	}
+	//alert(name);
 });
 document.onkeydown=function(e){
 	if(e.keyCode=='13'){
