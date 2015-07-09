@@ -32,11 +32,14 @@ function doOnLoad() {
 	//dhxLayout.attachHeader('headerDiv');
 	/*工具栏*/
 	toolbar = dhxLayout.attachToolbar();
+//	toolbar.addText("title", 1, "<img src='../images/performance/hospital/title.jpg' style='height:34px' />");
+	toolbar.addText("title", 1,"<div style='font:italic normal bold 16pt Arial;width:900px;'>医院全面质量与绩效考核系统</div>");
+//	toolbar.addText("block", 2, "<div style='width:600px;'></div>");
 	toolbar.setAlign('right');
 	toolbar.setIconSize(32);
 	toolbar.setIconsPath(parent.contextPath+"/images/performance/icon/");
-	toolbar.addButton('changepassword',1,"控制面板","setting.ico",null);
-	toolbar.addButton('logout',1,"退出系统","exit.ico",null);
+	toolbar.addButton('changepassword',3,"控制面板","setting.ico",null);
+	toolbar.addButton('logout',4,"退出系统","exit.ico",null);
 	toolbar.attachEvent("onClick", function(id) {
         if(id=="changepassword"){
         	loadPage('manage.spr?action=changePassword','修改密码');
