@@ -5,16 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
-
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/base.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/helper/dhtmlxhelper.js"></script>
+<jsp:include page="../include/include.jsp" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/performance/hospital/login.js"></script>
-<link rel="stylesheet"
-	href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css"
-	type="text/css" media="screen">
+	
 <style type="text/css">
 body
         {

@@ -113,7 +113,7 @@ public class ImportController extends BaseMultiActionController {
 		jdbcTemplate.update(sql);
 		sql="update t_per_record t2, t_dict_table t1 set t2.zb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='zb';";
 		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.ejzb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ejzb';";
+		sql="update t_per_record t2, t_dict_table t1 set t2.ejzb_id=t1.dict_id where t1.dict_text=t2.ejzb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ejzb';";
 		jdbcTemplate.update(sql);
 		sql="UPDATE t_per_record SET post= (CASE "
 				+ "WHEN post='检验师' THEN 0 WHEN post='药学人员' THEN 1 WHEN post='放射师' THEN 2 WHEN post='实习护士' THEN 3 WHEN post='实习医生' THEN 4 "
