@@ -17,7 +17,7 @@ import com.microwill.framework.rpc.help.JSONExecuteHelp;
 public  class AuthorizeQueryStrategy {
 	private String conditionSql;
 	private String pageSql;
-	private String querySql = "select record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,t1.user_name,check_time,result,dianping,kaohe,jiance,beizhu from t_per_record t1 where 1=1 ";
+	private String querySql = "select record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,t1.user_name,check_time,result,dianping,jiance,kaohe,beizhu from t_per_record t1 where 1=1 ";
 	private String summarySql="select sum(kaohe+0.00) as summaryNum,sum(jiance)/count(1)*100 as summaryRate from t_per_record t1 where 1=1 ";
 	private Map loginedUserContext;
 	private JdbcTemplate jdbcTemplate;

@@ -22,26 +22,13 @@ function doOnLoad() {
 	}
 	
 }
-function filter(data,type){
-	
-	if(type=="post"){
-		var map=listObjectToMap(getEjzb(false),"value","text");
-		for(var i=0;i<data.length;i++){
-			data[i].keyindex=(map[data[i].keyindex]==undefined)?"其他":map[data[i].keyindex];
-		}
-	}else{
-		for(var i=0;i<data.length;i++){
-			data[i].keyindex=(data[i].keyindex==null)?"其他":data[i].keyindex;
-		}
-	}
-	return data;
-}
+
 function newCanvas(){
 	$("#chart_container").remove();
 	$("body").append("<div id='chart_container' style='border:1px solid #A4BED4;'>");
 	//默认大小
-	$("#chart_container").css("height","800px");
-	$("#chart_container").css("width","1000px");
+	$("#chart_container").css("height","600px");
+	$("#chart_container").css("width","800px");
 	if(data.length>=10&&chartType=="bar"){
 		$("#chart_container").css("width",data.length*60+"px");
 	}

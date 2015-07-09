@@ -242,6 +242,7 @@ function loadSonByParent(parentObj,sonObj){
 	var sonCombo=myForm.getCombo(sonObj);
 	var parentComboValue=myForm.getCombo(parentObj).getSelectedValue();
 	sonCombo.clearAll();
+	sonCombo.setComboText("");
 	sonCombo.setComboValue("");
 	var list2=parent.getDictListByParent(parentComboValue,sonObj);
 	var list=new Array();

@@ -101,6 +101,9 @@ public class ImportController extends BaseMultiActionController {
 	private void handler(List objList,HttpServletRequest request) {
 		String hosp_id=HospitalHelper.getHospIdFromSession(request);
 		String sql="insert into t_per_record(record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,user_name,check_time,result,dianping,jiance,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,?,?,?,?,?,'"+hosp_id+"')";
+		
+		System.out.println("一共导入"+objList.size()+"条记录.");
+		
 		jdbcTemplate.batchUpdate(sql, objList);
 		sql="update t_per_record t2, t_dict_table t1 set t2.ks_id=t1.dict_id where t1.dict_text=t2.ks_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ks';";
 		jdbcTemplate.update(sql);
