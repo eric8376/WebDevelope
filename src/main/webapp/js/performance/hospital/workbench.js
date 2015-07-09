@@ -76,7 +76,9 @@ function doOnLoad() {
     contentTab.tabs("a1").setActive();
     /*菜单栏*/
     /*过滤栏*/
-    
+    dhxLayout.cells("c").setText("快捷过滤");
+    dhxLayout.cells("c").setWidth(150);
+    dhxLayout.cells("c").collapse();//过滤栏默认隐藏起来不占版面
     tabbar = dhxLayout.cells("c").attachTabbar();
    // tabbar.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     tabbar.setSkin('dhx_skyblue');
@@ -86,7 +88,7 @@ function doOnLoad() {
     grid.setImagePath(parent.contextPath+"/js/dhtmlx/imgs/");
     grid.setHeader("序号,科室");
     grid.setNoHeader(true);
-    grid.setInitWidths("0,125");
+    grid.setInitWidths("0,150");
     grid.setColAlign("center,center");
     grid.setColTypes("ro,ro");
     grid.setColSorting("str,str");
@@ -102,7 +104,7 @@ function doOnLoad() {
     grid1.setHeader("序号,项目");
     grid1.setNoHeader(true);
 
-    grid1.setInitWidths("0,125");
+    grid1.setInitWidths("0,150");
     grid1.setColAlign("center,center");
     grid1.setColTypes("ro,ro");
     grid1.setColSorting("str,str");
@@ -114,8 +116,8 @@ function doOnLoad() {
     contentTab.tabs("a1").setActive();
 	//alert(Object.toJSON(data));
 	//
-	dhxLayout.cells("c").setText("分类过滤");
-    dhxLayout.cells("c").setWidth(150);
+	
+ 
     
     //dhxLayout.cells("b").hideHeader();
     //dhxLayout.cells("a").setHeight(300);
