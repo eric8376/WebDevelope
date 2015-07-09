@@ -13,11 +13,11 @@
 <%if(loginedUserInfo!=null){ 
 %>
 
-<div style="text-align:left;background-color: rgb(255,230,246);padding: 20px;" >
-欢迎登陆
-您当前使用的是【<%=loginedUserInfo.get("hosp_name")%>】医院的全面质量与绩效考核系统 :</br>
-您是【<%=loginedUserInfo.get("KS_TEXT")%>】 科室的【<%=loginedUserInfo.get("REAL_NAME") %>】
-<br>您拥有：【<%=loginedUserInfo.get("ROLE_TEXT") %>】权限.
+<div style="text-align:left;background-color: rgb(255,230,246);padding: 60px;" >
+亲爱的用户您好,欢迎您的登录。<br>
+<p>您当前使用的是【<%=loginedUserInfo.get("hosp_name")%>】医院的全面质量与绩效考核系统 。</p>
+<p>您是【<%=loginedUserInfo.get("KS_TEXT")%>】 科室的【<%=loginedUserInfo.get("REAL_NAME") %>】。</p>
+<p>您拥有：【<%=loginedUserInfo.get("ROLE_TEXT") %>】权限。</p>
 </div>
 <% }%>
 </body>
