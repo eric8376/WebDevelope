@@ -28,7 +28,7 @@ function doOnLoad() {
 
 function newCanvas(){
 	$("#chart_container").remove();
-	$("body").append("<div id='chart_container' style='border:1px solid #A4BED4;'>");
+	$("body").append("<div id='chart_container' style='width:800px;height:600px'>");
 	//默认大小
 	$("#chart_container").css("height","600px");
 	$("#chart_container").css("width","1000px");
@@ -38,8 +38,6 @@ function newCanvas(){
 	if(data.length>=10&&chartType=="barH"){
 		$("#chart_container").css("height",data.length*60+"px");
 	}
-	//初始化图表
-	chart = echarts.init(document.getElementById('chart_container'));
 	
 }
 function createBarHChart(){
@@ -73,9 +71,11 @@ function createBarHChart(){
 	
 }
 function createBarChart(){
+	newCanvas();
+	chart = echarts.init(document.getElementById('chart_container'));
 	var category=convertObjectAttrToArray(data,"keyindex");
 	var number=convertObjectAttrToArray(data,"number");
-	newCanvas();
+
 	//创建柱状图表
 	option = {
 		    title : {
@@ -135,70 +135,39 @@ function createBarChart(){
     chart.setOption(option);
 }
 function createPieChart(){
-	var category=convertObjectAttrToArray(data,"keyindex");
-	var pieData=replaceObjectListAttr(data,['number','keyindex'],['value','name']);
-	newCanvas();
-	option = {
-		    title : {
-		        text: '饼状图表',
-		        subtext: '饼状图表',
-		        x:'center'
-		    },
-		    tooltip : {
-		        trigger: 'item',
-		        formatter: "{a} <br/>{b} : {c} ({d}%)"
-		    },
-		    legend: {
-		        orient : 'vertical',
-		        x : 'left',
-		        data:category
-		    },
-		    toolbox: {
-		        show : true,
-		        feature : {
-		            mark : {show: false},
-		            dataView : {show: false, readOnly: false},
-		            magicType : {
-		                show: true, 
-		                type: ['pie', 'funnel'],
-		                option: {
-		                    funnel: {
-		                        x: '25%',
-		                        width: '50%',
-		                        funnelAlign: 'left',
-		                        max: 1548
-		                    }
-		                }
-		            },
-		            restore : {show: false},
-		            saveAsImage : {show: true}
-		        }
-		    },
-		    calculable : true,
-		    series : [
-		        {
-		            name:'扣分',
-		            type:'pie',
-		            radius : '55%',
-		            center: ['50%', '60%'],
-		            data:pieData,
-		            itemStyle: {
-		                normal: {
-		                    label: {
-		                        show: true,
-		                        position: 'top',
-		                        formatter: '{b}\n{d}%'
-		                       
-		                    },
-		                    labelLine:{
-		                    	length:60
-		                    	}
-		                }
-		            },
-		        }
-		    ]
-		};
-	chart.setOption(option);
+	var hightchartdata=convertObjectsToArrays(data);
+	$("#chart_container").highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: '饼状图'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '占比',
+            data:hightchartdata
+        }]
+    });
 }
 function createLineChart(){
 	newCanvas();

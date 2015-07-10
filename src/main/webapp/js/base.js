@@ -377,6 +377,18 @@ function convertObjectAttrToArray(data,key){
 	}
 	return newdata;
 }
+function convertObjectsToArrays(data){
+	var outdata=new Array();
+	for(var i=0;i<data.length;i++){
+		var indata=new Array();
+		for(var o in data[i]){
+			
+			indata.push(data[i][o]);
+		}
+		outdata.push(indata);
+	}
+	return outdata;
+}
 function replaceObjectListAttr(data,fromlist,tolist){
 	if(fromlist.length!=tolist.length){
 		return null;
