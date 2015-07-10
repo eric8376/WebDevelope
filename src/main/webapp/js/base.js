@@ -370,5 +370,27 @@ function listObjectToMap(list,id,text){
 	}
 	return map;
 }
-
+function convertObjectAttrToArray(data,key){
+	var newdata=new Array();
+	for(var i=0;i<data.length;i++){
+		newdata[i]=data[i][key];
+	}
+	return newdata;
+}
+function replaceObjectListAttr(data,fromlist,tolist){
+	if(fromlist.length!=tolist.length){
+		return null;
+	}
+	var newdata=new Array();
+	for(var i=0;i<data.length;i++){
+		var obj=new Object();
+		for(j=0;j<fromlist.length;j++){
+			
+			obj[tolist[j]]=data[i][fromlist[j]];
+			
+		}
+		newdata.push(obj);
+	}
+	return newdata;
+}
 

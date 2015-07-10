@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
+<script src="<%=request.getContextPath()%>/js/echart/echarts-all.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/chartview.js"></script>
-<script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/work.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <style>
 .dhx_axis_item_x{
@@ -20,7 +20,7 @@ transform: rotate(45deg);
 </style>
 </head>
 <body>
-<div id="chart_container" style="border:1px solid #A4BED4;">
+<div id="chart_container" style="border:1px solid #A4BED4;width:10px;height:10px;">
 </div>
 </body>
 </html>
