@@ -95,7 +95,7 @@ function doOnLoad() {
 	    			 {title:"删除",width:100,type:"link"},
 	    			 {title:"管理部门",width:0,type:"link"},
 	    			 {title:"管理环节",width:100,type:"link"},
-	    			 {title:"对应环节和部门",width:350,type:"ro"}
+	    			 {title:"对应环节",width:350,type:"ro"}
 	    			];
 	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\",\"','bm','\");^_self') as m1,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
 	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +

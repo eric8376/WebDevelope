@@ -29,16 +29,21 @@ import com.microwill.framework.web.util.LoginHelper;
 public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	//用户管理
 	private static String ADD_USER_SQL = "insert into t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
 	private static String UPDATE_USER_SQL="update t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
 	private static String DELETE_USER_SQL="delete from t_per_user where user_id=?";
+	//记录管理
 	private static String ADD_RECORD_SQL = "insert into t_per_record(record_id,ks_id,xm_id,user_name,check_time,result,dianping,kaohe,beizhu,hosp_id,zb_id,hj_id,ejzb_id,post,jiance) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=?,ejzb_id=?,post=?,jiance=? where record_id=?";
 	private static String DELETE_RECORD_SQL = "delete from t_per_record where record_id=?";
+	//字典管理
 	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id) values(?,?,?,?,?,?,?)";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
+	//字典关联
 	private static String DELETE_DICT_MAP_SQL = "delete from hospital.t_per_dict_map where parent_id=? and son_id=?";
 	private static String ADD_DICT_MAP_SQL = "insert into hospital.t_per_dict_map(parent_id,son_id,map_id) values(?,?,?)" ;
+	//其他
 	private static String DELETE_USER_ROLE_MAP_SQL = "delete from T_PER_USER_ROLE where role_id=?";
 	private static String ADD_USER_ROLE_MAP_SQL = "insert into T_PER_USER_ROLE(user_id,role_id) values(?,?)";
 	private static String DELETE_ROLE_XM_MAP_SQL = "delete from T_PER_ROLE_XM where ksxm_id=? ";
@@ -421,7 +426,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	}
 	private String getUserIdFromSession(HttpServletRequest request){
 		
-		return(String)LoginHelper.getToken(request).get("dept_id");
+		return(String)LoginHelper.getToken(request).get("user_id");
 	}
 	private String getDeptIdFromSession(HttpServletRequest request){
 		
