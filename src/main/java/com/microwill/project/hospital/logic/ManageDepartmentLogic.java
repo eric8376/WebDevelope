@@ -16,7 +16,7 @@ import com.microwill.project.hospital.bo.RoleType;
 public class ManageDepartmentLogic extends UserTypeLogic {
 	private static final String KSSql="select dict_id,dict_text from hospital.t_dict_table where group_code='ks' and hosp_id=? ";
 	private static final String XMSql="select distinct k.dict_id,k.dict_text from t_per_xm  k " +
-			"where k.creator_dep_id=? and k.hosp_id=? " ;
+			"where (k.creator_dep_id=? or permission = 0) and k.hosp_id=? " ;
 			
 	/* (non-Javadoc)
 	 * @see com.microwill.performance.logic.UserTypeLogic#getKSList()

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.framework.web.util.LoginHelper;
+import com.microwill.project.hospital.bo.RoleType;
 
 /**
  * @author Administrator
@@ -38,7 +39,7 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String UPDATE_RECORD_SQL = "update t_per_record set ks_id=?,xm_id=?,user_name=?,check_time=?,result=?,dianping=?,kaohe=?,beizhu=?,zb_id=?,hj_id=?,ejzb_id=?,post=?,jiance=? where record_id=?";
 	private static String DELETE_RECORD_SQL = "delete from t_per_record where record_id=?";
 	//字典管理
-	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id) values(?,?,?,?,?,?,?)";
+	private static String ADD_DICT_SQL = "insert into hospital.t_dict_table(dict_id,group_id,dict_text,group_code,hosp_id,creator_id,creator_dep_id,permission,createtime) values(?,?,?,?,?,?,?,?,now())";
 	private static String DELETE_DICT_SQL = "delete from hospital.t_dict_table where dict_id= ?";
 	//字典关联
 	private static String DELETE_DICT_MAP_SQL = "delete from hospital.t_per_dict_map where parent_id=? and son_id=?";
@@ -244,7 +245,11 @@ public class ManageOperactionController extends BaseMultiActionController {
 		int result = 0;
 		try {
 			result = jdbcTemplate.update(ADD_DICT_SQL,
-					new Object[] { dictId, groupId, dictText, groupCode,getHospIdFromSession(request),getUserIdFromSession(request),getDeptIdFromSession(request) });
+					new Object[] { dictId, groupId, dictText,
+							groupCode,getHospIdFromSession(request),
+							getUserIdFromSession(request),
+							getDeptIdFromSession(request),
+							getPermissionFromSession(request)});
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -431,6 +436,13 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private String getDeptIdFromSession(HttpServletRequest request){
 		
 		return(String)LoginHelper.getToken(request).get("ks");
+	}
+	private Integer getPermissionFromSession(HttpServletRequest request){
+		String role=(String)LoginHelper.getToken(request).get("role_name");
+		if(RoleType.ADMIN.getRole().equals(role)){
+			return 0;
+		}
+		return null;
 	}
 	private String getUUID() {
 		UUID uuid = UUID.randomUUID();
