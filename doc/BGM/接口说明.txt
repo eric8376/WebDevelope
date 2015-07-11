@@ -1,0 +1,35 @@
+请用POST提交，否则会有乱码
+1、登录
+http://localhost/hospital/BGM/invoke.spr?action=login&username=admin&password=111
+2、获取病患讯息
+http://localhost/hospital/BGM/invoke.spr?action=getPatient&patientId=20131216091200501
+3、获取当天的检验计划
+http://localhost/hospital/BGM/invoke.spr?action=getTodayPlanByUser&userId=4028818842f17d9b0142f5ee954f0001
+4、新增病患（单个）
+http://localhost/hospital/BGM/invoke.spr?action=addPatient&name=test1
+	private String patientId;
+	private String recordNo;
+	private String idNo;
+	private String insuranceId;
+	private String name;
+	private Integer sex;
+	private Integer age;
+	private String bornDate;
+	private String contact1;
+	private String contact2;
+	private String address;
+	private Integer type;
+	private String checkinTime;
+	private String checkoutTime;
+	private String memo;
+5、上传检测结果（单个）
+http://localhost/hospital/BGM/invoke.spr?action=addResult&patientId=2
+参数如下：
+	private String checkId;
+	private String patientId;
+	private String userId;
+	private String machId;
+	private String checkResult;
+	private String analysisResult;
+	private String checkTime;
+	private String memo;
