@@ -54,7 +54,7 @@ function doOnLoad() {
 	}
 	 
 	 
-	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition;
+	   var sql="select dict_id,dict_text,CONCAT('Delete^javascript:doDelete(\"',dict_id,'\");^_self') from "+viewName+" where 1=1 "+filterCondition+" order by dict_text asc";
 	var grid_define={
 		columns:
 			[{title:"编号",width:0,type:"ro"},

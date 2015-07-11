@@ -73,12 +73,12 @@ function doOnLoad() {
 	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
 	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
 	    		" on t1.dict_id=t2.parent_id "+
-	    		" group by t1.dict_id,t1.dict_text,d,m2";
+	    		" group by t1.dict_id,t1.dict_text,d,m2"+" order by dict_text asc";
 	    	}
 	    else if(mapType=='zb'){
 	    	viewName="hospital.t_per_zb";
 	    	columns=[{title:"编号",width:0,type:"ro"},
-			 {title:"关键环节",width:100,type:"ro"},
+			 {title:"一级指标",width:100,type:"ro"},
 			 {title:"删除",width:100,type:"link"},
 			 {title:"管理",width:100,type:"link"},
 			 {title:"对应二级指标",width:350,type:"ro"}
@@ -86,7 +86,7 @@ function doOnLoad() {
 	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
 	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
 	    		" on t1.dict_id=t2.parent_id "+
-	    		" group by t1.dict_id,t1.dict_text,d,m2";
+	    		" group by t1.dict_id,t1.dict_text,d,m2 "+" order by dict_text asc";
 	    	}
 	    else if(mapType=='xm'){
 	    	viewName="hospital.t_per_xm";
@@ -100,7 +100,7 @@ function doOnLoad() {
 	    	  sql="select t1.dict_id,t1.dict_text,CONCAT('Delete^javascript:doDelete(\"',t1.dict_id,'\");^_self') as d,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\",\"','bm','\");^_self') as m1,CONCAT('Manage^javascript:doManage(\"',t1.dict_id,'\");^_self') as m2,GROUP_CONCAT(t2.ks_text) as group_ks" +
 	    		" from (select * from "+viewName+" where 1=1 "+filterCondition+") t1 left join (select dict_text as ks_text,parent_id from hospital.t_per_dict_map k1,hospital.t_dict_table k2 where k1.son_id=k2.dict_id ) t2 " +
 	    		" on t1.dict_id=t2.parent_id "+
-	    		" group by t1.dict_id,t1.dict_text,d,m1,m2";
+	    		" group by t1.dict_id,t1.dict_text,d,m1,m2"+" order by dict_text asc";
 	    	
 	    }
 	    
