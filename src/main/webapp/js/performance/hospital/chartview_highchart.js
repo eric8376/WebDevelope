@@ -1,28 +1,37 @@
+/**
+ * 需要引入
+ *  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts-3d.js"></script>
+ */
 dhtmlxEvent(window,"load", doOnLoad);
 
 var chart,myForm,data,keyIndex,chartType,valueIndex;
 
 function doOnLoad() {
 	
-	 //加载数据
+	
 	var chartType=getParam("chartType");
 	var condition=window.location.search;
-	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",condition);
-	var res=eval("("+loader.xmlDoc.responseText+")");
-	data=filter(res.list,getParam("keyIndex"));
-	if(chartType=="pie"){
-		createPieChart();
-		}else if(chartType=="bar"){
-			createBarChart();
-		}else if(chartType=="barH"){
-			createBarHChart();
-		}else if(chartType=="line"){
-			createLineChart();
+	
+	if(chartType!=null&&condition!=null){//参数不为空才自动加载
+		var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",condition);
+		var res=eval("("+loader.xmlDoc.responseText+")");
+		data=filter(res.list,getParam("keyIndex"));
+		if(chartType=="pie"){
+			createPieChart();
+			}else if(chartType=="bar"){
+				createBarChart();
+			}else if(chartType=="barH"){
+				createBarHChart();
+			}else if(chartType=="line"){
+				createLineChart();
+		}
 	}
+	//参数为空则等待调用 外部须留#chart_container
 	
 
   
-	
 	
 }
 
@@ -41,98 +50,10 @@ function newCanvas(){
 	
 }
 function createBarHChart(){
-	
-	newCanvas();
-	 chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","barH");
-	 chart.define("value","#number#");
-	 //chart.define("color","#66cc33"); 
-	 chart.define("label","#number#");
-	 chart.define("width","80"); 
-	 chart.define("padding",{left: 150}); 
-	 chart.define("tooltip","#keyindex#");   
-	 chart.define("yAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("xAxis",{
-       // template:"{obj}",
-        title:"扣分"
-	 	});     
-	 chart.parse(data,"json");
-//	 var dhxWins= new dhtmlXWindows();
-//	
-//	 var popupWindow = parent.dhxLayout.dhxWins.createWindow("popupWindow",300,300,800,500);
-//	 
-//	 popupWindow.attachObject(chart);
-//	 popupWindow.show();
-	
+	createBaseBarChart("bar");
 }
 function createBarChart(){
-	newCanvas();
-	chart = echarts.init(document.getElementById('chart_container'));
-	var category=convertObjectAttrToArray(data,"keyindex");
-	var number=convertObjectAttrToArray(data,"number");
-
-	//创建柱状图表
-	option = {
-		    title : {
-		        text: '柱状图表',
-		        subtext: '柱状图表',
-		        x:'center'
-		    },
-		    tooltip : {
-		        trigger: 'axis'
-		    },
-//		    legend: {
-//		    	 orient : 'vertical',
-//		         x : 'right',
-//		        data:category
-//		    },
-		    toolbox: {
-		        show : true,
-		        feature : {
-		            mark : {show: false},
-		            dataView : {show: false, readOnly: false},
-		            magicType : {show: false, type: ['line', 'bar']},
-		            restore : {show: false},
-		            saveAsImage : {show: true}
-		        }
-		    },
-		    calculable : true,
-		    xAxis : [
-		        {
-		            type : 'category',
-		            data : category
-		        }
-		    ],
-		    yAxis : [
-		        {
-		            type : 'value'
-		        }
-		    ],
-		    series : [
-		        {
-		            name:'扣分',
-		            type:'bar',
-		            itemStyle: {
-		                normal: {
-		                    color: getColor,
-		                    label: {
-		                        show: true,
-		                        position: 'top',
-		                        formatter: '{b}\n{c}'
-		                    }
-		                }
-		            },
-		            data:number,
-
-		        }
-		    ]
-		};
-    chart.setOption(option);
+	createBaseBarChart("column");
 }
 function createPieChart(){
 	var hightchartdata=convertObjectsToArrays(data);
@@ -149,7 +70,7 @@ function createPieChart(){
             text: '饼状图'
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
         },
         plotOptions: {
             pie: {
@@ -158,7 +79,7 @@ function createPieChart(){
                 depth: 35,
                 dataLabels: {
                     enabled: true,
-                    format: '{point.name}'
+                    format: '{point.name}:<b>{point.percentage:.2f}%'
                 }
             }
         },
@@ -167,35 +88,124 @@ function createPieChart(){
             name: '占比',
             data:hightchartdata
         }]
+        , credits: {  
+            enabled: false // remove high chart logo hyper-link  
+        }
     });
 }
 function createLineChart(){
+	var category=convertObjectAttrToArray(data,"keyindex");
+	var number=convertObjectAttrToArray(data,"number");
 	newCanvas();
-	chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","line");
-	 chart.define("value","#number#");
-	 chart.define("label","#keyindex#");
-	 chart.define("xAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("yAxis",{
-      
-     // template:"{obj}",
-      title:"扣分"
-	 	});     
+
+	    $("#chart_container").highcharts({
+	        chart: {
+	            type: 'line'
+	        },
+	        title: {
+	            text: '折线图'
+	        },
+	        subtitle: {
+	            text: '折线图'
+	        },
+	        xAxis: {
+	            categories: category
+	        },
+	        yAxis: {
+	            title: {
+	                text: ''
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
+	        },
+	        tooltip: {
+	            valueSuffix: ''
+	        },
+	        plotOptions: {
+	            line: {
+	                dataLabels: {
+	                    enabled: true
+	                },
+	                enableMouseTracking: true
+	            }
+	        },
+	        series: [{
+	            name: '数值',
+	            data: number
+	        }]
+	        , credits: {  
+                enabled: false // remove high chart logo hyper-link  
+            }
+	    });
+
+}
+function createBaseBarChart(type){
+	var category=convertObjectAttrToArray(data,"keyindex");
+	var number=convertObjectAttrToArray(data,"number");
+	newCanvas();
+	    $('#chart_container').highcharts({
+	        chart: {
+	            type: type
+	        },
+	        title: {
+	            text: '柱状图'
+	        },
+	        subtitle: {
+	            text: '柱状图'
+	        },
+	        xAxis: {
+	            categories: category,
+	            title: {
+	                text: null
+	            }
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '数值',
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+	        },
+	        tooltip: {
+	            valueSuffix: ''
+	        },
+	        plotOptions: {
+	            bar: {
+	                dataLabels: {
+	                    enabled: true
+	                }
+	            }
+	        },
+//	        legend: {
+//	            layout: 'vertical',
+//	            align: 'right',
+//	            verticalAlign: 'top',
+//	            x: -40,
+//	            y: 100,
+//	            floating: true,
+//	            borderWidth: 1,
+//	            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+//	            shadow: true
+//	        },
+	        credits: {
+	            enabled: false
+	        },
+	        series: [{
+	            name:'数值',
+	            data:number
+	        }]
+	        , credits: {  
+                enabled: false // remove high chart logo hyper-link  
+            }
+	    });
 	
-	chart.parse(data,"json");
+	
 }
-function getColor(params) {
-    // build a color map as your need.
-    var colorList = [
-      '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
-       '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
-       '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
-    ];
-    //var index = 
-    return colorList[params.dataIndex%15]
-}
+
+

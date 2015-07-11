@@ -57,7 +57,7 @@ function doAnalysis(newWindows){
 	{
 		window.open("p.spr?page=chartview"+allcondition);
 	}
-	
+	else{
 	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",allcondition);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=parent.filter(res.list,keyIndex);
@@ -68,88 +68,7 @@ function doAnalysis(newWindows){
 	}else if(chartType=="barH"){
 		createBarHChart();
 	}
-}
-function newCanvas(){
-	$("#chart_container").remove();
-	$("body").append("<div id='chart_container' style='border:1px solid #A4BED4;'>");
-	//默认大小
-	$("#chart_container").css("height","800px");
-	$("#chart_container").css("width","1000px");
-	if(data.length>=10&&chartType=="bar"){
-		$("#chart_container").css("width",data.length*60+"px");
 	}
-	if(data.length>=10&&chartType=="barH"){
-		$("#chart_container").css("height",data.length*40+"px");
-	}
-	
-}
-function createBarHChart(){
-	
-	newCanvas();
-	 chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","barH");
-	 chart.define("value","#number#");
-	 //chart.define("color","#66cc33"); 
-	 chart.define("label","#number#");
-	 chart.define("width","80"); 
-	 chart.define("padding",{left: 150}); 
-	 chart.define("tooltip","#keyindex#");   
-	 chart.define("yAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("xAxis",{
-       // template:"{obj}",
-        title:"扣分"
-	 	});     
-	 chart.parse(data,"json");
-//	 var dhxWins= new dhtmlXWindows();
-//	
-//	 var popupWindow = parent.dhxLayout.dhxWins.createWindow("popupWindow",300,300,800,500);
-//	 
-//	 popupWindow.attachObject(chart);
-//	 popupWindow.show();
-	
-}
-function createBarChart(){
-	
-	newCanvas();
-	chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","bar");
-	 chart.define("value","#number#");
-	 chart.define("label","#number#");
-	 chart.define("width","40");
-	 chart.define("padding",{bottom: 150}); 
-	 chart.define("tooltip","#keyindex#");   
-	 chart.define("xAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("yAxis",{
-         
-        // template:"{obj}",
-         title:"扣分"
-	 	});     
-	// chart.clearAll();
-	 chart.parse(data,"json");	
-}
-function createPieChart(){
-	newCanvas();
-	chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","pie3D");
-	 chart.define("value","#number#");
-	 chart.define("label","#keyindex#");
-	 chart.define("pieInnerText",function(obj){
- 		var sum = chart.sum("#number#");
-		return Math.round(obj.number/sum*100) +"%"
-	}); 
-	chart.parse(data,"json");
 }
 function loadSearchForm(){
 	//owner
@@ -177,7 +96,8 @@ function loadSearchForm(){
     {type:"combo", name:"user_name", label:"相关人员:",options:list1,readonly:1},
     {type:"combo", name:"post", label:"人员类别:",options:parent.getEjzb(true),readonly:1},
     {type:"combo", name:"ks", label:"科室",options:list2,readonly:1},
-	 {type:"button", name:"search", value:"生成图形"},
+	 {type:"button", name:"search", value:"生成图表(本页)"},
+	 {type:"button", name:"searchnew", value:"生成图表(新页)"},
 	 {type: "newcolumn", offset:50},
 	 {type: "label", label: ""},
 	 {type: "label", label: ""},
@@ -185,6 +105,7 @@ function loadSearchForm(){
 		{type:"combo", name:"hj", label:"关键环节",options:null,readonly:1},
 		{type:"combo", name:"zb", label:"一级指标",options:null,readonly:1},
 		{type:"combo", name:"ejzb", label:"二级指标",options:null,readonly:1},
+		
 	{type: "newcolumn", offset:50},
     {type: "label", label: "分析类型",position:"label-left"},
     {type: "radio", name: "keyIndex", value: "post", label: "人员类别"},
@@ -213,6 +134,8 @@ function loadSearchForm(){
 myForm = new dhtmlXForm("form_container", formData);
 myForm.attachEvent("onButtonClick", function(name) {
 	if(name =='search'){
+		doAnalysis(false);
+	}else if(name =='searchnew'){
 		doAnalysis(true);
 	}
 });

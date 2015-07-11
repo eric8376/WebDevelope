@@ -372,13 +372,16 @@ function listObjectToMap(list,id,text){
 }
 function convertObjectAttrToArray(data,key){
 	var newdata=new Array();
+	
 	for(var i=0;i<data.length;i++){
 		newdata[i]=data[i][key];
 	}
+
 	return newdata;
 }
 function convertObjectsToArrays(data){
 	var outdata=new Array();
+	
 	for(var i=0;i<data.length;i++){
 		var indata=new Array();
 		for(var o in data[i]){
@@ -387,6 +390,7 @@ function convertObjectsToArrays(data){
 		}
 		outdata.push(indata);
 	}
+	
 	return outdata;
 }
 function replaceObjectListAttr(data,fromlist,tolist){

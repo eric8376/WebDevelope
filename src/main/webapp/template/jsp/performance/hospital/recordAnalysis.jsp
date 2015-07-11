@@ -6,6 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>医院全面质量与绩效考核系统</title>
 <jsp:include page="../include/include.jsp" />
+<jsp:include page="../include/chart.jsp" />
+<script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/chartview_highchart.js"></script>
 <script language="javascript" src="<%=request.getContextPath()%>/js/performance/hospital/recordAnalysis.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx.css" type="text/css" media="screen"><link rel="stylesheet" href="<%=request.getContextPath()%>/js/dhtmlx/dhtmlx_custom.css" type="text/css" media="screen">
 <style>
@@ -19,8 +21,8 @@ transform: rotate(45deg);
 </style>
 </head>
 <body>
-<div id="form_container" style="width:950px;height:280px;align:center;padding-left:25px" align="center"></div>
-<div id="chart_container" style="border:1px solid #A4BED4;">
+<div id="form_container" style="width:1000px;height:400px;align:center;padding-left:25px" align="center"></div>
+<div id="chart_container" >
 </div>
 </body>
 </html>

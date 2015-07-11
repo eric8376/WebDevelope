@@ -1,3 +1,6 @@
+/**需要引入
+ * <script src="<%=request.getContextPath()%>/js/echart/echarts-all.js"></script>
+ */
 dhtmlxEvent(window,"load", doOnLoad);
 
 var chart,myForm,data,keyIndex,chartType,valueIndex;
@@ -44,32 +47,8 @@ function newCanvas(){
 }
 function createBarHChart(){
 	
-	newCanvas();
-	 chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","barH");
-	 chart.define("value","#number#");
-	 //chart.define("color","#66cc33"); 
-	 chart.define("label","#number#");
-	 chart.define("width","80"); 
-	 chart.define("padding",{left: 150}); 
-	 chart.define("tooltip","#keyindex#");   
-	 chart.define("yAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("xAxis",{
-       // template:"{obj}",
-        title:"扣分"
-	 	});     
-	 chart.parse(data,"json");
-//	 var dhxWins= new dhtmlXWindows();
-//	
-//	 var popupWindow = parent.dhxLayout.dhxWins.createWindow("popupWindow",300,300,800,500);
-//	 
-//	 popupWindow.attachObject(chart);
-//	 popupWindow.show();
+	//TODO
+
 	
 }
 function createBarChart(){
@@ -201,24 +180,7 @@ function createPieChart(){
 	chart.setOption(option);
 }
 function createLineChart(){
-	newCanvas();
-	chart =  new dhtmlXChart({
-	     container: "chart_container"
-	    	 });
-	 chart.define("view","line");
-	 chart.define("value","#number#");
-	 chart.define("label","#keyindex#");
-	 chart.define("xAxis",{
-			title:"医院",
-			template:"#keyindex#"
-		});   	
-	 chart.define("yAxis",{
-      
-     // template:"{obj}",
-      title:"扣分"
-	 	});     
-	
-	chart.parse(data,"json");
+//TODO
 }
 function getColor(params) {
     // build a color map as your need.
