@@ -59,8 +59,10 @@ function doOnLoad() {
 	  var columns;
 	  var sql;
 	  var filterCondition=" and hosp_id='"+parent.loginedUserInfo.hospId+"' ";
-	  if(parent.loginedUserInfo.jb!=0){
-		  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"' ";
+	  if(parent.loginedUserInfo.jb!=0&&mapType!="xm"){
+		  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"'";
+	  }else{
+		  filterCondition+=" and (creator_dep_id='"+parent.loginedUserInfo.ks+"' or permission=0)";
 	  }
 	    if(mapType=='hj'){
 	    	viewName="hospital.t_per_hj";
@@ -89,6 +91,7 @@ function doOnLoad() {
 	    		" group by t1.dict_id,t1.dict_text,d,m2 "+" order by dict_text asc";
 	    	}
 	    else if(mapType=='xm'){
+	    	
 	    	viewName="hospital.t_per_xm";
 	    	columns=[{title:"编号",width:0,type:"ro"},
 	    			 {title:"项目",width:100,type:"ro"},

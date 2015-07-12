@@ -56,6 +56,7 @@ function createBarChart(){
 	createBaseBarChart("column");
 }
 function createPieChart(){
+	newCanvas();
 	var hightchartdata=convertObjectsToArrays(data);
 	$("#chart_container").highcharts({
         chart: {
