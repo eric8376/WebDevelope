@@ -42,6 +42,24 @@
   </init-param>
   <load-on-startup>1</load-on-startup>
  </servlet>
+   <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <init-param>
+            <!-- 用户名 -->
+            <param-name>loginUsername</param-name>
+            <param-value>rycaifu</param-value>
+        </init-param>
+        <init-param>
+            <!-- 密码 -->
+            <param-name>loginPassword</param-name>
+            <param-value>rycaifu</param-value>
+        </init-param>
+    </servlet>
+     <servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
  <servlet>
   <servlet-name>JSONServiceCall</servlet-name>
   <servlet-class>com.microwill.framework.rpc.JSONServiceCallServlet</servlet-class>
