@@ -91,6 +91,10 @@ function initToolBar(grid){
 	toolbar.addButton('updateRecord',3,"修改","edit.ico",null);
 	toolbar.addButton('caculate',4,"考核计算","calculator.ico",null);
 	toolbar.addButton('import',5,"导入数据","importExcel.ico",null);
+	if(parent.loginedUserInfo.jb=='0'){
+	 toolbar.addButton('deleteAllRecord',6,"清空数据","importExcel.ico",null);
+	 toolbar.addButton('updateDictData',7,"数据关联","importExcel.ico",null);
+	}
 	toolbar.setIconSize(24);
 	
 	
@@ -144,6 +148,38 @@ function initToolBar(grid){
     				parent.loadPage('manage.spr?action=recordManage');
     			}
     		});
+        }else if(id=="deleteAllRecord"){
+        	if(parent.loginedUserInfo.jb!='0'){
+    			alert("非管理员不能删除全部");
+    			return;
+    		}
+    		if(!confirm("确定要删除全部吗？")){
+    			return;
+    		}
+    		dhtmlxAjax.post("manageOperation.spr?action=deleteAllRecord","recordId=a",function(respon){
+    			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
+    			if(res.result=='success')
+    			{
+    				alert("删除全部成功。");
+    			}else{
+    				alert("删除全部失败。");
+    			}});
+        }else if(id=="updateDictData"){
+        	if(parent.loginedUserInfo.jb!='0'){
+    			alert("非管理员不能操作更新");
+    			return;
+    		}
+    		if(!confirm("确定要更新吗？")){
+    			return;
+    		}
+    		dhtmlxAjax.post("manageOperation.spr?action=doUpdateDictData","recordId=a",function(respon){
+    			var responsetxt=(respon.xmlDoc.response==undefined)?respon.xmlDoc.responseText:respon.xmlDoc.response;var res=eval("("+responsetxt+")");;
+    			if(res.result=='success')
+    			{
+    				alert("删除全部成功。");
+    			}else{
+    				alert("删除全部失败。");
+    			}});
         }
         
     });

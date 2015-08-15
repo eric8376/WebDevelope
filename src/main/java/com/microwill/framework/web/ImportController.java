@@ -5,7 +5,6 @@ package com.microwill.framework.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.microwill.project.hospital.service.HospitalService;
 import com.microwill.project.hospital.util.HospitalHelper;
 
 /**
@@ -42,6 +41,8 @@ import com.microwill.project.hospital.util.HospitalHelper;
 public class ImportController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private HospitalService hospitalService;
 
 	@RequestMapping
 	public String handleDefault(Model model, @RequestParam MultipartFile excel,
@@ -73,7 +74,8 @@ public class ImportController extends BaseMultiActionController {
 				objList.add(objs);
 				}
 			}
-			handler(objList,request);
+			String hosp_id = HospitalHelper.getHospIdFromSession(request);
+			hospitalService.importTable(objList, hosp_id);
 			request.setAttribute("result", "success");
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
@@ -98,31 +100,7 @@ public class ImportController extends BaseMultiActionController {
 		return "/performance/include/uploadForm";
 	}
 
-	private void handler(List objList,HttpServletRequest request) {
-		String hosp_id=HospitalHelper.getHospIdFromSession(request);
-		String sql="insert into t_per_record(record_id,xm_id,hj_id,zb_id,ejzb_id,ks_id,post,user_name,check_time,result,dianping,jiance,kaohe,beizhu,hosp_id) values(uuid(),?,?,?,?,?,?,?,?,?,?,?,?,?,'"+hosp_id+"')";
-		
-		System.out.println("一共导入"+objList.size()+"条记录.");
-		
-		jdbcTemplate.batchUpdate(sql, objList);
-		sql="update t_per_record t2, t_dict_table t1 set t2.ks_id=t1.dict_id where t1.dict_text=t2.ks_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ks';";
-		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.xm_id=t1.dict_id where t1.dict_text=t2.xm_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='xm';";
-		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.hj_id=t1.dict_id where t1.dict_text=t2.hj_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='hj';";
-		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.zb_id=t1.dict_id where t1.dict_text=t2.zb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='zb';";
-		jdbcTemplate.update(sql);
-		sql="update t_per_record t2, t_dict_table t1 set t2.ejzb_id=t1.dict_id where t1.dict_text=t2.ejzb_id and t2.hosp_id='"+hosp_id+"' and t1.hosp_id='"+hosp_id+"' and t1.group_code='ejzb';";
-		jdbcTemplate.update(sql);
-		sql="UPDATE t_per_record SET post= (CASE "
-				+ "WHEN post='检验师' THEN 0 WHEN post='药学人员' THEN 1 WHEN post='放射师' THEN 2 WHEN post='实习护士' THEN 3 WHEN post='实习医生' THEN 4 "
-				+ "WHEN post='医生' THEN 5 WHEN post='护士' THEN 6 WHEN post='进修医生' THEN 7 WHEN post='规培医生' THEN 8 WHEN post='工勤人员' THEN 9 WHEN post='患者' THEN 10 "
-				+ "WHEN post='患者家属' THEN 11 WHEN post='就医者' THEN 12 WHEN post='其他人员' THEN 13  "
-				+ "ELSE post END);";
-		jdbcTemplate.update(sql);
-	}
-
+	
 	@RequestMapping(params = "action=showUploadFrom")
 	public String uploadForm(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

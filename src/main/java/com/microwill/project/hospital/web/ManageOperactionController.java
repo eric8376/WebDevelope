@@ -3,7 +3,6 @@
  */
 package com.microwill.project.hospital.web;
 
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.microwill.framework.web.BaseMultiActionController;
 import com.microwill.framework.web.util.LoginHelper;
 import com.microwill.project.hospital.bo.RoleType;
+import com.microwill.project.hospital.service.HospitalService;
 
 /**
  * @author Administrator
@@ -30,6 +30,8 @@ import com.microwill.project.hospital.bo.RoleType;
 public class ManageOperactionController extends BaseMultiActionController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private HospitalService hospitalService;
 	//用户管理
 	private static String ADD_USER_SQL = "insert into t_per_user(user_id,user_name,password,real_name,regdate,ks,bm,jb,hosp_id) values(?,?,?,?,now(),?,?,?,?)";
 	private static String UPDATE_USER_SQL="update t_per_user set user_name=? ,real_name=?,ks=?,bm=?,jb=? where user_id=?";
@@ -52,6 +54,40 @@ public class ManageOperactionController extends BaseMultiActionController {
 	private static String QUERY_RECORD_OF_PROJRCT = "select count(1) from t_per_record t1,t_per_dict_map t2 where t1.ksxm_id= t2.ksxm_id and t2.xm_id =? and t2.ks_id=?";
 	private static String UPDATE_PASSWORD_SQL = "update t_per_user set password=? where user_id=? and password=?";
 
+	@RequestMapping(params = "action=doUpdateDictData")
+	public ModelAndView doUpdateDictData(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+	
+		try {
+			hospitalService.doUpdateDictData(getHospIdFromSession(request));
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			outputJSON(response, "{result:false}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			outputJSON(response, "{result:false}");
+		}
+		return null;
+
+	}
+	@RequestMapping(params = "action=deleteAllRecord")
+	public ModelAndView deleteAllRecord(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+	
+		try {
+			hospitalService.doDeleteDictData(getHospIdFromSession(request));
+			outputJSON(response, "{\"result\":\"success\",\"on\":\"yes\"}");
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			outputJSON(response, "{result:false}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			outputJSON(response, "{result:false}");
+		}
+		return null;
+
+	}
 	@RequestMapping(params = "action=updateUser")
 	public ModelAndView updateUser(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -426,7 +462,9 @@ public class ManageOperactionController extends BaseMultiActionController {
 
 	}
 	private String getHospIdFromSession(HttpServletRequest request){
-		
+		if(LoginHelper.getToken(request).get("hosp_id")==null){
+			throw new IllegalArgumentException("hosp_id could not be null value");
+		}
 		return(String)LoginHelper.getToken(request).get("hosp_id");
 	}
 	private String getUserIdFromSession(HttpServletRequest request){

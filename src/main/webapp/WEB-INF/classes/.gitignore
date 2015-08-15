@@ -1,1 +1,14 @@
+/config.properties
+/db.properties
+/hibernate_BGM.cfg.xml
+/hibernate_DG.cfg.xml
+/hibernate_bureau.cfg.xml
+/hibernate_hospital.cfg.xml
+/log4j.properties
+/spring/
+/spring-servlet.xml
+/spring-views.xml
+/sql-map-config.xml
+/toolbox.xml
+/velocity.properties
 /com/
