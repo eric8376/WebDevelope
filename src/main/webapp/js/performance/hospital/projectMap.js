@@ -59,7 +59,8 @@ function doOnLoad() {
 			  filterCondition+=" and creator_dep_id='"+parent.loginedUserInfo.ks+"'";
 		  }  
 	  var sql="select dict_id,dict_text,if(t2.son_id is null,0,1),if(t2.son_id is null,0,1) as init_value from (select * from "+viewName+" where 1=1 "+filterCondition+")  t1 left join  hospital.t_per_dict_map  t2 on t1.dict_id=t2.son_id and parent_id='"+projectId+"'";
-	var grid_define={
+	  sql+=" order by dict_text asc";
+	  var grid_define={
 			columns:columns,
 			key:"dict_id",
 			sql:sql
