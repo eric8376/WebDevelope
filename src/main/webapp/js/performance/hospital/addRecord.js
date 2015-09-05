@@ -70,6 +70,9 @@ dhtmlxEvent(window,"load", doOnLoad);
 						 myForm.getCombo("hj").setComboValue(result.list[0].hj_id);
 					     loadSonByParent("hj","zb");
 						myForm.getCombo("zb").setComboValue(result.list[0].zb_id);
+						loadSonByParent("zb","ejzb");
+						myForm.getCombo("ejzb").setComboValue(result.list[0].ejzb_id);
+						myForm.getCombo("post").setComboValue(result.list[0].post);
 						user=result.list[0];
 						
 		        }else{

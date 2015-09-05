@@ -43,7 +43,7 @@ function doAnalysis(newWindows){
 	if(!isEmpty(post)&&post!="ALL"){
 		condition+=" and post='"+post+"' ";
 	}
-	else if(!isEmpty(xm)&&xm!="ALL"){
+	if(!isEmpty(xm)&&xm!="ALL"){
 		condition+=" and xm_id='"+xm+"' ";
 	}
 	if(!isEmpty(kssj)){
