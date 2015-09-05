@@ -11,7 +11,7 @@ var chart,myForm,data,keyIndex,chartType,valueIndex;
 function doOnLoad() {
 	
 	
-	var chartType=getParam("chartType");
+	chartType=getParam("chartType");
 	var condition=window.location.search;
 	
 	if(chartType!=null&&condition!=null){//参数不为空才自动加载
@@ -41,10 +41,10 @@ function newCanvas(){
 	//默认大小
 	$("#chart_container").css("height","600px");
 	$("#chart_container").css("width","1000px");
-	if(data.length>=10&&chartType=="bar"){
-		$("#chart_container").css("width",data.length*80+"px");
+	if(data.length>=10&&("[bar],[line]").indexOf("["+chartType+"]")>=0){
+		$("#chart_container").css("width",data.length*60+"px");
 	}
-	if(data.length>=10&&chartType=="barH"){
+	if(data.length>=10&&("[barH]").indexOf("["+chartType+"]")>=0){
 		$("#chart_container").css("height",data.length*60+"px");
 	}
 	
