@@ -18,7 +18,7 @@ function doOnLoad() {
 				{type:"button", name:"save", value:"确定"}] 
 			   }
                         ]
-			myForm = new dhtmlXForm("form_container", formData);
+			myForm = createFormObject(formData);
 		        myForm.attachEvent("onButtonClick", function(name) {
 		        	if(name =='save'){
 		        			this.send("manageOperation.spr?action=changePassword","post",function(respon){

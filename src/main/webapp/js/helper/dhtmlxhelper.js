@@ -28,8 +28,23 @@ var toComboData=function(list,valueStr,textStr){
 	}
 	return jsonlist;
 }
-
-
+/*form*/
+function createFormObject(formData){
+	setItems(formData);
+	return new dhtmlXForm("form_container", formData);
+}
+function setItems(obj){
+	for(var i=0;i<obj.length;i++){
+		if(obj[i].type=="combo"){
+			obj[i].filtering="true";
+			obj[i].readonly=null;
+		}
+		if(obj[i].list&&$.isArray(obj[i].list)){
+			setItems(obj[i].list);
+		}
+	}
+	return;
+}
 /*grid*/
 /**
  * define.sql 列表的sql语句

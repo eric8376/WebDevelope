@@ -38,7 +38,7 @@ function doOnLoad() {
 		]}
 	   
                 ]
-	myForm = new dhtmlXForm("form_container", formData);
+	myForm = createFormObject(formData);
     myForm.attachEvent("onButtonClick", function(name) {
     	if(name =='search'){
     		doSearch();

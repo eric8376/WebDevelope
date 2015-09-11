@@ -51,7 +51,8 @@ dhtmlxEvent(window,"load", doOnLoad);
 				                                				{value: "2", text: "科室领导"}
 				                                		]},
 				{type:"button", name:"save", value:"保存"},{type:"button", name:"cancel", value:"取消" }];
-				myForm = new dhtmlXForm("form_container", operation=="update"?updateFormData:addFormData);
+		        var formData=operation=="update"?updateFormData:addFormData;
+		        myForm = createFormObject(formData);
 		        myForm.attachEvent("onButtonClick", function(name) {
 					if(name =='save'){
 						 

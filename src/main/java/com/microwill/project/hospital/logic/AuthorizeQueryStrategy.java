@@ -81,7 +81,7 @@ public  class AuthorizeQueryStrategy {
 	public String queryAnalysis(String condition,String keyIndex,String valueIndex) throws Exception {
 		String sql ="select "+keyIndex+" as keyindex, "+valueIndex+" as number "
 				+ "from hospital.t_per_vrecord where 1=1 "
-				+ ""+condition+""+getScopeSql()+"group by "+keyIndex+ " ";
+				+ ""+condition+""+getScopeSql()+"group by "+keyIndex+ " "+ "order by number desc";
 		List list = jdbcTemplate.queryForList(
 				sql);
 		System.out.println(sql);

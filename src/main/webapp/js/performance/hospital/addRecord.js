@@ -45,7 +45,7 @@ dhtmlxEvent(window,"load", doOnLoad);
 				]},
                         
                         ]
-			myForm = new dhtmlXForm("form_container", formData);
+			myForm = createFormObject(formData);
 			//myForm.setSkin('dhx_terrace');
 		    //myForm.setFontSize("15px");
 		    //赋值+联动
