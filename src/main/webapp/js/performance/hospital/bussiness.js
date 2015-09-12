@@ -52,6 +52,8 @@ function getLineSeriesContainsPlanValue(data){
 		if(data[i].isplan&&data[i].isplan=='1'){
 			obj.color='red';
 		}
+		obj.marker=new Object();
+		obj.marker.enabled=false;
 		outdata.push(obj);
 	}
 	

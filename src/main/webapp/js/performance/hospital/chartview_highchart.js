@@ -50,10 +50,10 @@ function newCanvas(){
 	$("#chart_container").css("height","600px");
 	$("#chart_container").css("width","1000px");
 	if(data.length>=10&&("[bar],[line]").indexOf("["+chartType+"]")>=0){
-		$("#chart_container").css("width",data.length*60+"px");
+		$("#chart_container").css("width",data.length*25+"px");
 	}
 	if(data.length>=10&&("[barH]").indexOf("["+chartType+"]")>=0){
-		$("#chart_container").css("height",data.length*60+"px");
+		$("#chart_container").css("height",data.length*25+"px");
 	}
 	
 }
@@ -184,9 +184,21 @@ function createBaseBarChart(type,category,number){
 	        plotOptions: {
 	            bar: {
 	                dataLabels: {
-	                    enabled: true
+	                    enabled: true,
+	                    allowOverlap:true,
+		                style: {"color": "contrast", "fontSize": "5px", "fontWeight": "bold", "textShadow": "0 0 6px contrast, 0 0 3px contrast" }
 	                }
-	            }
+	                
+	            },
+	            column: {
+	                dataLabels: {
+	                    enabled: true,
+	                    allowOverlap:true,
+		                rotation:310,
+		                style: {"color": "contrast", "fontSize": "5px", "fontWeight": "bold", "textShadow": "0 0 6px contrast, 0 0 3px contrast" }
+	                }
+	                
+	            },
 	        },
 //	        legend: {
 //	            layout: 'vertical',
