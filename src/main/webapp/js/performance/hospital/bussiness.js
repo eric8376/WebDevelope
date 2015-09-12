@@ -49,7 +49,7 @@ function getLineSeriesContainsPlanValue(data){
 		var obj=new Object();
 		obj.name=data[i].keyindex;
 		obj.y=data[i].number;
-		if(data[i].isplan=='1'){
+		if(data[i].isplan&&data[i].isplan=='1'){
 			obj.color='red';
 		}
 		outdata.push(obj);

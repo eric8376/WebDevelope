@@ -18,17 +18,7 @@ function doOnLoad() {
 		var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",condition);
 		var res=eval("("+loader.xmlDoc.responseText+")");
 		data=filter(res.list,getParam("keyIndex"));
-		if(chartType=="pie"){
-			createPieChart();
-			}else if(chartType=="bar"){
-				createBarChart();
-			}else if(chartType=="barH"){
-				createBarHChart();
-			}else if(chartType=="line"){
-				var category=convertObjectAttrToArray(data,"keyindex");//timeline
-				var number=getLineSeriesContainsPlanValue(data);//series data
-				createLineChart(category,number);
-		}
+		doCreateChart(chartType,data);
 	}
 	//参数为空则等待调用 外部须留#chart_container
 	
@@ -36,7 +26,23 @@ function doOnLoad() {
   
 	
 }
-
+function doCreateChart(chartType,data){
+	if(chartType=="pie"){
+		createPieChart();
+	}else if(chartType=="bar"){
+			var category=convertObjectAttrToArray(data,"keyindex");//timeline
+			var number=getLineSeriesContainsPlanValue(data);//series data
+			createBarChart(category,number);
+	}else if(chartType=="barH"){
+			var category=convertObjectAttrToArray(data,"keyindex");//timeline
+			var number=getLineSeriesContainsPlanValue(data);//series data
+			createBarHChart(category,number);
+	}else if(chartType=="line"){
+			var category=convertObjectAttrToArray(data,"keyindex");//timeline
+			var number=getLineSeriesContainsPlanValue(data);//series data
+			createLineChart(category,number);
+	}
+}
 function newCanvas(){
 	$("#chart_container").remove();
 	$("body").append("<div id='chart_container' style='width:800px;height:600px'>");
@@ -51,11 +57,11 @@ function newCanvas(){
 	}
 	
 }
-function createBarHChart(){
-	createBaseBarChart("bar");
+function createBarHChart(category,number){
+	createBaseBarChart("bar",category,number);
 }
-function createBarChart(){
-	createBaseBarChart("column");
+function createBarChart(category,number){
+	createBaseBarChart("column",category,number);
 }
 function createPieChart(){
 	newCanvas();
@@ -144,9 +150,7 @@ function createLineChart(category,number){
 	    });
 
 }
-function createBaseBarChart(type){
-	var category=convertObjectAttrToArray(data,"keyindex");
-	var number=convertObjectAttrToArray(data,"number");
+function createBaseBarChart(type,category,number){
 	newCanvas();
 	    $('#chart_container').highcharts({
 	        chart: {

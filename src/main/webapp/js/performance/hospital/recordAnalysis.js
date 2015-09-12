@@ -61,13 +61,7 @@ function doAnalysis(newWindows){
 	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",allcondition);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=parent.filter(res.list,keyIndex);
-	if(chartType=="pie"){
-	createPieChart();
-	}else if(chartType=="bar"){
-		createBarChart();
-	}else if(chartType=="barH"){
-		createBarHChart();
-	}
+	doCreateChart(chartType,data);
 	}
 }
 function loadSearchForm(){

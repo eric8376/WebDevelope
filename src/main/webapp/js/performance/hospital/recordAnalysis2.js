@@ -60,17 +60,7 @@ function doAnalysis(newWindows){
 	var loader = dhtmlxAjax.postSync("authorize.spr?action=queryAnalysis",allcondition);
 	var res=eval("("+loader.xmlDoc.responseText+")");
 	data=res.list;
-	if(chartType=="pie"){
-	createPieChart();
-	}else if(chartType=="bar"){
-		createBarChart();
-	}else if(chartType=="barH"){
-		createBarHChart();
-	}else if(chartType=="line"){
-		var category=convertObjectAttrToArray(data,"keyindex");//timeline
-		var number=getLineSeriesContainsPlanValue(data);//series data
-		createLineChart(category,number);
-	}
+	doCreateChart(chartType,data);
 	}
 }
 function loadSearchForm(){
