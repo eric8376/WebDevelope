@@ -42,3 +42,18 @@ function filter(data,type){
 	}
 	return data;
 }
+function getLineSeriesContainsPlanValue(data){
+	var outdata=new Array();
+	
+	for(var i=0;i<data.length;i++){
+		var obj=new Object();
+		obj.name=data[i].keyindex;
+		obj.y=data[i].number;
+		if(data[i].isplan=='1'){
+			obj.color='red';
+		}
+		outdata.push(obj);
+	}
+	
+	return outdata;
+}

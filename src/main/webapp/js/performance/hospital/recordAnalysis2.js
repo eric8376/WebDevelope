@@ -67,7 +67,9 @@ function doAnalysis(newWindows){
 	}else if(chartType=="barH"){
 		createBarHChart();
 	}else if(chartType=="line"){
-		createLineChart();
+		var category=convertObjectAttrToArray(data,"keyindex");//timeline
+		var number=getLineSeriesContainsPlanValue(data);//series data
+		createLineChart(category,number);
 	}
 	}
 }
@@ -110,7 +112,7 @@ function loadSearchForm(){
 		    {type: "label", label: "统计数值",position:"label-left"},
 		    {type: "radio", name: "valueIndex", value: "ROUND(sum(kaohe),1)", label: "考核分",checked: "1"},
 		    {type: "radio", name: "valueIndex", value: "count(1)", label: "监测数"},
-		    {type: "radio", name: "valueIndex", value: "sum(jiance)", label: "监测值"},
+		    {type: "radio", name: "valueIndex", value: "ROUND(sum(jiance),1)", label: "监测值"},
 //	{type: "newcolumn", offset:50},
 //    {type: "label", label: "分析指标",position:"label-left"},
 //    {type: "radio", name: "keyIndex", value: "xm", label: "项目",checked: "1"},

@@ -90,9 +90,14 @@ public  class AuthorizeQueryStrategy {
 		return jsonTxt;
 	}
 	public String queryAnalysis2(String condition,String keyIndex,String valueIndex) throws Exception {
-		String sql ="select left(check_time,7) as keyindex, "+valueIndex+"  as number "
+		String sql ="select left(check_time,7) as keyindex, "+valueIndex+"  as number , if(mid(check_time,5,1)='/',true,false) as isplan "
 				+ "from hospital.t_per_vrecord where 1=1 "
 				+ ""+condition+""+getScopeSql()+" group by left(check_time,7) ";
+		//为了增加对计划值的区分增加二次过滤和排序 
+		sql="select keyindex as keyindex,number,isplan from ( "
+				+sql+" ) t1 "
+				+" order by replace(keyindex,'/','-'),isplan desc ";
+		
 		List list = jdbcTemplate.queryForList(
 				sql);
 		System.out.println(sql);

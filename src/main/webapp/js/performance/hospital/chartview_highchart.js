@@ -25,7 +25,9 @@ function doOnLoad() {
 			}else if(chartType=="barH"){
 				createBarHChart();
 			}else if(chartType=="line"){
-				createLineChart();
+				var category=convertObjectAttrToArray(data,"keyindex");//timeline
+				var number=getLineSeriesContainsPlanValue(data);//series data
+				createLineChart(category,number);
 		}
 	}
 	//参数为空则等待调用 外部须留#chart_container
@@ -94,9 +96,8 @@ function createPieChart(){
         }
     });
 }
-function createLineChart(){
-	var category=convertObjectAttrToArray(data,"keyindex");
-	var number=convertObjectAttrToArray(data,"number");
+function createLineChart(category,number){
+
 	newCanvas();
 
 	    $("#chart_container").highcharts({
