@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<title>tree</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="Shortcut Icon" href="">
+<link href="css/tree/zTreeStyle.css" rel="stylesheet">
+<!--[if IE 7]>
+<link href="css/tree/zTreeStyle.css" rel="stylesheet">
+<![endif]-->
+<link href="css/reset.css" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+</head>
+<body style='overflow-y: scroll; overflow-x:hidden;'> 
+<!-- page start-->
+<!-- ztree start -->
+<div class="zTreeDemoBackground"> 
+<ul id="tree" class="ztree"></ul>
+</div>
+<!-- ztree end -->
+<!-- page form end-->
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	if($.browser.version > "7.0") { 
+  $("body").css({"position":"fixed","left":"0","top":"0"});
+  $('.ztree').click(function(){
+    $("body").css("position","relative");		
+
+		})
+} 
+});
+</script>
+<!--ztree 树结构 -->
+<script src="js/ztree.all.min.js"></script>
+<script type="text/javascript">
+		<!--
+		var curMenu = null, zTree_Menu = null;
+		
+		var setting = {
+			view: {
+				showLine: false,
+				selectedMulti: false,
+				dblClickExpand: false,
+				showIcon: false	
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			check: {
+				enable: true,
+				chkboxType : {"Y": "ps", "N": "ps"}
+			},
+			callback: {
+				beforeExpand: beforeExpand,
+				onExpand: onExpand,
+				onClick: onClick
+			}
+		};
+
+		var zNodes =[
+			{ id:1, pId:0, name:"机构管理", open:true},
+			{ id:11, pId:1, name:"修改机构-不可勾选（例）"},
+			{ id:111, pId:11, name:"机构注册机构"},
+			{ id:112, pId:11, name:"必选（例） 1-1-2"},
+			{ id:113, pId:11, name:"子节点 1-1-3"},
+			{ id:114, pId:11, name:"子节点 1-1-4"},
+			{ id:12, pId:1, name:"功能管理 1-2"},
+			{ id:121, pId:12, name:"子节子节字子节字点"},
+			{ id:122, pId:12, name:"子节点 1-2-2"},
+			{ id:123, pId:12, name:"子节点 1-2-3"},
+			{ id:124, pId:12, name:"子节点 1-2-4"},
+			{ id:2, pId:0, name:"应用管理"},
+			{ id:21, pId:2, name:"子菜单 2-1"},
+			{ id:211, pId:21, name:"子节点 2-1-1"},
+			{ id:212, pId:21, name:"子节点 2-1-2"},
+			{ id:213, pId:21, name:"子节点 2-1-3"},
+			{ id:214, pId:21, name:"子节点 2-1-4"},
+			{ id:22, pId:2, name:"子菜单 2-2"},
+			{ id:221, pId:22, name:"子节点 2-2-1"},
+			{ id:222, pId:22, name:"子节点 2-2-2"},
+			{ id:223, pId:22, name:"子节点 2-2-3"},
+			{ id:224, pId:22, name:"子节点 2-2-4"},
+			
+			{ id:3, pId:0, name:"企业经营管理"},
+			{ id:31, pId:3, name:"子菜单 3-1"},
+			{ id:311, pId:31, name:"子节点 3-1-1"},
+			{ id:312, pId:31, name:"子节点 3-1-2"},
+			{ id:313, pId:31, name:"子节点 3-1-3"},
+			{ id:314, pId:31, name:"子节点 3-1-4"},
+			{ id:32, pId:3, name:"子菜单 3-2"},
+			{ id:321, pId:32, name:"子节点 3-2-1"},
+			{ id:322, pId:32, name:"子节点 3-2-2"},
+			{ id:323, pId:32, name:"子节点 3-2-3"},
+			{ id:324, pId:32, name:"子节点 3-2-4"},	
+			
+		    { id:4, pId:0, name:"机构应用管理"},
+			{ id:41, pId:4, name:"子菜单 4-1"},
+			{ id:411, pId:41, name:"子节点 4-1-1"},
+			{ id:412, pId:41, name:"子节点 4-1-2"},
+			{ id:413, pId:41, name:"子节点 4-1-3"},
+			{ id:414, pId:41, name:"子节点 4-1-4"},
+			{ id:42, pId:4, name:"子菜单 4-2"},
+			{ id:421, pId:42, name:"子节点 4-2-1"},
+			{ id:422, pId:42, name:"子节点 4-2-2"},
+			{ id:423, pId:42, name:"子节点 4-2-3"},
+			{ id:424, pId:42, name:"子节点 4-2-4"}			
+		];
+
+
+		var curExpandNode = null;
+		function beforeExpand(treeId, treeNode) {
+			var pNode = curExpandNode ? curExpandNode.getParentNode():null;
+			var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+			var zTree = $.fn.zTree.getZTreeObj("tree");
+			for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+				if (treeNode !== treeNodeP.children[i]) {
+					zTree.expandNode(treeNodeP.children[i], false);
+				}
+			}
+			while (pNode) {
+				if (pNode === treeNode) {
+					break;
+				}
+				pNode = pNode.getParentNode();
+			}
+			if (!pNode) {
+				singlePath(treeNode);
+			}
+
+		}
+		function singlePath(newNode) {
+			if (newNode === curExpandNode) return;
+			if (curExpandNode && curExpandNode.open==true) {
+				var zTree = $.fn.zTree.getZTreeObj("tree");
+				if (newNode.parentTId === curExpandNode.parentTId) {
+					zTree.expandNode(curExpandNode, false);
+				} else {
+					var newParents = [];
+					while (newNode) {
+						newNode = newNode.getParentNode();
+						if (newNode === curExpandNode) {
+							newParents = null;
+							break;
+						} else if (newNode) {
+							newParents.push(newNode);
+						}
+					}
+					if (newParents!=null) {
+						var oldNode = curExpandNode;
+						var oldParents = [];
+						while (oldNode) {
+							oldNode = oldNode.getParentNode();
+							if (oldNode) {
+								oldParents.push(oldNode);
+							}
+						}
+						if (newParents.length>0) {
+							zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+						} else {
+							zTree.expandNode(oldParents[oldParents.length-1], false);
+						}
+					}
+				}
+			}
+			curExpandNode = newNode;
+		}
+
+		function onExpand(event, treeId, treeNode) {
+			curExpandNode = treeNode;
+		}
+
+		function onClick(e,treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj("tree");
+			zTree.expandNode(treeNode, null, null, null, true);
+		}
+
+		$(document).ready(function(){
+			$.fn.zTree.init($("#tree"), setting, zNodes);
+		});
+</script>
+
+
+</body>
+</html>
