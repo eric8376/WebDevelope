@@ -56,6 +56,7 @@ function setItems(obj){
  */
 function createGridObject(id,define){
 	var grid = new dhtmlXGridObject(id);
+	grid.setImagePath("../js/dhtmlx/imgs/"); 
 	//初始化工具栏和分页栏
 	$("#"+id).before("<div id='toolbarObj'></div>");
 	$("#"+id).after("<div id='pageToolbarObj'></div>");
